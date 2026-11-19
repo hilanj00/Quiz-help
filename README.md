@@ -10,7 +10,7 @@ U.S. Maritime Academy "Rules of the Road" practice problems.
   and how many questions.
 - Missed questions are remembered in your browser so you can retake just those.
 
-## Sections so far (462 questions)
+## Sections so far (517 questions)
 
 | Section | File |
 | --- | --- |
@@ -20,6 +20,7 @@ U.S. Maritime Academy "Rules of the Road" practice problems.
 | Lights & Shapes, #225–321, plus International only and Inland only | `data/lights-shapes-2.js` |
 | Sound & Light Signals, #322–415, plus International only and Inland only | `data/sound-signals.js` |
 | Annexes & distress signals, #416–436 | `data/annexes.js` |
+| General Questions, Lights in Diagrams, Sound Signals in Diagrams | `data/diagrams.js` |
 
 All answers come from the book's answer keys. Questions that refer to a book diagram are flagged
 `{diagram: true}` and are off by default in the quiz. Lights & Shapes #276–297 (pages 62–63) are not

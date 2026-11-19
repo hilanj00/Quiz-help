@@ -30,7 +30,7 @@ addSection({
       "Distress signals may be used in place of the danger signal.",
       "The danger signal consists of four or more short blasts of the whistle."], "A"],
     [335, "Rule 34", "Two power-driven vessels are crossing as shown in DIAGRAM 42. Vessel \"A\" sounds three short blasts on the whistle. This signal means that vessel \"A\"", [
-      "intends to hold course and speed.", "is sounding the danger signal.", "is backing engines.", "proposes to cross ahead of the other vessel."], "C"],
+      "intends to hold course and speed.", "is sounding the danger signal.", "is backing engines.", "proposes to cross ahead of the other vessel."], "C", {diagram: true}],
     [336, "Rule 34", "A light signal of three flashes means", [
       "\"I am in doubt as to your actions.\"", "\"my engines are full speed astern.\"", "\"I desire to overtake you.\"", "\"I am operating astern propulsion.\""], "D"],
     [337, "Rule 34", "At night you observe a vessel ahead to show three flashes of a white light. This signal indicates that the vessel ahead is", [

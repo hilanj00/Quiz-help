@@ -69,10 +69,11 @@
     quiz = null;
     const secRows = window.QUIZ_SECTIONS.map((s) => {
       const n = s.items.filter((q) => settings.diagrams || !q.diagram).length;
+      const hidden = s.items.length - n;
       return `<label class="check" for="sec-${s.id}">
         <input type="checkbox" id="sec-${s.id}" data-sec="${s.id}" ${settings.sections.includes(s.id) ? "checked" : ""}>
         <span class="name">${esc(s.title)}</span>
-        <span class="count">${n} q</span>
+        <span class="count">${n} q${hidden ? ` · +${hidden} diagram` : ""}</span>
       </label>`;
     }).join("");
 
