@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<!-- ARTIFACT-HEAD-START -->
+<title>Rules of the Road Quiz</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;600&display=swap">
+<link rel="stylesheet" href="style.css">
+<!-- ARTIFACT-HEAD-END -->
+</head>
+<body>
+<!-- ARTIFACT-BODY-START -->
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <h1>Rules of the Road</h1>
+      <p>Navigation Rules practice test · International &amp; Inland · <span id="total-count">0</span> questions</p>
+    </div>
+    <div class="lights" aria-hidden="true"><span class="r"></span><span class="w"></span><span class="g"></span></div>
+  </header>
+  <main id="app"></main>
+  <footer>Questions from the U.S. Maritime Academy Rules of the Road practice problems, based on the USCG Navigation Rules and Regulations Handbook.</footer>
+</div>
+<script>
+  window.QUIZ_SECTIONS = [];
+  function addSection(s) { window.QUIZ_SECTIONS.push(s); }
+</script>
+<script src="data/rules-01-09.js"></script>
+<script src="data/rules-10-19.js"></script>
+<script src="data/lights-shapes.js"></script>
+<script src="app.js"></script>
+<!-- ARTIFACT-BODY-END -->
+</body>
+</html>

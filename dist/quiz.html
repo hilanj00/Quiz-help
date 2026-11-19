@@ -1,0 +1,1723 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Rules of the Road Quiz</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=IBM+Plex+Mono:wght@500;600&family=IBM+Plex+Sans:wght@400;600&display=swap">
+<style>
+/* Layout: one centered column, like a single card on a chart table. Port red = wrong, starboard green = right. */
+:root {
+  --bg: #eef2f5;
+  --surface: #ffffff;
+  --ink: #102a3c;
+  --muted: #557083;
+  --line: #d3dde4;
+  --accent: #1d5f8c;
+  --accent-ink: #ffffff;
+  --port: #c2332b;
+  --port-soft: #fbe9e7;
+  --stbd: #1e8a4c;
+  --stbd-soft: #e5f4ea;
+  --amber: #b4770f;
+  --amber-soft: #fbf1dc;
+  --font-display: "Barlow Condensed", "Arial Narrow", "Helvetica Neue", Arial, sans-serif;
+  --font-body: "IBM Plex Sans", "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0b1721; --surface: #12222f; --ink: #e3edf3; --muted: #93abbb; --line: #24394a;
+    --accent: #5ba7da; --accent-ink: #06121b;
+    --port: #ef6b62; --port-soft: #3a1c1b; --stbd: #4cc27f; --stbd-soft: #15301f;
+    --amber: #e3a841; --amber-soft: #33270f;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #0b1721; --surface: #12222f; --ink: #e3edf3; --muted: #93abbb; --line: #24394a;
+  --accent: #5ba7da; --accent-ink: #06121b;
+  --port: #ef6b62; --port-soft: #3a1c1b; --stbd: #4cc27f; --stbd-soft: #15301f;
+  --amber: #e3a841; --amber-soft: #33270f;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.5;
+}
+.wrap {
+  max-width: 720px;
+  margin: 0 auto;
+  padding-block: 24px 48px;
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+header.top { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.brand { display: flex; flex-direction: column; gap: 2px; }
+.brand h1 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 2.1rem;
+  line-height: 1;
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+}
+.brand p { margin: 0; color: var(--muted); font-size: 0.9rem; }
+.lights { display: flex; gap: 6px; align-items: center; }
+.lights span { width: 12px; height: 12px; border-radius: 50%; display: block; }
+.lights .r { background: var(--port); }
+.lights .w { background: var(--surface); border: 2px solid var(--muted); }
+.lights .g { background: var(--stbd); }
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+h2 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 1.35rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+.label {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* Setup */
+.sections { display: flex; flex-direction: column; gap: 8px; }
+.check {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 12px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  cursor: pointer;
+}
+.check:hover { border-color: var(--accent); }
+.check input { width: 18px; height: 18px; accent-color: var(--accent); flex: none; }
+.check .name { flex: 1; min-width: 0; }
+.check .count { font-family: var(--font-mono); font-size: 0.85rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+
+.options { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+.field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+.seg { display: flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.seg button {
+  flex: 1; border: 0; background: transparent; color: var(--ink);
+  padding: 8px 6px; font: inherit; font-size: 0.9rem; cursor: pointer;
+}
+.seg button + button { border-left: 1px solid var(--line); }
+.seg button[aria-pressed="true"] { background: var(--accent); color: var(--accent-ink); font-weight: 600; }
+.toggle { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+.toggle input { width: 18px; height: 18px; accent-color: var(--accent); }
+.hint { margin: 0; color: var(--muted); font-size: 0.85rem; }
+
+.actions { display: flex; gap: 10px; flex-wrap: wrap; }
+.btn {
+  font: inherit; font-weight: 600;
+  padding: 11px 18px;
+  border-radius: 8px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+}
+.btn:hover { border-color: var(--accent); }
+.btn.primary { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.btn.primary:hover { filter: brightness(1.08); }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.btn.ghost { background: transparent; }
+button:focus-visible, input:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+/* Quiz */
+.progress { display: flex; flex-direction: column; gap: 8px; }
+.progress-row { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; font-variant-numeric: tabular-nums; }
+.bar { height: 6px; background: var(--line); border-radius: 3px; overflow: hidden; }
+.bar > div { height: 100%; background: var(--accent); width: 0; transition: width 0.25s ease; }
+.tags { display: flex; gap: 6px; flex-wrap: wrap; }
+.tag {
+  font-family: var(--font-mono); font-size: 0.72rem; letter-spacing: 0.04em;
+  padding: 3px 8px; border-radius: 6px;
+  border: 1px solid var(--line); color: var(--muted);
+}
+.tag.rule { color: var(--accent); border-color: var(--accent); }
+.tag.warn { color: var(--amber); border-color: var(--amber); background: var(--amber-soft); }
+.question { font-size: 1.15rem; line-height: 1.45; margin: 0; }
+.choices { display: flex; flex-direction: column; gap: 10px; }
+.choice {
+  display: flex; gap: 12px; align-items: flex-start; text-align: left;
+  width: 100%;
+  font: inherit; color: var(--ink);
+  background: var(--surface);
+  border: 1.5px solid var(--line);
+  border-radius: 8px;
+  padding: 12px 14px;
+  cursor: pointer;
+}
+.choice:hover:not(:disabled) { border-color: var(--accent); }
+.choice .key {
+  flex: none; width: 28px; height: 28px; border-radius: 6px;
+  display: grid; place-items: center;
+  font-family: var(--font-mono); font-weight: 600; font-size: 0.9rem;
+  border: 1.5px solid var(--line);
+}
+.choice .txt { flex: 1; min-width: 0; padding-top: 2px; }
+.choice.selected { border-color: var(--accent); }
+.choice.selected .key { background: var(--accent); border-color: var(--accent); color: var(--accent-ink); }
+.choice.right { border-color: var(--stbd); background: var(--stbd-soft); }
+.choice.right .key { background: var(--stbd); border-color: var(--stbd); color: #fff; }
+.choice.wrong { border-color: var(--port); background: var(--port-soft); }
+.choice.wrong .key { background: var(--port); border-color: var(--port); color: #fff; }
+.choice:disabled { cursor: default; }
+
+.feedback { border-radius: 8px; padding: 12px 14px; display: flex; flex-direction: column; gap: 4px; }
+.feedback.right { background: var(--stbd-soft); border-left: 4px solid var(--stbd); }
+.feedback.wrong { background: var(--port-soft); border-left: 4px solid var(--port); }
+.feedback strong { font-family: var(--font-display); font-size: 1.15rem; letter-spacing: 0.03em; text-transform: uppercase; }
+.feedback p { margin: 0; }
+.src { color: var(--muted); font-size: 0.85rem; }
+
+.nav { display: flex; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+.kbd-hint { color: var(--muted); font-size: 0.8rem; margin: 0; }
+
+/* Results */
+.score { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; }
+.score .big {
+  font-family: var(--font-display); font-weight: 700; font-size: 4rem; line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+.score .big.pass { color: var(--stbd); }
+.score .big.fail { color: var(--port); }
+.score .meta { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
+.review { display: flex; flex-direction: column; gap: 12px; }
+.review-item { border: 1px solid var(--line); border-left: 4px solid var(--port); border-radius: 8px; padding: 12px 14px; display: flex; flex-direction: column; gap: 6px; }
+.review-item p { margin: 0; }
+.review-item .yours { color: var(--port); }
+.review-item .correct { color: var(--stbd); font-weight: 600; }
+
+footer { color: var(--muted); font-size: 0.8rem; text-align: center; }
+
+@media (prefers-reduced-motion: reduce) { .bar > div { transition: none; } }
+@media (max-width: 480px) {
+  .brand h1 { font-size: 1.7rem; }
+  .card { padding: 16px; }
+  .question { font-size: 1.05rem; }
+  .score .big { font-size: 3.2rem; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <h1>Rules of the Road</h1>
+      <p>Navigation Rules practice test · International &amp; Inland · <span id="total-count">0</span> questions</p>
+    </div>
+    <div class="lights" aria-hidden="true"><span class="r"></span><span class="w"></span><span class="g"></span></div>
+  </header>
+  <main id="app"></main>
+  <footer>Questions from the U.S. Maritime Academy Rules of the Road practice problems, based on the USCG Navigation Rules and Regulations Handbook.</footer>
+</div>
+<script>
+  window.QUIZ_SECTIONS = [];
+  function addSection(s) { window.QUIZ_SECTIONS.push(s); }
+</script>
+<script>
+// Rules 1-9 — transcribed from the U.S. Maritime Academy "Rules of the Road" practice problems.
+// Format: [number, rule, question, [choices A..D], answer, flags]
+// Answers come from the book's answer key unless flagged {src:"rules"}.
+// flags.diagram = true → question refers to a diagram that is not reproduced here.
+
+addSection({
+  id: "r1-9-both",
+  title: "Rules 1–9 · International & Inland",
+  questions: [
+    [1, "Rule 1", "You are on a vessel that cannot comply with the spacing requirement for masthead lights due to the nature of the vessel's function. What is required in this situation?", [
+      "The vessel must carry only the lights that comply with the rules; the others may be omitted.",
+      "The vessel's lights must comply as closely as possible, as determined by her government.",
+      "The vessel must be altered to permit full compliance with the rules.",
+      "An all-around light should be substituted for the aft masthead light and the sternlight."], "B"],
+    [2, "Rule 2", "According to the Navigation Rules, you may depart from the Rules when", [
+      "no vessels are in sight visually.",
+      "no vessels are visible on radar.",
+      "you are in immediate danger.",
+      "out of sight of land."], "C"],
+    [3, "Rule 2", "In complying with the Rules, of what must the mariner regard?", [
+      "Limited backing power of his vessel.",
+      "Radar information about nearby vessels.",
+      "The occupation of the other vessel, if known.",
+      "All of the above."], "D"],
+    [4, "Rule 2", "The Rules state that vessels may depart from the requirements of the Rules when", [
+      "there are no other vessels around.",
+      "operating in a narrow channel.",
+      "the Master enters it in the ship's log.",
+      "necessary to avoid immediate danger."], "D"],
+    [5, "Rule 3", "You are on watch in fog. Which of the following vessels is in sight?", [
+      "A vessel that you can see from the bridge.",
+      "A radar target of which you have determined the course and speed.",
+      "A vessel of which you can hear the fog signal.",
+      "All of the above."], "A"],
+    [6, "Rule 3", "Which vessel is \"underway\" under the Rules of the Road?", [
+      "A vessel at anchor with the engine running.",
+      "A vessel with a line led to a tree onshore.",
+      "A vessel drifting with the engine off.",
+      "A vessel aground."], "C"],
+    [7, "Rule 3", "The NAVIGATION RULES define a \"vessel not under command\" as a vessel which", [
+      "from the nature of her work is unable to keep out of the way of another vessel.",
+      "through some exceptional circumstance is unable to maneuver as required by the rules.",
+      "by taking action contrary to the rules has created a special circumstance situation.",
+      "is moored, aground or anchored in a fairway."], "B"],
+    [8, "Rule 3", "Breadth refers to the", [
+      "greatest breadth.",
+      "molded breadth.",
+      "breadth on the main deck.",
+      "breadth at the load waterline."], "A"],
+    [9, "Rule 3", "What does the word \"length\" refer to?", [
+      "Length between the perpendiculars.",
+      "Length overall.",
+      "Waterline length.",
+      "Register length."], "B"],
+    [10, "Rule 3", "Which of the following is NOT a vessel \"restricted in her ability to maneuver\"?", [
+      "A vessel laying mat revetments for bank protection along a channel.",
+      "A vessel towing with severely limited maneuverability.",
+      "A deep-draft vessel.",
+      "A vessel underway with a boat alongside and taking on fuel."], "C"],
+    [11, "Rule 3", "Which of the following is a vessel \"restricted in her ability to maneuver\"?", [
+      "A vessel not under command.",
+      "A vessel constrained by her draft.",
+      "A vessel underway in fog.",
+      "A vessel towing that is severely restricted in its maneuverability."], "D"],
+    [12, "Rule 3", "A vessel \"restricted in her ability to maneuver\" is one which", [
+      "from the nature of her work is unable to maneuver as required by the rules.",
+      "through some exceptional circumstance is unable to maneuver as required by the rules.",
+      "due to adverse weather conditions is unable to maneuver as required by the rules.",
+      "has lost steering and is unable to maneuver."], "A"],
+    [13, "Rule 3", "A vessel that is defined as \"restricted in her ability to maneuver\" is unable to keep out of the way of another vessel due to", [
+      "her draft.",
+      "the nature of her work.",
+      "some exceptional circumstances.",
+      "a danger of navigation."], "B"],
+    [14, "Rules 3, 24", "Which vessel is NOT to be regarded as \"restricted in her ability to maneuver\"?", [
+      "A vessel transferring provisions while underway.",
+      "A composite power driven vessel.",
+      "A vessel servicing a navigation mark.",
+      "A vessel launching aircraft."], "B"],
+    [15, "Rule 3", "Which vessel is NOT classified as \"restricted in her ability to maneuver\"?", [
+      "A vessel picking up a navigation mark.",
+      "A vessel transferring cargo while underway.",
+      "A vessel anchored.",
+      "A vessel in a towing operation that restricts the ability of the vessel and her tow to change their course."], "C"],
+    [16, "Rule 3", "According to the Rules, which vessel is NOT \"restricted in her ability to maneuver\"?", [
+      "A vessel servicing a navigation marker.",
+      "A sailing vessel.",
+      "A vessel mineclearing.",
+      "A vessel dredging."], "B"],
+    [17, "Rule 3", "All of the following vessels shall be regarded as \"restricted in their ability to maneuver\" EXCEPT a vessel", [
+      "laying a pipeline.",
+      "dredging.",
+      "mineclearing.",
+      "not under command."], "D"],
+    [18, "Rule 3", "Which vessel is regarded as a vessel \"restricted in her ability to maneuver\"?", [
+      "A vessel fishing with trawls.",
+      "A vessel which has lost use of her steering gear.",
+      "A vessel with a draft of such depth that she cannot change her course.",
+      "A vessel engaged in mineclearing."], "D"],
+    [19, "Rule 3", "A vessel transferring cargo while underway is classified by the Rules as a vessel", [
+      "not under command.",
+      "in special circumstances.",
+      "restricted in her ability to maneuver.",
+      "constrained by her draft."], "C"],
+    [20, "Rule 3", "Which vessel is considered to be a \"vessel restricted in her ability to maneuver\" under the Navigational Rules?", [
+      "A vessel at anchor.",
+      "A vessel dredging.",
+      "A vessel fishing.",
+      "A vessel towing."], "B"],
+    [21, "Rule 3", "Which of the following is a \"vessel restricted in her ability to maneuver\"?", [
+      "A deep-draft vessel that can only navigate in a dredged channel.",
+      "A vessel fishing with a bottom trawl that must remain on course.",
+      "A large tanker that is being towed as a dead ship to drydock.",
+      "A vessel laying revetment mats to provide bank protection along a channel."], "D"],
+    [22, "Rule 3", "The term \"restricted visibility\" as used in the Rules refers", [
+      "only to fog.",
+      "only to visibility of less than one-half of a mile.",
+      "to visibility where you cannot see shore.",
+      "to any condition where visibility is restricted."], "D"],
+    [23, "Rule 3", "A vessel is \"in sight\" of another vessel when", [
+      "she can be observed visually or by radar.",
+      "she can see and be observed visually from the other vessel.",
+      "she can be seen well enough to determine her heading.",
+      "her fog signal can be heard."], "B"],
+    [24, "Rule 3", "A vessel is being propelled both by sail and by engines. Under the Rules, the vessel is", [
+      "considered a \"special circumstance\" vessel.",
+      "not covered under any category.",
+      "considered a sail vessel.",
+      "considered a power-driven vessel."], "D"],
+    [25, "Rule 3", "Which vessel is \"underway\" according to the Rules?", [
+      "A vessel made fast to a single point mooring buoy.",
+      "A fishing vessel hauling her nets.",
+      "A pilot vessel at anchor.",
+      "A vessel which has run aground."], "B"],
+    [26, "Rule 3", "Which craft would be considered a \"power-driven vessel\" under the Rules of the Road?", [
+      "An auxiliary sail vessel, using her engine.",
+      "A canoe being propelled by a small outboard motor.",
+      "A tug powered by a diesel engine.",
+      "All of the above."], "D"],
+    [27, "Rule 3", "The term \"power-driven vessel\" refers to any vessel", [
+      "with propelling machinery onboard whether or not in use.",
+      "making way against the current.",
+      "with propelling machinery in use.",
+      "traveling at a speed greater than that of the current."], "C"],
+    [28, "Rule 3", "Which vessel by definition is unable to keep out of the way of another vessel?", [
+      "Vessel engaged in fishing.",
+      "Vessel restricted in her ability to maneuver.",
+      "Sailing vessel.",
+      "Vessel towing."], "B"],
+    [29, "Rule 3", "For the purpose of the Rules, except where otherwise required, the term", [
+      "\"vessel\" includes seaplanes.",
+      "\"seaplane\" includes nondisplacement craft.",
+      "\"vessel engaged in fishing\" includes a vessel sport fishing with trolling lines.",
+      "\"vessel restricted in her ability to maneuver\" includes fishing vessels."], "A"],
+    [30, "Rule 3", "The term \"vessel\" includes", [
+      "seaplanes.",
+      "nondisplacement craft.",
+      "barges.",
+      "all of the above."], "D"],
+    [31, "Rule 3", "A vessel is \"engaged in fishing\" when", [
+      "there are lines out.",
+      "she is using any type of gear, other than lines.",
+      "she is using fishing apparatus which restricts her maneuverability.",
+      "she has any fishing gear on board."], "C"],
+    [32, "Rule 3", "Which statement is true concerning a \"vessel engaged in fishing\"?", [
+      "The vessel may be using nets, lines, or trawls.",
+      "The vessel may be trolling.",
+      "The vessel is classified as \"restricted in her ability to maneuver\".",
+      "It sounds the same fog signal as a vessel underway but stopped."], "A"],
+    [33, "Rule 3", "According to the Navigation Rules, all of the following are engaged in fishing EXCEPT a vessel", [
+      "setting nets.",
+      "trawling.",
+      "using a dredge net.",
+      "trolling."], "D"],
+    [34, "Rule 3", "The word \"vessel\", in the Rules, includes", [
+      "sailing ships.",
+      "nondisplacement craft.",
+      "seaplanes.",
+      "all of the above."], "D"],
+    [35, "Rule 5", "The rule regarding lookouts applies", [
+      "in restricted visibility.",
+      "between dusk and dawn.",
+      "in heavy traffic.",
+      "all of the above."], "D"],
+    [36, "Rule 5", "A lookout shall be maintained", [
+      "only at night.",
+      "only during restricted visibility.",
+      "at night, and during restricted visibility.",
+      "at all times."], "D"],
+    [37, "Rule 6", "A vessel must proceed at a safe speed", [
+      "in restricted visibility.",
+      "in congested waters.",
+      "during darkness.",
+      "at all times."], "D"],
+    [38, "Rule 6", "\"Safe speed\" is defined as that speed where", [
+      "you can stop within your visibility range.",
+      "you can take proper and effective action to avoid collision.",
+      "you are traveling slower than surrounding vessels.",
+      "no wake comes from your vessel."], "B"],
+    [39, "Rule 6", "The Navigation Rules state that a vessel shall be operated at a safe speed at all times so that she can be stopped within", [
+      "the distance of visibility.",
+      "1/2 the distance of visibility.",
+      "a distance appropriate to existing circumstances and conditions.",
+      "the distance that it would require for the propeller to go from full ahead to full astern."], "C"],
+    [40, "Rule 6", "Which factor is listed in the Rules as one which must be taken into account when determining safe speed?", [
+      "The construction of the vessel.",
+      "The maneuverability of the vessel.",
+      "The experience of vessel personnel.",
+      "All of the above."], "B"],
+    [41, "Rule 6", "The Rules state that certain factors are to be taken into account when determining safe speed. One of the factors stated is the", [
+      "state of wind, sea and current, and the proximity of navigational hazards.",
+      "maximum attainable speed of your vessel.",
+      "temperature.",
+      "aids to navigation that are available."], "A"],
+    [42, "Rule 6", "In determining \"safe speed\", all of the following must be taken into account EXCEPT", [
+      "the maximum horsepower of your vessel.",
+      "the presence of background lights at night.",
+      "the draft of your vessel.",
+      "the maneuverability of your vessel."], "A"],
+    [43, "Rule 7", "In order for there to be risk of collision, which condition(s) must be true?", [
+      "The other vessel must be approaching.",
+      "Your vessel must be power driven.",
+      "The other vessel must be forward of your beam.",
+      "All of the above."], "A"],
+    [44, "Rule 7", "Risk of collision is considered to exist if", [
+      "four vessels are nearby.",
+      "a vessel has a steady bearing at a constant range.",
+      "there is any doubt that a risk of collision exists.",
+      "a special circumstance situation is apparent."], "C"],
+    [45, "Rule 7", "In which situation would you consider a risk of collision to exist?", [
+      "A vessel is two points on your port bow, range increasing, bearing changing slightly to the right.",
+      "A vessel is broad on your starboard beam, range decreasing, bearing changing rapidly to the right.",
+      "A vessel is two points abaft your port beam, range increasing, bearing is constant.",
+      "A vessel is on your starboard quarter, range decreasing, bearing is constant."], "D"],
+    [46, "Rule 7", "Which procedure(s) shall be used to determine risk of collision?", [
+      "Watching the compass bearing of an approaching vessel.",
+      "Systematic observation of objects detected by radar.",
+      "Long-range radar scanning.",
+      "All of the above."], "D"],
+    [48, "Rule 7", "Risk of collision exists when an approaching vessel has a/an", [
+      "steady bearing and decreasing range.",
+      "generally steady range and increasing bearing.",
+      "increasing range and bearing.",
+      "decreasing bearing only."], "A"],
+    [50, "Rule 7", "You are seeing another vessel approaching and its compass bearing is not significantly changing. This would indicate that", [
+      "you are the stand-on vessel.",
+      "risk of collision exists.",
+      "a special circumstances situation exists.",
+      "the other vessel is dead in the water."], "B"],
+    [51, "Rule 7", "The Rules state that risk of collision is deemed to exist", [
+      "whenever two vessels approach from opposite directions.",
+      "if the bearing of an approaching vessel does not appreciably change.",
+      "whenever a vessel crosses ahead of the intended track of another vessel.",
+      "if one vessel approaches another so as to be overtaking."], "B"],
+    [52, "Rule 7", "Which statement is true concerning a vessel equipped with operational radar?", [
+      "She must use this equipment to obtain early warning of risk of collision.",
+      "The radar equipment is only required to be used in restricted visibility.",
+      "The use of radar excuses a vessel from the need of a lookout.",
+      "The safe speed of such a vessel will likely be greater than that of vessels without radar."], "A"],
+    [53, "Rule 7", "In determining risk of collision, a vessel uses", [
+      "radar scanning.",
+      "radar plotting.",
+      "compass bearings.",
+      "all of the above."], "D"],
+    [54, "Rule 7", "Which statement is true concerning risk of collision?", [
+      "Any vessel must keep out of the way of the other vessel.",
+      "Risk of collision always exists when two vessels pass within one mile of each other.",
+      "Risk of collision always exists when the compass bearing of an approaching vessel appreciably changes.",
+      "Risk of collision may exist even when the compass bearing of an approaching vessel is changing."], "D"],
+    [55, "Rule 7", "Which statement is true concerning risk of collision?", [
+      "Risk of collision never exists if the compass bearing of the other vessel is changing.",
+      "Proper use shall be made of radar equipment if fitted to determine risk of collision.",
+      "Risk of collision must be determined before you slow down.",
+      "Risk of collision shall exist if the vessels will pass within one-half mile of each other."], "B"],
+    [57, "Rule 8", "Which of the following is a requirement for any action taken to avoid collision?", [
+      "When in sight of another vessel, any action taken must be accompanied by sound signals.",
+      "The action taken must include changing the speed of the vessel.",
+      "The action must be positive and made in ample time.",
+      "All of the above."], "C"],
+    [58, "Rule 8", "When action to avoid a close quarters situation is taken, a course change alone may be the most effective action provided that", [
+      "it is done in a succession of small course changes.",
+      "it is not done too early.",
+      "it is a large course change.",
+      "the course change is to starboard."], "C"],
+    [60, "Rule 8", "Under the Rules, a vessel shall slacken her speed, stop, or reverse her engines to", [
+      "avoid collision.",
+      "allow more time to assess the situation.",
+      "be stopped in an appropriate distance.",
+      "all of the above."], "D"],
+    [61, "Rule 9", "A sailing vessel is meeting a vessel engaged in fishing in a narrow channel. Which statement is true?", [
+      "The fishing vessel shall not hinder the passage of the sail vessel.",
+      "The fishing vessel has the right of way.",
+      "Each vessel should move to the edge of the channel on her port side.",
+      "Each vessel should be displaying signals for a vessel constrained by her draft."], "A"],
+    [62, "Rule 9", "Vessels of less than what length may not hamper the passage of other vessels in a narrow fairway?", [
+      "10-meters.",
+      "20-meters.",
+      "30-meters.",
+      "40-meters."], "B"],
+    [63, "Rule 9", "Where do you stay in a narrow channel?", [
+      "To the north side",
+      "To the south side",
+      "To the port side",
+      "To the starboard side"], "D"],
+    [64, "Rule 9", "A vessel proceeding along a narrow channel shall", [
+      "avoid crossing the channel at right angles.",
+      "not overtake any vessels within the channel.",
+      "keep as close as possible to the edge of the channel on her starboard side.",
+      "when nearing a bend in the channel, sound a long blast of the whistle."], "C"],
+    [65, "Rule 9", "Your 15-meter tug is underway and crossing a deep and narrow channel. A large container vessel is off your port bow on a steady bearing. Which statement is true concerning this situation?", [
+      "You should sound the danger signal.",
+      "The container vessel has the right of way as it is the larger vessel.",
+      "You cannot impede the passage of the container vessel in the channel.",
+      "None of the above."], "C"],
+    [66, "Rule 9", "You are crossing a narrow channel on your 15-meter vessel with a deep loaded cargo vessel proceeding down the channel. In this situation, which statement is correct?", [
+      "You have the right of way because you are less than 65 feet in length.",
+      "You cannot impede the passage of the cargo vessel.",
+      "The cargo vessel has the right of way because it is running with the current.",
+      "The Rule of Special Circumstances applies in this case."], "B"],
+    [67, "Rule 9", "Which vessel is not to impede the passage of a vessel which can only navigate safely within a narrow channel?", [
+      "Any vessel less than 20-meters in length.",
+      "Any sailing vessel.",
+      "A vessel engaged in fishing.",
+      "All of the above."], "D"],
+  ]
+});
+
+addSection({
+  id: "r1-9-inland",
+  title: "Rules 1–9 · Inland Only",
+  questions: [
+    [1, "Rule 3", "Which term is NOT defined in the Inland Navigation Rules?", [
+      "Seaplane.",
+      "Restricted visibility.",
+      "Underway.",
+      "Vessel constrained by her draft."], "D"],
+    [2, "Rule 3", "For the purpose of the Inland Navigation Rules, the term \"Inland Waters\" includes", [
+      "The Great Lakes on the United States side of the International Boundary.",
+      "the water surrounding any islands of the United States.",
+      "the coastline of the United States, out to one mile offshore.",
+      "any lakes within state boundaries."], "A"],
+    [3, "Rule 3", "For the purpose of the Inland Navigation Rules, the term \"Inland Waters\" includes", [
+      "the Western Rivers.",
+      "the Great Lakes on the United States side of the International Boundary.",
+      "harbors and rivers shoreward of the COLREGS demarcation lines.",
+      "all of the above."], "D"],
+    [4, "Rule 3", "For the purpose of the Inland Navigation Rules, the term \"Inland Waters\" includes", [
+      "the Western Rivers, extending to the COLREGS demarcation line.",
+      "harbors and rivers to the outermost aids to navigation.",
+      "waters along the coast of the United States to a distance of two miles offshore.",
+      "none of the above."], "A"],
+    [7, "Rule 9", "Which statement is true in the Great Lakes concerning narrow channels?", [
+      "You should keep to that side of the channel which is on your port side.",
+      "You do not hinder sailing vessels",
+      "A vessel downbound with a following current will propose the manner of passage.",
+      "all of the above."], "C"],
+    [8, "Rule 9", "When two vessels are meeting on a narrow inland waterway specified by the secretary, which vessel shall sound the first passing signal?", [
+      "The downbound vessel",
+      "The upbound vessel",
+      "The vessel that is towing.",
+      "Either vessel."], "A"],
+    [9, "Rule 9", "A power-driven vessel operating in a narrow channel with a following current on the Great Lakes or Western Rivers is meeting an upbound vessel. Which statement is true?", [
+      "The downbound vessel has the right of way.",
+      "The downbound vessel must initiate the required maneuvering signals.",
+      "The downbound vessel must propose the manner and place of passage.",
+      "All of the above."], "D"],
+  ]
+});
+
+addSection({
+  id: "r1-9-intl",
+  title: "Rules 1–9 · International Only",
+  questions: [
+    [1, "Rule 1", "The International Rules of the Road apply", [
+      "all inland waters.",
+      "only to waters outside the territorial waters of the United States.",
+      "only to waters where foreign vessels travel.",
+      "upon the high seas and connecting waters navigable by seagoing vessels."], "D"],
+    [2, "Rule 3", "Which statement is true concerning a vessel \"constrained by her draft?\"", [
+      "It must be a power-driven vessel.",
+      "It is not under command.",
+      "It may be a vessel being towed.",
+      "She is hampered because of her work."], "A"],
+    [3, "Rule 3", "Which statement applies to a vessel \"constrained by her draft?\"", [
+      "She is severely restricted in her ability to change her course because of her draft in relation to the available depth of water.",
+      "The term applies only to vessels in marked channels.",
+      "She is designated as a \"vessel restricted in her ability to maneuver.\"",
+      "The vessel must be over 100 meters in length."], "A"],
+    [4, "Rule 3", "Which of the following vessels is NOT regarded as being \"restricted in her ability to maneuver\"?", [
+      "A vessel servicing an aid to navigation.",
+      "A vessel engaged in dredging.",
+      "A towing vessel with tow unable to deviate from its course.",
+      "A vessel constrained by her draft."], "D"],
+    [6, "Rules 9, 34", "You are in charge of a 250-meter freight vessel proceeding down a narrow channel. There is a vessel engaged in fishing on your starboard bow one-half mile away. Which statement is true?", [
+      "You are not to impede the fishing vessel.",
+      "If you are in doubt as to the fishing vessel's movement, you may sound the danger signal.",
+      "You are to slow to bare steerageway until clear of the fishing vessel.",
+      "You must sound the danger signal."], "B"],
+  ]
+});
+</script>
+<script>
+// Rules 10-19 — transcribed from the U.S. Maritime Academy "Rules of the Road" practice problems.
+// Format: [number, rule, question, [choices A..D], answer, flags]
+// flags.diagram = true → the book shows a diagram that is not reproduced here.
+// flags.note = extra explanation shown after answering.
+
+addSection({
+  id: "r10-19-both",
+  title: "Rules 10–19 · International & Inland",
+  questions: [
+    [68, "Rule 12", "Which statement is true concerning two sailing vessels?", [
+      "A sailing vessel on a port tack shall keep out of the way of a sailing vessel on a starboard tack.",
+      "When both vessels have the wind on the same side, the vessel to leeward shall keep out of the way.",
+      "A sail vessel with the wind aft of the beam must keep out of the way of a vessel sailing into the wind.",
+      "None of the above."], "A"],
+    [69, "Rule 12", "When two sailing vessels are approaching each other as shown in DIAGRAM 3, which of the following statements correctly describes the situation?", [
+      "Vessel \"I\" should stand on because it has the wind on its port side.",
+      "Vessel \"II\" should stand on because it is on the starboard tack.",
+      "Neither vessel has the right of way because they are meeting end on.",
+      "The Rule of Special Circumstances applies to these vessels."], "B", {diagram: true}],
+    [70, "Rule 12", "If a sailing vessel with the wind on the port side sees a sail vessel to windward and cannot tell whether the other vessel has the wind on the port or starboard side, she shall", [
+      "hold course and speed.",
+      "sound the danger signal.",
+      "keep out of the way of the other vessel.",
+      "turn to port and come into the wind."], "C"],
+    [71, "Rule 12", "If two sailing vessels are running free with the wind on the same side, which one must keep clear of the other?", [
+      "The one with the wind closest abeam.",
+      "The one with the wind closest astern.",
+      "The one to leeward.",
+      "The one to windward."], "D"],
+    [73, "Rule 13", "Which statement is true concerning two sailing vessels approaching each other?", [
+      "A sailing vessel overtaking another is the give-way vessel.",
+      "When each is on a different tack, the vessel on the starboard tack shall keep out of the way.",
+      "A sailing vessel seeing another to leeward on an undetermined tack shall hold her course.",
+      "All of the above."], "A"],
+    [74, "Rule 13", "Vessel \"A\" is overtaking vessel \"B\" as shown in DIAGRAM 9. Which vessel is the stand-on vessel?", [
+      "Vessel \"A\".",
+      "Vessel \"B\".",
+      "Neither vessel.",
+      "Both vessels must keep clear of the other."], "B", {diagram: true}],
+    [75, "Rule 13", "A vessel approaching your vessel from 180 degrees relative is in what type of situation?", [
+      "Meeting.",
+      "Overtaking.",
+      "Crossing.",
+      "Extremis."], "B"],
+    [76, "Rule 13", "Sailing vessels have the right of way over a power-driven vessel except", [
+      "in a crossing situation.",
+      "in a meeting situation.",
+      "when they are the overtaking vessel.",
+      "on the inland waters of the U.S."], "C"],
+    [77, "Rule 13", "An overtaking situation at night would be one in which one vessel sees which of the following lights of the vessel ahead?", [
+      "Masthead lights and sidelights.",
+      "Sidelights and sternlight.",
+      "Sidelights only.",
+      "Sternlight only."], "D"],
+    [78, "Rules 13, 17", "Vessel \"A\" is overtaking vessel \"B\". Vessel \"B\"", [
+      "should change course to the right.",
+      "should slow down until vessel \"A\" has passed.",
+      "should hold course and speed.",
+      "may steer various courses and vessel \"A\" must keep clear."], "C"],
+    [79, "Rule 13", "A sailing vessel is overtaking a tug and tow as shown in DIAGRAM 43. Which statement is correct?", [
+      "The sailing vessel is the stand-on vessel because it is overtaking.",
+      "The sailing vessel is the stand-on vessel because it is under sail.",
+      "The tug is the stand-on vessel because it is being overtaken.",
+      "The tug is the stand-on vessel because it is towing."], "C", {diagram: true}],
+    [80, "Rule 13", "An overtaking situation would be one in which one vessel is approaching another from more than how many degrees abaft the beam?", [
+      "0 degrees.",
+      "10 degrees.",
+      "22.5 degrees.",
+      "None of the above."], "C"],
+    [81, "Rule 13", "You are on vessel \"A\" and approaching vessel \"B\" as shown in DIAGRAM 15. You are not sure whether your vessel is crossing or overtaking vessel \"B\". You should", [
+      "change course to make the situation definitely either crossing or overtaking.",
+      "consider it to be a crossing situation.",
+      "consider it to be an overtaking situation.",
+      "consider it a meeting situation."], "C", {diagram: true}],
+    [82, "Rule 13", "The Rules state that a vessel overtaking another vessel is relieved of her duty to keep clear when", [
+      "she is forward of the other vessel's beam.",
+      "the overtaking situation becomes a crossing situation.",
+      "she is past and clear of the other vessel.",
+      "the other vessel is no longer in sight."], "C"],
+    [83, "Rule 13", "Which statement is true concerning an overtaking situation?", [
+      "It happens when one vessel is approaching another vessel from more than 20 degrees astern of the beam.",
+      "It is the duty of the vessel being overtaken to get out of the way.",
+      "Any later change of bearing between the two vessels shall not make the overtaking vessel a crossing vessel.",
+      "All of the above."], "C"],
+    [84, "Rule 13", "Which of the following statements concerning an overtaking situation is correct?", [
+      "The overtaking vessel is the stand-on vessel.",
+      "Neither vessel is the stand-on vessel.",
+      "The overtaking vessel must maintain course and speed.",
+      "The overtaking vessel must keep out of the way of the other."], "D"],
+    [85, "Rule 14", "Vessel \"A\" is on course 000 True. Vessel \"B\" is on nearly a head-on course and is bearing 355 True, 200 yards away from vessel \"A\". To ensure a safe passing, vessel \"A\" should", [
+      "maintain course.",
+      "alter course to port.",
+      "alter course to ensure a starboard to starboard passing.",
+      "maneuver to ensure a port to port passing."], "D"],
+    [86, "Rule 14", "In which situation do the Rules require both vessels to change course?", [
+      "Two power-driven vessels meeting head on.",
+      "Two power-driven vessels crossing when it is apparent to the stand-on vessel that the give-way vessel is not taking appropriate action.",
+      "Two sailing vessels crossing with the wind on the same side.",
+      "All of the above."], "A"],
+    [87, "Rule 14", "When two power-driven vessels are meeting head-on and there is a risk of collision, each shall", [
+      "stop her engines.",
+      "alter course to starboard.",
+      "sound the danger signal.",
+      "back down."], "B"],
+    [88, "Rule 14", "Vessel \"A\" is towing, and vessel \"B\" are meeting as shown in DIAGRAM 12. In this situation, which statement is true?", [
+      "Both vessels should alter course to starboard and pass port to port.",
+      "Both vessels should alter course to port and pass starboard to starboard.",
+      "Vessel \"A\" should hold course while vessel \"B\" alters course to starboard.",
+      "Vessel \"A\" has the right of way in this situation."], "A",
+      {diagram: true, note: "A towing vessel is still a power-driven vessel unless it is declared restricted in her ability to maneuver (RAM)."}],
+    [89, "Rule 14", "Vessel \"A\" and vessel \"B\", which is towing, are meeting head and head as shown in DIAGRAM 8. How must the vessels pass?", [
+      "Vessel \"A\" must alter course while vessel \"B\" continues on its present course.",
+      "The vessels should determine which will alter course by exchanging whistle signals.",
+      "Both vessels should alter course to port and pass starboard to starboard.",
+      "Both vessels should alter course to starboard and pass port to port."], "D", {diagram: true}],
+    [90, "Rule 14", "Which of the following would describe a meeting situation?", [
+      "Seeing one red light of a vessel directly ahead.",
+      "Seeing two forward white towing lights in a vertical line on a towing vessel directly ahead.",
+      "Seeing both sidelights of a vessel directly off your starboard beam.",
+      "Seeing both sidelights of a vessel directly ahead."], "D"],
+    [91, "Rule 14", "While underway at night, you sight a vessel ahead displaying the lights shown in DIAGRAM 71. How should the vessels pass?", [
+      "Both vessels should alter course to starboard and pass port to port.",
+      "Both vessels should alter course to port and pass starboard to starboard.",
+      "Your vessel should hold course and speed and the other vessel should keep clear.",
+      "You should sound an appropriate overtaking signal."], "A", {diagram: true}],
+    [92, "Rule 14", "Rule 14 describes the action to be taken by vessels meeting head on. Which of the following conditions must be true in order for this rule to apply?", [
+      "Both vessels must be power-driven.",
+      "They must be meeting on reciprocal or nearly reciprocal courses.",
+      "The situation must involve risk of collision.",
+      "All of the above."], "D"],
+    [93, "Rule 15", "Vessel \"A\" is underway and towing when vessel \"B\" is sighted off the starboard bow as shown in DIAGRAM 5. Which statement is true?", [
+      "Vessel \"A\" is the stand-on vessel because it is to the port side of vessel \"B\"",
+      "Vessel \"A\" is the stand-on vessel because it is towing.",
+      "Vessel \"B\" is the stand-on vessel because it is to starboard of vessel \"A\".",
+      "Neither vessel is the stand-on vessel."], "C", {diagram: true}],
+    [95, "Rule 15", "Your vessel is NOT making way, but is not in any way disabled. Another vessel is approaching you on your starboard beam. Which statement is true?", [
+      "The other vessel must give way since your vessel is stopped.",
+      "Your vessel is the give-way vessel in a crossing situation.",
+      "You should be showing the lights or shapes for a vessel not under command.",
+      "You should be showing the lights or shapes for a vessel restricted in her ability to maneuver."], "B"],
+    [96, "Rule 15", "When two power-driven vessels are crossing, the vessel which has the other to starboard must keep out of the way if", [
+      "she is the faster vessel.",
+      "the situation involves risk of collision.",
+      "the vessels will pass within one-half mile of each other.",
+      "whistle signals have been sounded."], "B"],
+    [98, "Rule 15", "You are aboard the give-way vessel in a crossing situation. Which of the following should you NOT do in obeying the Rules?", [
+      "Cross ahead of the stand-on vessel.",
+      "Make a large course change to starboard.",
+      "Slow your vessel.",
+      "Back your vessel."], "A"],
+    [99, "Rule 15", "Vessels \"A\" and \"B\" are crossing as shown in DIAGRAM 30. Which statement is true?", [
+      "The vessels should pass starboard to starboard.",
+      "Vessel \"B\" should pass behind the stern of the vessel \"A\".",
+      "Vessel \"B\" should alter course to the right.",
+      "Vessel \"A\" must keep clear of vessel \"B\""], "D",
+      {diagram: true, note: "When a question does not say what type of vessels are involved, assume they are power-driven vessels."}],
+    [100, "Rule 15", "In DIAGRAM 28, vessel \"A\" is underway and towing when vessel \"B\" is sighted off the starboard bow. Which vessel is the stand-on vessel?", [
+      "Vessel \"A\" is the stand-on vessel because it is to port.",
+      "Vessel \"A\" is the stand-on vessel because it is towing.",
+      "Vessel \"B\" is the stand-on vessel because it is to starboard of vessel \"A\".",
+      "Neither vessel is the stand-on vessel."], "C", {diagram: true}],
+    [101, "Rule 15", "When two power-driven vessels are crossing, which vessel is the stand-on vessel?", [
+      "The vessel which is to starboard of the other vessel.",
+      "The vessel which is to port of the other vessel.",
+      "The larger vessel.",
+      "The vessel that sounds the first whistle signal."], "A"],
+    [102, "Rule 15", "Vessels \"A\" and \"B\" are crossing as shown in DIAGRAM 26. Which statement is true?", [
+      "The vessels should pass starboard to starboard.",
+      "Vessel \"B\" should pass under the stern of vessel \"A\".",
+      "Vessel \"B\" should alter course to the right.",
+      "Vessel \"A\" must keep clear of vessel \"B\"."], "D", {diagram: true}],
+    [103, "Rules 16, 15", "Every vessel that is to keep out of the way of another vessel must take positive action early to comply with this obligation and must", [
+      "avoid crossing ahead of the other vessel.",
+      "avoid passing astern of the other vessel.",
+      "sound one prolonged blast to indicate compliance.",
+      "alter course to port for vessel on her port side."], "A"],
+    [104, "Rule 15", "Every vessel which is directed by these Rules to keep out of the way of another vessel shall, if the circumstances of the case admit, avoid", [
+      "crossing ahead of the other.",
+      "crossing astern of the other.",
+      "passing port to port.",
+      "passing starboard to starboard."], "A"],
+    [105, "Rule 17", "Which of the following must be true in order for a stand-on vessel to take action to avoid collision by her maneuver alone?", [
+      "She must be in sight of the give-way vessel.",
+      "There must be risk of collision.",
+      "She must determine that the give-way vessel is not taking appropriate action.",
+      "All of the above."], "D"],
+    [106, "Rule 17", "The rules require that a stand-on vessel take action to avoid collision when she determines that", [
+      "risk of collision exists.",
+      "the other vessel will cross ahead of her.",
+      "the other vessel is not taking appropriate action.",
+      "collision cannot be avoided by the give-way vessel's maneuver alone."], "D"],
+    [108, "Rule 17", "When two vessels are in immediate danger of collision, the stand-on vessel must", [
+      "abandon ship.",
+      "assist in taking whatever action is necessary to avoid collision.",
+      "hold course and speed.",
+      "sound a distress signal."], "B"],
+    [109, "Rule 17", "If it becomes necessary for a stand-on vessel to take action to avoid collision, she shall, if possible", [
+      "not decrease speed.",
+      "not increase speed.",
+      "not turn port for a vessel on her own port side.",
+      "not turn to starboard for a vessel on her own port side."], "C"],
+    [110, "Rule 17", "In order for a stand-on vessel to take action in a situation, she must determine that", [
+      "the other vessel is restricted in her ability to maneuver.",
+      "the other vessel has sounded the danger signal.",
+      "the other vessel is not taking appropriate action.",
+      "the other vessel has not changed course since risk of collision was determined."], "C"],
+    [112, "Rule 17", "If your vessel is the stand-on vessel in a crossing situation", [
+      "you must keep your course and speed.",
+      "you may change course and speed as the other vessel must keep clear.",
+      "the other vessel must keep course and speed.",
+      "both vessels must keep course and speed."], "A"],
+    [113, "Rule 18", "A vessel is underway and fishing with trolling lines. This vessel", [
+      "must keep out of the way of sailing vessels when there is risk of collision.",
+      "has rights over a sailing vessel.",
+      "is the stand-on vessel when overtaking power-driven vessels.",
+      "all of the above."], "A"],
+    [114, "Rule 18", "You are aboard vessel \"A\" which is towing in open waters when vessel \"B\", a sailing vessel, is sighted off your port bow, as shown in DIAGRAM 20. Which vessel has the right of way?", [
+      "Vessel \"A\" is the stand-on vessel because it is towing.",
+      "Vessel \"A\" is the stand-on vessel because it is starboard of vessel \"B\".",
+      "Vessel \"B\" is the stand-on vessel because it is sailing.",
+      "Vessel \"B\" is the stand-on vessel because it is to port of vessel \"A\"."], "C", {diagram: true}],
+    [115, "Rule 18", "A power-driven vessel has on her port side a sailing vessel which is on a collision course. The power-driven vessel is required to", [
+      "maintain course and speed.",
+      "keep clear.",
+      "sound a danger signal",
+      "stop her engines."], "B"],
+    [116, "Rule 18", "Of the vessels listed, which must keep out of the way of all the others?", [
+      "A sailing vessel.",
+      "A vessel restricted in her ability to maneuver.",
+      "A vessel not under command.",
+      "A vessel fishing."], "A"],
+    [117, "Rule 18", "Which of the following should not impede the navigation of a power-driven vessel?", [
+      "A vessel not under command.",
+      "A vessel engaged in fishing.",
+      "A sailing vessel",
+      "A seaplane."], "D"],
+    [118, "Rule 18", "A vessel engaged in fishing shall keep out of the way of a vessel", [
+      "under sail.",
+      "restricted in her ability to maneuver.",
+      "crossing a channel.",
+      "all of the above."], "B"],
+    [119, "Rule 18", "A vessel underway and fishing shall keep out of the way of a", [
+      "power-driven vessel underway.",
+      "vessel not under command.",
+      "vessel sailing.",
+      "vessel engaged on pilotage duty."], "B"],
+    [120, "Rule 18", "A vessel sailing shall keep out of the way of all of the following vessels except a vessel", [
+      "not under command.",
+      "engaged in pilotage duty.",
+      "restricted in her ability to maneuver.",
+      "engaged in fishing."], "B",
+      {note: "The book adds: pilot vessels haven't been covered yet, but you should be able to eliminate the rest."}],
+    [121, "Rule 18", "A sailing vessel is NOT required to keep out of the way of a", [
+      "power-driven vessel.",
+      "vessel not under command.",
+      "vessel restricted in her ability to maneuver.",
+      "vessel engaged in fishing."], "A"],
+    [122, "Rule 18", "Vessels I and II are underway as shown in DIAGRAM 33. Vessel I is a sailing vessel with the wind dead aft. Vessel II is engaged in trawling. Which statement is true?", [
+      "Vessel I is to keep clear because the other vessel is fishing.",
+      "Vessel II is to keep clear because it is a power-driven vessel.",
+      "Vessel II is to keep clear because the other vessel is to its starboard.",
+      "Both vessels are to take action to stay clear of each other."], "A", {diagram: true}],
+    [123, "Rule 18", "You are underway on vessel \"A\" and sight vessel \"B\" which is a vessel underway and fishing. Which statement is true? (See DIAGRAM 14.)", [
+      "Vessel \"A\" must keep out of the way of vessel \"B\" because \"B\" is to port.",
+      "Vessel \"A\" must keep out of the way of vessel \"B\" because \"B\" is fishing.",
+      "Vessel \"B\" must keep out of the way of vessel \"A\" because \"A\" is to starboard.",
+      "In this case, both vessels are required by the Rules to keep clear of each other."], "B", {diagram: true}],
+    [124, "Rule 18", "You are aboard vessel \"A\" on open waters and vessel \"B\", a sailing vessel, is sighted off your port bow as shown in DIAGRAM 27. Which vessel is the stand-on vessel?", [
+      "Vessel \"A\" because it is towing.",
+      "Vessel \"A\" because it's to starboard of vessel \"B\".",
+      "Vessel \"B\" because it is sailing.",
+      "Vessel \"B\" because it is to port of vessel \"A\"."], "C", {diagram: true}],
+    [125, "Rule 18", "In the situation illustrated in DIAGRAM 2, Vessel I is a power-driven vessel. Vessel II is a sail vessel with the wind dead aft. Which of the following statements about this situation is correct?", [
+      "Vessel I should keep out of the way of Vessel II.",
+      "Vessel II should keep out of the way of Vessel I.",
+      "Vessel II would normally be the stand-on vessel, but should stay out of the way in this particular situation.",
+      "The Rules of Special Circumstances applies, and neither vessel is the stand-on vessel."], "A", {diagram: true}],
+    [126, "Rule 18", "On open water, a vessel engaged in fishing is in a crossing situation with a vessel sailing located on the fishing vessel's starboard side. Which vessel is the stand-on vessel?", [
+      "The fishing vessel because it is to port of the sailing vessel.",
+      "The fishing vessel because it is engaged in fishing.",
+      "The sailing vessel because it is to starboard of the fishing vessel.",
+      "The sailing vessel because it is sailing."], "B"],
+    [127, "Rule 18", "The Rules state that a seaplane shall", [
+      "not be regarded as a vessel.",
+      "in general, keep well clear of all vessels.",
+      "proceed at a slower speed than surrounding vessels.",
+      "when making way, show the lights for a vessel not under command."], "B"],
+    [128, "Rule 18", "A power-driven vessel underway shall keep out of the way of", [
+      "a vessel not under command.",
+      "a vessel engaged in fishing.",
+      "a sailing vessel.",
+      "all of the above."], "D"],
+    [129, "Rule 18", "On open waters, a power-driven vessel shall keep out of the way of", [
+      "a vessel on her port side that is crossing her course.",
+      "a vessel that is overtaking her.",
+      "seaplanes on the water.",
+      "a sailing vessel."], "D"],
+    [130, "Rule 18", "A power-driven vessel underway shall keep out of the way of", [
+      "a vessel not under command.",
+      "a vessel restricted in her ability to maneuver.",
+      "a vessel engaged in fishing.",
+      "all of the above."], "D"],
+    [134, "Rule 19", "A vessel in fog has detected by radar alone a meeting vessel ahead on a collision course. In order to avoid a close quarters situation, the vessel should", [
+      "turn to port.",
+      "turn to starboard.",
+      "maintain course and speed and sound the danger signal.",
+      "maintain course and speed and sound no signal."], "B"],
+    [135, "Rule 19", "The steering and sailing rules for vessels in restricted visibility apply to vessels", [
+      "in sight of one another in fog.",
+      "navigating in or near an area of restricted visibility.",
+      "only if they are showing special-purpose lights.",
+      "only if they have operational radar."], "B"],
+    [136, "Rules 19, 35", "Which of the following is a requirement for a vessel navigating near an area of restricted visibility?", [
+      "A power-driven vessel shall have her engines ready for immediate maneuver.",
+      "She shall proceed at a safe speed.",
+      "If she detects another vessel by radar, she shall determine if risk of collision exists.",
+      "all of the above."], "D"],
+    [137, "Rule 19", "Your vessel is underway in reduced visibility. You hear, about two points on the starboard bow, a fog signal of another vessel. Which of the following actions should you take?", [
+      "Alter course to starboard to pass around the other vessel.",
+      "Slow your engines and let him pass ahead of you.",
+      "Reduce your speed to bare steerageway.",
+      "Alter course to port to pass him on his port side."], "C"],
+    [138, "Rule 19", "You are on watch in the fog. The vessel is proceeding at a safe speed when you hear a fog signal ahead of you. The Rules require you to navigate with caution until the danger of collision is over and to", [
+      "slow to less than two knots.",
+      "reduce to bare steerageway.",
+      "stop your engines.",
+      "begin a radar plot."], "B"],
+    [139, "Rule 19", "Except where it has been determined that a risk of collision does not exist, every vessel, which hears apparently forward of her beam the fog signal of another vessel, shall", [
+      "reduce speed to bare minimum",
+      "turn to port.",
+      "begin a radar plot.",
+      "all of the above."], "A"],
+    [140, "Rule 19", "In restricted visibility, a vessel, which detects by radar alone the presence of another vessel, shall determine if a close quarters situation is developing or risk of collision exists. If so, she shall", [
+      "sound the danger signal.",
+      "when taking action, make only course changes.",
+      "avoid altering course toward a vessel abaft the beam.",
+      "all of the above."], "C"],
+    [141, "Rule 19", "Which statement concerning maneuvering in restricted visibility is FALSE?", [
+      "A vessel which cannot avoid a close-quarters situation with a vessel forward of her beam shall reduce her speed to bare steerageway.",
+      "A vessel which hears a fog signal forward of her beam shall stop her engines.",
+      "A vessel which hears a fog signal forward of the beam shall navigate with caution.",
+      "If a vessel determines by radar that a close-quarters situation is developing, she shall take avoiding action in ample time."], "B"],
+    [142, "Rule 19", "In fog you observe your radar and determine that risk of collision exists with a vessel which is two miles off your port bow. You should", [
+      "stop your engines.",
+      "sound the danger signal at two-minute intervals.",
+      "hold course and speed until the other vessel is sighted.",
+      "take proper avoiding action as soon as possible."], "D"],
+    [143, "Rule 19", "A vessel hearing a fog signal forward of her beam shall reduce speed to", [
+      "moderate speed.",
+      "safe speed.",
+      "half speed.",
+      "the minimum where the vessel can be kept on course."], "D"],
+  ]
+});
+
+addSection({
+  id: "r10-tss",
+  title: "Rule 10 · Traffic Separation Schemes",
+  questions: [
+    [1, "Rule 10", "There are two classes of vessels which do not have to comply with the rule regarding traffic separation schemes, to the extent necessary to carry out their work. One of these is a vessel", [
+      "engaged in fishing.",
+      "servicing a submarine cable.",
+      "towing another.",
+      "in pilotage duty."], "B"],
+    [2, "Rule 10", "A vessel using a traffic separation scheme is forbidden to", [
+      "proceed through an inappropriate traffic lane.",
+      "engage in fishing in the separation zone.",
+      "cross a traffic lane.",
+      "enter the separation zone, even in an emergency."], "A"],
+    [3, "Rule 10", "A traffic separation zone is that part of a traffic separation scheme which", [
+      "is located between the separation scheme and the nearest land.",
+      "contains all the traffic moving in one direction.",
+      "is designated as an anchorage area.",
+      "separates traffic proceeding in one direction from traffic proceeding in the opposite direction."], "D"],
+    [4, "Rule 10", "A vessel using a traffic separation scheme shall", [
+      "only anchor in the separation zone.",
+      "if obliged to cross a traffic lane, do so at as small an angle as is practicable.",
+      "avoid anchoring in areas near the termination of the scheme.",
+      "utilize the separation zone for navigating through the scheme if she is impeding other traffic due to her slower speed."], "C"],
+    [5, "Rule 10", "A vessel may enter a traffic separation zone", [
+      "in an emergency.",
+      "to engage in fishing within the zone.",
+      "to cross the traffic separation scheme.",
+      "any of the above."], "D"],
+    [6, "Rule 10", "In a traffic separation scheme, when joining a traffic lane from the side, a vessel shall do so", [
+      "at as small an angle as possible.",
+      "as nearly as practical at right angles to the general direction of traffic flow.",
+      "only in case of an emergency or to engage in fishing within the zone.",
+      "never."], "A"],
+  ]
+});
+
+addSection({
+  id: "r10-19-inland",
+  title: "Rules 10–19 · Inland Only",
+  questions: [
+    [1, "Rule 10", "Which statement is true concerning the Inland Navigation Rules?", [
+      "They require compliance with TSS rules.",
+      "They define moderate speed.",
+      "They require communication by radiotelephone to reach a passing agreement.",
+      "All of the above."], "A"],
+    [5, "Rule 15", "On the Western Rivers, a vessel crossing a river must", [
+      "only keep out of the way of a power-driven vessel descending the river.",
+      "keep out of the way of any vessel descending the river.",
+      "keep out of the way of a power-driven vessel ascending or descending.",
+      "keep out of the way of any vessel ascending or descending the river."], "C"],
+    [7, "Rule 17", "You are on vessel \"A\", and vessel \"B\" desires to overtake you on the starboard side as shown in DIAGRAM 31. After the vessels have exchanged one blast signals, you should", [
+      "alter course to the left.",
+      "slow your vessel until vessel \"B\" has passed.",
+      "hold course and speed.",
+      "alter course to the left to give vessel \"B\" more sea room."], "C", {diagram: true}],
+  ]
+});
+</script>
+<script>
+// Lights & Shapes (Rules 20-25) — transcribed from the U.S. Maritime Academy "Rules of the Road" practice problems.
+// The answer key page for this section has not been photographed yet, so every answer here
+// was worked out from the Navigation Rules text and is flagged {src: "rules"}.
+// Replace with the book's key when it is available.
+//
+// Skipped for now because the answer depends entirely on a diagram that isn't reproduced:
+//   169 (DIAGRAM 52), 170 (DIAGRAM 58), 188 (DIAGRAM 16), 196 (DIAGRAM 77), 197 (DIAGRAM 73),
+//   198 (DIAGRAM 66), 199 (DIAGRAM 63), 200 (DIAGRAM 60), 201 (DIAGRAM 10), 220 (DIAGRAM 46),
+//   223 (DIAGRAM 62)
+
+const R = {src: "rules"};
+
+addSection({
+  id: "lights-shapes",
+  title: "Lights & Shapes · International & Inland",
+  questions: [
+    [144, "Rule 20", "Navigation lights must be displayed in all weathers from sunset to sunrise. They", [
+      "must be displayed when day signals are being used.",
+      "must be displayed when moored to a pier.",
+      "may be extinguished at night on open waters when no other vessels are in the area.",
+      "may be displayed during daylight."], "D", R],
+    [145, "Rules 20, 25", "Which statement is true of a 30-meter sailing vessel underway?", [
+      "She must show sidelights and a sternlight in restricted visibility.",
+      "She may show an all-around white light at the top of the mast.",
+      "She need not show a sternlight if she is showing all-round lights on the mast.",
+      "If she is using propelling machinery, she shall show forward a shape consisting of two cones, points together."], "A", R],
+    [146, "Rule 20", "The lights prescribed by the Rules shall (must) be exhibited", [
+      "from sunrise to sunset in restricted visibility.",
+      "at all times.",
+      "only from sunset to sunrise.",
+      "whenever a lookout is posted."], "A", R],
+    [147, "Rule 20", "While you are underway, navigation lights must be displayed on your vessel", [
+      "during all periods of reduced visibility.",
+      "at all times.",
+      "at night only when other vessels may be in the area.",
+      "at night only when vessels are detected on radar."], "A", R],
+    [148, "Rule 20", "Dayshapes shall be shown", [
+      "during daylight hours.",
+      "during daylight hours in restricted visibility.",
+      "between 8 A.M. and 4 P.M. daily.",
+      "between sunset and sunrise."], "A", R],
+    [150, "Rule 21", "You see a vessel's green sidelight bearing due east from you. The vessel might be heading", [
+      "east.",
+      "northeast.",
+      "northwest.",
+      "southwest."], "D", {src: "rules", note: "The book says: use your toy boats! You see her starboard (green) side from the west, so she must be heading roughly south to west."}],
+    [151, "Rule 21", "You see a red sidelight bearing NW. That vessel may be heading", [
+      "south.",
+      "east.",
+      "northeast.",
+      "northwest."], "A", {src: "rules", note: "Use your toy boats! You see her port (red) side from the southeast, so she is heading somewhere between southeast and southwest."}],
+    [152, "Rule 21", "You are heading due east (090°) and observe a vessel's red sidelight on your port beam. The vessel may be heading", [
+      "WNW (292.5°)",
+      "NNW (337.5°)",
+      "SW (225°)",
+      "NE (045°)"], "C", {src: "rules", note: "Use your toy boats! She is due north of you showing her port side, so she is heading between south and WNW. 292.5° is exactly the edge of the red arc, so SW is the safe answer."}],
+    [153, "Rules 21, 23", "The masthead light may be located at other than the fore and aft centerline of a vessel", [
+      "less than 20-meters in length.",
+      "less than 12-meters in length.",
+      "which has separate sidelights carried on the outboard extremes of the vessel's breadth.",
+      "engaged in fishing"], "B", R],
+    [154, "Rule 21", "While underway at night you are coming up on a vessel from astern. What lights would you expect to see?", [
+      "Red and green sidelights.",
+      "Two white lights.",
+      "One white light and red and green sidelights.",
+      "One white light."], "D", R],
+    [155, "Rules 21, 14", "Underway at night you see the red sidelight of a vessel well off your port bow. Which statement is true?", [
+      "You are required to alter course to the right.",
+      "You must stop engines.",
+      "You are on a collision course with the other vessel.",
+      "You may maintain course and speed."], "D", R],
+    [156, "Rules 21, 25", "A lantern combining the two sidelights of a vessel's running lights may be shown on a", [
+      "sailing vessel of 25-meters in length.",
+      "20-meter vessel engaged in fishing and making way.",
+      "25-meter power-driven vessel engaged in trolling.",
+      "6-meter vessel under oars."], "D", R],
+    [157, "Rule 21", "Which vessel may combine her sidelights in one lantern on the fore and aft centerline of the vessel?", [
+      "A 16-meter sail vessel.",
+      "A 25-meter power-driven vessel.",
+      "A 28-meter sail vessel.",
+      "Any non-self-propelled vessel."], "A", R],
+    [158, "Rule 21", "The arc of visibility for sidelights is from right ahead to", [
+      "22.5 degrees abaft the beam.",
+      "abeam.",
+      "22.5 degrees forward of the beam.",
+      "135 degrees abaft the beam."], "A", R],
+    [159, "Rule 21", "As defined in the Navigation Rules, a white masthead light shows through an arc of how many degrees?", [
+      "90 degrees.",
+      "112.5 degrees.",
+      "225 degrees.",
+      "360 degrees."], "C", R],
+    [160, "Rule 21", "The sternlight shall be positioned such that it will show from dead astern to how many degrees on each side of the stern of the vessel?", [
+      "22.5 degrees.",
+      "67.5 degrees.",
+      "112.5 degrees.",
+      "135.0 degrees."], "B", R],
+    [161, "Rule 21", "As defined in the Rules, a towing light is a yellow light having the same characteristics as a", [
+      "masthead light.",
+      "all-round light.",
+      "sidelight.",
+      "sternlight."], "D", R],
+    [162, "Rule 21", "A towing light, according to the Rules, is a", [
+      "white light.",
+      "red light.",
+      "yellow light.",
+      "blue light."], "C", R],
+    [163, "Rule 21", "A vessel is towing and carrying the required masthead lights aft. What is the visibility arc of these lights?", [
+      "112.5 degrees.",
+      "135.0 degrees.",
+      "225.0 degrees.",
+      "360.0 degrees."], "C", R],
+    [164, "Rule 21", "A \"flashing light\", according to the definition given in the rules, is a light that", [
+      "is red in color.",
+      "is visible over an arc of the horizon of 360 degrees.",
+      "flashes at regular intervals at a frequency of 120 flashes or more per minute.",
+      "all of the above."], "C", R],
+    [165, "Rule 23", "A 30-meter tug is underway and not towing. At night, this vessel must show sidelights and", [
+      "one masthead light and a sternlight.",
+      "two masthead lights and a sternlight.",
+      "three masthead lights and a sternlight.",
+      "a sternlight."], "A", R],
+    [166, "Rule 23", "A dredge not engaged in dredging but proceeding to a dredging location at night would", [
+      "not be required to show any lights.",
+      "be required to show lights of an underway dredge.",
+      "be required to show lights of a stationary dredge.",
+      "be required to show lights of a power-driven vessel underway."], "D", R],
+    [167, "Rule 23", "Which power-driven vessel is NOT required to carry a light in the position of the after masthead light?", [
+      "A pushing vessel and a vessel being pushed, in a composite unit and 100-meters in length.",
+      "A vessel of 60-meters in length towing astern.",
+      "A vessel of 45-meters in length trolling.",
+      "Any vessel constrained by her draft."], "C", R],
+    [168, "Rules 23, 27", "Which vessel must exhibit forward and after masthead lights when making way?", [
+      "A 75-meter vessel restricted in her ability to maneuver.",
+      "A 100-meter sailing vessel.",
+      "A 150-meter vessel engaged in fishing.",
+      "A 45-meter vessel engaged in towing."], "A", R],
+    [171, "Rule 23", "A power-driven vessel less than 12-meters in length may, instead of the underway lights for vessels under 50-meters, at night, show which of the following?", [
+      "Sidelights and sternlight.",
+      "One all-round white light and sidelights.",
+      "Masthead light only.",
+      "Sternlight only."], "B", R],
+    [172, "Rule 23", "Which vessel must exhibit forward and after masthead lights when underway?", [
+      "A 200-meter sailing vessel.",
+      "A 50-meter power-driven vessel.",
+      "A 100-meter vessel engaged in fishing.",
+      "All of the above."], "B", R],
+    [173, "Rule 23", "Which statement is true concerning a 75-meter power-driven vessel underway at night?", [
+      "She must exhibit an all-round white light at the stern.",
+      "She must exhibit forward and after masthead lights.",
+      "She must exhibit only a forward masthead light.",
+      "She may exhibit a red light over a green light forward."], "B", R],
+    [174, "Rule 23", "Your tug is underway at night and NOT towing. What light(s) should your vessel show aft to other vessels coming up from astern?", [
+      "One white light.",
+      "Two white lights.",
+      "One white light and one yellow light.",
+      "One white light and two yellow lights."], "A", R],
+    [175, "Rule 23", "The maximum length of a power-driven vessel which may show an all-round white light and sidelights instead of a masthead light and sidelights is", [
+      "7 meters.",
+      "10 meters.",
+      "12 meters.",
+      "20 meters."], "C", R],
+    [176, "Rule 23", "The minimum length of a power-driven vessel that must show forward and after masthead lights is", [
+      "30-meters.",
+      "50-meters.",
+      "75-meters.",
+      "100-meters."], "B", R],
+    [177, "Rule 23", "An all-round flashing yellow light is exhibited by a/an", [
+      "vessel not under command.",
+      "air cushion vessel in the nondisplacement mode.",
+      "vessel towing a submerged object.",
+      "vessel engaged in diving operations."], "B", R],
+    [178, "Rules 24, 26", "Which vessel may exhibit identifying lights when not actually engaged in her occupation?", [
+      "A trawler.",
+      "A fishing vessel.",
+      "A tug.",
+      "None of the above."], "D", R],
+    [179, "Rule 24", "At night, you are towing a partly submerged vessel 20-meters in length and 4-meters in breadth. What lights must you display on the towed vessel?", [
+      "A white light at the stern.",
+      "Two white lights side by side at the stern.",
+      "A white light at the forward end and a white light at the after end.",
+      "Two red lights in a vertical line at the after end."], "C", R],
+    [181, "Rule 24", "Which statement is true concerning lights and shapes for towing vessels?", [
+      "If a tow exceeds 200-meters in length, the towing vessel will show a black ball during daylight.",
+      "When towing astern, a vessel will carry her identification lights at the masthead in addition to her regular masthead light.",
+      "When towing astern, the towing vessel may show either a sternlight or a towing light, but not both.",
+      "If the towing vessel is 50 meters or more in length, she must carry forward and after masthead lights."], "D", R],
+    [182, "Rule 24", "At night, a broken down vessel being towed would show the same lights as", [
+      "a power-driven vessel underway.",
+      "the towing vessel.",
+      "a barge.",
+      "a vessel at anchor."], "C", R],
+    [183, "Rule 24", "You are approaching another vessel at night. You can see both red and green sidelights and, above the level of the sidelights, three white lights in a vertical line. The vessel may be", [
+      "not under command.",
+      "towing a tow more than 200-meters astern.",
+      "trawling.",
+      "underway and dredging."], "B", R],
+    [184, "Rule 24", "Which vessel must show a towing light above the sternlight?", [
+      "A vessel pushing three barges ahead.",
+      "A vessel towing alongside.",
+      "A vessel with 150-meter tow astern.",
+      "None of the above."], "C", R],
+    [185, "Rules 24, 27", "A vessel in a towing operation which severely restricts the towing vessel and her tow in their ability to change course shall, when making way, exhibit", [
+      "the lights for a towing vessel.",
+      "the lights for a vessel restricted in its ability to maneuver.",
+      "sidelights and sternlights.",
+      "All of the above."], "D", R],
+    [186, "Rule 24", "Two barges are being pushed ahead by a towboat. Which statement is true concerning lights on the barges?", [
+      "Each vessel should show sidelights.",
+      "Each vessel should show at least one white light.",
+      "The barges should be lighted as separate units.",
+      "The barges should be lighted as one vessel."], "D", R],
+    [187, "Rules 24, 26, 27", "Which vessel would exhibit sidelights when underway and not making way?", [
+      "A vessel towing astern.",
+      "A vessel trawling.",
+      "A vessel not under command.",
+      "A vessel engaged in dredging operations."], "A", R],
+    [190, "Rule 24", "A vessel with a tow over 200-meters in length will show, during the day", [
+      "a black ball.",
+      "a diamond shape.",
+      "two cones, points together.",
+      "one cone, point upward."], "B", R],
+    [191, "Rule 24", "You are overtaking a vessel at night and you see a yellow light showing above the sternlight of the overtaken vessel. The overtaken vessel is", [
+      "underway and dredging.",
+      "pushing ahead or towing alongside.",
+      "towing astern.",
+      "a pilot vessel."], "C", R],
+    [192, "Rule 24", "Which statement is true concerning a partly submerged vessel being towed?", [
+      "It must show a yellow light at each end.",
+      "It will show red lights along its length.",
+      "A diamond shape will be carried at the aftermost extremity of the tow.",
+      "All of the above."], "C", R],
+    [193, "Rule 24", "A vessel, which does not normally engage in towing operations, is towing a vessel in distress. She", [
+      "need not show the lights for a vessel engaged in towing, if it is impractical to do so.",
+      "may show the lights for a vessel not under command.",
+      "must show a yellow light above the sternlight.",
+      "must show the lights for a vessel towing."], "A", R],
+    [195, "Rule 24", "What dayshape should a vessel being towed exhibit if the tow EXCEEDS 200-meters?", [
+      "Two balls.",
+      "Two diamonds.",
+      "One ball.",
+      "One diamond."], "D", R],
+    [202, "Rule 24", "In addition to sidelights what light should a vessel being towed show?", [
+      "A sternlight.",
+      "Not under command lights.",
+      "A masthead light.",
+      "Range lights."], "A", R],
+    [203, "Rule 24", "A vessel towing a barge astern would show, at the stern", [
+      "only a sternlight.",
+      "a towing light above the sternlight.",
+      "two towing lights in a vertical line.",
+      "two white lights in a vertical line."], "B", R],
+    [204, "Rule 24", "A power-driven vessel exhibits the same lights as a", [
+      "vessel towing, when not underway.",
+      "vessel towing astern.",
+      "sailing vessel.",
+      "pushing vessel and a vessel being pushed, when they are in a composite unit."], "D", R],
+    [205, "Rule 24", "A vessel being towed alongside shall exhibit", [
+      "one all-round white light.",
+      "sidelights and a sternlight.",
+      "only the outboard sidelight and a sternlight.",
+      "a masthead light, sidelights, and a sternlight."], "B", R],
+    [206, "Rule 24", "Barges being towed at night", [
+      "must be lighted at all times.",
+      "must be lighted only if manned.",
+      "must be lighted only if towed astern.",
+      "need not be lighted."], "A", R],
+    [207, "Rule 24", "A vessel or object being towed at night must show", [
+      "a white all-round light.",
+      "sidelights and a sternlight.",
+      "a flashing yellow light.",
+      "forward and after masthead lights."], "B", R],
+    [208, "Rule 24", "A power-driven vessel when towing another vessel astern (tow less than 200-meters) shall show", [
+      "two masthead lights in a vertical line, sidelights, sternlight and towing light above the sternlight",
+      "two masthead lights in a vertical line, sidelights and towing light instead of the sternlight",
+      "two towing lights in a vertical line at the stern.",
+      "a small white light abaft the funnel."], "A", R],
+    [209, "Rule 24", "A 20-meter vessel is towing another vessel astern. The length of the tow from the stern of the towing vessel to the stern of the tow is 75-meters. How many white vertical masthead configuration lights shall the towing vessel show at night?", [
+      "1",
+      "2",
+      "3",
+      "4"], "B", R],
+    [210, "Rule 24", "A towing vessel is towing two barges astern. The length of the tow from the stern of the tug to the stern of the last barge is 250-meters. How many forward white masthead lights should be displayed on the towboat at night?", [
+      "1",
+      "2",
+      "3",
+      "4"], "C", R],
+    [211, "Rule 24", "What lights are shown on a barge being towed astern at night?", [
+      "A white light at each corner",
+      "A white light fore and aft",
+      "Sidelights and a sternlight",
+      "A sternlight only"], "C", R],
+    [213, "Rule 24", "Which vessel may show two masthead lights in a vertical line?", [
+      "A vessel less than 50-meters in length with a 20-meter tow.",
+      "A sail vessel towing a small vessel astern.",
+      "A vessel restricted in her ability to maneuver.",
+      "A vessel engaged in dredging."], "A", R],
+    [214, "Rule 24", "When towing more than one barge astern at night", [
+      "only the last barge on the tow must be lighted.",
+      "only the first and the last barges in the tow must be lighted.",
+      "each barge in the tow must be lighted.",
+      "only manned barges must be lighted."], "C", R],
+    [215, "Rule 24", "Towing vessel 30-meters in length is pushing barges ahead. How many white masthead lights is the vessel required to show at night?", [
+      "1",
+      "2",
+      "3",
+      "4"], "B", R],
+    [218, "Rules 25, 35", "Which statement(s) about a 25-meter auxiliary sailboat is/are true?", [
+      "The sidelights and sternlight may be combined in one lantern.",
+      "When operating under sail, her fog signal would consist of one prolonged blast.",
+      "She may show a green light over a red light at the masthead.",
+      "She must show fixed sidelights, and may not use a portable lantern."], "D", R],
+    [219, "Rule 25", "At night you sight a vessel displaying a single green light. This is a", [
+      "vessel at anchor.",
+      "motorboat underway.",
+      "vessel drifting.",
+      "sailing vessel."], "D", R],
+    [221, "Rule 25", "Which vessel may carry her sidelights and sternlight in a combined lantern on the mast?", [
+      "An 18-meter sailing vessel.",
+      "A 10-meter sailing vessel also being propelled by machinery.",
+      "A 25-meter sailing vessel.",
+      "All of the above."], "A", R],
+    [222, "Rule 25", "A sailing vessel displaying the dayshape in DIAGRAM 35 is indicating that the vessel is", [
+      "being propelled by power as well as sail.",
+      "on a starboard tack.",
+      "close-hauled and has difficulty maneuvering.",
+      "fishing as well as sailing."], "A", {src: "rules", diagram: true, note: "The dayshape for a sailing vessel also under power is a cone, point downward."}],
+    [224, "Rule 25", "A 15-meter sailing vessel would be required to show", [
+      "sidelights, sternlight, and a red light over a green light on the mast.",
+      "sidelights, and sternlight, but they may be in a combined lantern on the mast.",
+      "separate sidelights and sternlight.",
+      "sidelights only."], "B", R],
+  ]
+});
+</script>
+<script>
+// Rules of the Road quiz — plain JavaScript, no dependencies.
+// Question data comes from data/*.js via addSection() (defined in index.html before the data files load).
+
+(function () {
+  "use strict";
+
+  const LETTERS = ["A", "B", "C", "D", "E", "F"];
+  const PASS_MARK = 90; // The Coast Guard Rules of the Road exam module requires 90%.
+  const STORE_KEY = "rotr-quiz-v1";
+
+  // ---------- Build the question bank ----------
+  const bank = [];
+  for (const sec of window.QUIZ_SECTIONS) {
+    sec.items = [];
+    for (const row of sec.questions) {
+      const [num, rule, text, choices, answer, flags = {}] = row;
+      const q = {
+        id: sec.id + "-" + num,
+        section: sec,
+        num, rule, text, choices,
+        answer: LETTERS.indexOf(answer),
+        diagram: !!flags.diagram,
+        fromRules: flags.src === "rules",
+        note: flags.note || "",
+      };
+      sec.items.push(q);
+      bank.push(q);
+    }
+  }
+  const byId = new Map(bank.map((q) => [q.id, q]));
+
+  // ---------- Saved settings + missed list (this browser only) ----------
+  function load() {
+    try { return JSON.parse(localStorage.getItem(STORE_KEY)) || {}; } catch (e) { return {}; }
+  }
+  function save() {
+    try { localStorage.setItem(STORE_KEY, JSON.stringify(saved)); } catch (e) { /* storage unavailable */ }
+  }
+  const saved = load();
+  saved.missed = Array.isArray(saved.missed) ? saved.missed.filter((id) => byId.has(id)) : [];
+  const settings = Object.assign(
+    { sections: window.QUIZ_SECTIONS.map((s) => s.id), mode: "practice", count: "25", shuffle: true, diagrams: false },
+    saved.settings || {}
+  );
+
+  // ---------- State ----------
+  let quiz = null; // { list, idx, picks: [], checked: [] }
+
+  const $ = (sel) => document.querySelector(sel);
+  const app = $("#app");
+
+  function esc(s) {
+    return String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  }
+  function shuffle(arr) {
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+  function pool() {
+    return bank.filter((q) => settings.sections.includes(q.section.id) && (settings.diagrams || !q.diagram));
+  }
+
+  // ---------- Setup screen ----------
+  function renderSetup() {
+    quiz = null;
+    const secRows = window.QUIZ_SECTIONS.map((s) => {
+      const n = s.items.filter((q) => settings.diagrams || !q.diagram).length;
+      return `<label class="check" for="sec-${s.id}">
+        <input type="checkbox" id="sec-${s.id}" data-sec="${s.id}" ${settings.sections.includes(s.id) ? "checked" : ""}>
+        <span class="name">${esc(s.title)}</span>
+        <span class="count">${n} q</span>
+      </label>`;
+    }).join("");
+
+    const seg = (name, opts) => opts.map(([val, label]) =>
+      `<button type="button" data-${name}="${val}" aria-pressed="${settings[name] === val}">${label}</button>`).join("");
+
+    const available = pool().length;
+    const missedCount = saved.missed.length;
+
+    app.innerHTML = `
+      <section class="card" aria-labelledby="setup-h">
+        <h2 id="setup-h">Build your test</h2>
+        <div class="field">
+          <span class="label">Sections</span>
+          <div class="sections">${secRows}</div>
+        </div>
+        <div class="options">
+          <div class="field">
+            <span class="label">Mode</span>
+            <div class="seg">${seg("mode", [["practice", "Practice"], ["exam", "Exam"]])}</div>
+            <p class="hint">${settings.mode === "practice" ? "See the answer after each question." : "Answers are revealed at the end."}</p>
+          </div>
+          <div class="field">
+            <span class="label">Questions</span>
+            <div class="seg">${seg("count", [["10", "10"], ["25", "25"], ["50", "50"], ["all", "All"]])}</div>
+            <p class="hint">${available} available with these settings.</p>
+          </div>
+        </div>
+        <div class="field">
+          <label class="toggle" for="opt-shuffle"><input type="checkbox" id="opt-shuffle" ${settings.shuffle ? "checked" : ""}> Shuffle question order</label>
+          <label class="toggle" for="opt-diagrams"><input type="checkbox" id="opt-diagrams" ${settings.diagrams ? "checked" : ""}> Include questions that refer to a book diagram</label>
+          <p class="hint">The diagrams aren't reproduced here, so those questions are off by default.</p>
+        </div>
+        <div class="actions">
+          <button class="btn primary" id="start" ${available ? "" : "disabled"}>Start test</button>
+          <button class="btn" id="start-missed" ${missedCount ? "" : "disabled"}>Retake missed (${missedCount})</button>
+          ${missedCount ? `<button class="btn ghost" id="clear-missed">Clear missed list</button>` : ""}
+        </div>
+      </section>`;
+
+    app.querySelectorAll("[data-sec]").forEach((el) => el.addEventListener("change", () => {
+      settings.sections = [...app.querySelectorAll("[data-sec]:checked")].map((x) => x.dataset.sec);
+      persistSettings(); renderSetup();
+    }));
+    app.querySelectorAll("[data-mode]").forEach((el) => el.addEventListener("click", () => {
+      settings.mode = el.dataset.mode; persistSettings(); renderSetup();
+    }));
+    app.querySelectorAll("[data-count]").forEach((el) => el.addEventListener("click", () => {
+      settings.count = el.dataset.count; persistSettings(); renderSetup();
+    }));
+    $("#opt-shuffle").addEventListener("change", (e) => { settings.shuffle = e.target.checked; persistSettings(); });
+    $("#opt-diagrams").addEventListener("change", (e) => { settings.diagrams = e.target.checked; persistSettings(); renderSetup(); });
+    $("#start").addEventListener("click", () => {
+      let list = pool();
+      if (settings.shuffle) list = shuffle(list);
+      if (settings.count !== "all") list = list.slice(0, Number(settings.count));
+      startQuiz(list);
+    });
+    $("#start-missed").addEventListener("click", () => {
+      startQuiz(shuffle(saved.missed.map((id) => byId.get(id))));
+    });
+    const clr = $("#clear-missed");
+    if (clr) clr.addEventListener("click", () => { saved.missed = []; save(); renderSetup(); });
+  }
+  function persistSettings() { saved.settings = settings; save(); }
+
+  // ---------- Quiz screen ----------
+  function startQuiz(list) {
+    quiz = { list, idx: 0, picks: new Array(list.length).fill(-1), checked: new Array(list.length).fill(false) };
+    renderQuestion();
+    window.scrollTo(0, 0);
+  }
+
+  function renderQuestion() {
+    const { list, idx, picks, checked } = quiz;
+    const q = list[idx];
+    const practice = settings.mode === "practice";
+    const pick = picks[idx];
+    const done = practice && checked[idx];
+    const answeredCount = picks.filter((p) => p >= 0).length;
+
+    const choices = q.choices.map((c, i) => {
+      let cls = "choice";
+      if (done) {
+        if (i === q.answer) cls += " right";
+        else if (i === pick) cls += " wrong";
+      } else if (i === pick) cls += " selected";
+      return `<button class="${cls}" data-choice="${i}" ${done ? "disabled" : ""}>
+        <span class="key">${LETTERS[i]}</span><span class="txt">${esc(c)}</span></button>`;
+    }).join("");
+
+    let feedback = "";
+    if (done) {
+      const ok = pick === q.answer;
+      feedback = `<div class="feedback ${ok ? "right" : "wrong"}" role="status">
+        <strong>${ok ? "Correct" : "Incorrect"}</strong>
+        ${ok ? "" : `<p>The answer is <b>${LETTERS[q.answer]}</b>: ${esc(q.choices[q.answer])}</p>`}
+        ${q.note ? `<p>${esc(q.note)}</p>` : ""}
+        <p class="src">${q.fromRules ? "Answer worked out from the Navigation Rules (book key not yet added)." : "Answer from the book's answer key."}</p>
+      </div>`;
+    }
+
+    const last = idx === list.length - 1;
+    let nextLabel, nextDisabled;
+    if (practice) {
+      nextLabel = done ? (last ? "See results" : "Next question") : "Check answer";
+      nextDisabled = pick < 0;
+    } else {
+      nextLabel = last ? "Finish test" : "Next question";
+      nextDisabled = false;
+    }
+
+    app.innerHTML = `
+      <div class="progress">
+        <div class="progress-row">
+          <span class="label">Question ${idx + 1} of ${list.length}</span>
+          <span class="label">${practice ? "Practice" : `${answeredCount} answered`}</span>
+        </div>
+        <div class="bar"><div style="width:${((idx + (done ? 1 : 0)) / list.length) * 100}%"></div></div>
+      </div>
+      <section class="card" aria-live="polite">
+        <div class="tags">
+          <span class="tag rule">${esc(q.rule)}</span>
+          <span class="tag">${esc(q.section.title)} · #${q.num}</span>
+          ${q.diagram ? `<span class="tag warn">Book diagram not shown</span>` : ""}
+        </div>
+        <p class="question">${esc(q.text)}</p>
+        <div class="choices">${choices}</div>
+        ${feedback}
+        <div class="nav">
+          <div class="actions">
+            ${!practice && idx > 0 ? `<button class="btn" id="prev">Back</button>` : ""}
+            <button class="btn ghost" id="quit">End test</button>
+          </div>
+          <button class="btn primary" id="next" ${nextDisabled ? "disabled" : ""}>${nextLabel}</button>
+        </div>
+        <p class="kbd-hint">Keyboard: press A–D or 1–4 to choose, Enter to continue.</p>
+      </section>`;
+
+    app.querySelectorAll("[data-choice]").forEach((el) =>
+      el.addEventListener("click", () => choose(Number(el.dataset.choice))));
+    $("#next").addEventListener("click", advance);
+    $("#quit").addEventListener("click", finish);
+    const prev = $("#prev");
+    if (prev) prev.addEventListener("click", () => { quiz.idx--; renderQuestion(); });
+  }
+
+  function choose(i) {
+    if (!quiz) return;
+    const { idx, checked } = quiz;
+    if (settings.mode === "practice" && checked[idx]) return;
+    if (i >= quiz.list[idx].choices.length) return;
+    quiz.picks[idx] = i;
+    renderQuestion();
+  }
+
+  function advance() {
+    if (!quiz) return;
+    const { idx, list, picks, checked } = quiz;
+    if (settings.mode === "practice" && !checked[idx]) {
+      if (picks[idx] < 0) return;
+      checked[idx] = true;
+      recordResult(list[idx], picks[idx] === list[idx].answer);
+      renderQuestion();
+      return;
+    }
+    if (idx === list.length - 1) { finish(); return; }
+    quiz.idx++;
+    renderQuestion();
+    window.scrollTo(0, 0);
+  }
+
+  function recordResult(q, ok) {
+    const has = saved.missed.indexOf(q.id);
+    if (!ok && has < 0) saved.missed.push(q.id);
+    if (ok && has >= 0) saved.missed.splice(has, 1);
+    save();
+  }
+
+  // ---------- Results ----------
+  function finish() {
+    const { list, picks, checked } = quiz;
+    const practice = settings.mode === "practice";
+    // Practice mode only scores questions that were checked; exam mode scores everything shown.
+    const scored = list.map((q, i) => ({ q, pick: picks[i], counted: practice ? checked[i] : true }))
+      .filter((r) => r.counted);
+    if (!practice) scored.forEach((r) => recordResult(r.q, r.pick === r.q.answer));
+
+    const correct = scored.filter((r) => r.pick === r.q.answer).length;
+    const total = scored.length;
+    const pct = total ? Math.round((correct / total) * 100) : 0;
+    const pass = pct >= PASS_MARK;
+    const misses = scored.filter((r) => r.pick !== r.q.answer);
+
+    const review = misses.map((r) => `
+      <div class="review-item">
+        <div class="tags"><span class="tag rule">${esc(r.q.rule)}</span><span class="tag">${esc(r.q.section.title)} · #${r.q.num}</span></div>
+        <p>${esc(r.q.text)}</p>
+        <p class="yours">Your answer: ${r.pick >= 0 ? `${LETTERS[r.pick]}. ${esc(r.q.choices[r.pick])}` : "not answered"}</p>
+        <p class="correct">Correct: ${LETTERS[r.q.answer]}. ${esc(r.q.choices[r.q.answer])}</p>
+        ${r.q.note ? `<p class="src">${esc(r.q.note)}</p>` : ""}
+      </div>`).join("");
+
+    app.innerHTML = `
+      <section class="card" aria-labelledby="res-h">
+        <h2 id="res-h">Results</h2>
+        <div class="score">
+          <div class="big ${pass ? "pass" : "fail"}">${pct}%</div>
+          <div class="meta">
+            <span><b>${correct}</b> of <b>${total}</b> correct</span>
+            <span class="hint">${pass ? "That clears the 90% needed on the Coast Guard Rules of the Road exam." : "The Coast Guard Rules of the Road exam needs 90% to pass. Keep at it."}</span>
+          </div>
+        </div>
+        <div class="actions">
+          ${misses.length ? `<button class="btn primary" id="retry">Retake the ${misses.length} I missed</button>` : ""}
+          <button class="btn ${misses.length ? "" : "primary"}" id="again">New test</button>
+        </div>
+      </section>
+      ${misses.length ? `<section class="card"><h2>Review what you missed</h2><div class="review">${review}</div></section>` : ""}`;
+
+    const retry = $("#retry");
+    if (retry) retry.addEventListener("click", () => startQuiz(shuffle(misses.map((r) => r.q))));
+    $("#again").addEventListener("click", renderSetup);
+    quiz = null;
+    window.scrollTo(0, 0);
+  }
+
+  // ---------- Keyboard ----------
+  document.addEventListener("keydown", (e) => {
+    if (!quiz || e.metaKey || e.ctrlKey || e.altKey) return;
+    const k = e.key.toUpperCase();
+    const li = LETTERS.indexOf(k);
+    if (li >= 0 && li < 4) { choose(li); e.preventDefault(); return; }
+    if (/^[1-4]$/.test(k)) { choose(Number(k) - 1); e.preventDefault(); return; }
+    if (e.key === "Enter") {
+      const next = $("#next");
+      if (next && !next.disabled) { advance(); e.preventDefault(); }
+    }
+  });
+
+  $("#total-count").textContent = bank.length;
+  renderSetup();
+})();
+</script>
+</body>
+</html>
