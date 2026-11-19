@@ -1,14 +1,8 @@
-// Lights & Shapes (Rules 20-25) — transcribed from the U.S. Maritime Academy "Rules of the Road" practice problems.
-// The answer key page for this section has not been photographed yet, so every answer here
-// was worked out from the Navigation Rules text and is flagged {src: "rules"}.
-// Replace with the book's key when it is available.
-//
-// Skipped for now because the answer depends entirely on a diagram that isn't reproduced:
-//   169 (DIAGRAM 52), 170 (DIAGRAM 58), 188 (DIAGRAM 16), 196 (DIAGRAM 77), 197 (DIAGRAM 73),
-//   198 (DIAGRAM 66), 199 (DIAGRAM 63), 200 (DIAGRAM 60), 201 (DIAGRAM 10), 220 (DIAGRAM 46),
-//   223 (DIAGRAM 62)
+// Lights & Shapes (Rules 20-25, #144-224) — transcribed from the U.S. Maritime Academy "Rules of the Road" practice problems.
+// Answers are from the book's answer key (problems 144-321).
+// Not included: #188 (no transcription yet). #149, 180, 189, 194, 212, 216, 217 are eliminated in the book.
 
-const R = {src: "rules"};
+const R = {};
 
 addSection({
   id: "lights-shapes",
@@ -43,17 +37,17 @@ addSection({
       "east.",
       "northeast.",
       "northwest.",
-      "southwest."], "D", {src: "rules", note: "The book says: use your toy boats! You see her starboard (green) side from the west, so she must be heading roughly south to west."}],
+      "southwest."], "D", {note: "The book says: Use your toy boats! You see her starboard (green) side from the west, so she must be heading roughly south to west."}],
     [151, "Rule 21", "You see a red sidelight bearing NW. That vessel may be heading", [
       "south.",
       "east.",
       "northeast.",
-      "northwest."], "A", {src: "rules", note: "Use your toy boats! You see her port (red) side from the southeast, so she is heading somewhere between southeast and southwest."}],
+      "northwest."], "A", {note: "Use your toy boats! You see her port (red) side from the southeast, so she is heading somewhere between southeast and southwest."}],
     [152, "Rule 21", "You are heading due east (090°) and observe a vessel's red sidelight on your port beam. The vessel may be heading", [
       "WNW (292.5°)",
       "NNW (337.5°)",
       "SW (225°)",
-      "NE (045°)"], "C", {src: "rules", note: "Use your toy boats! She is due north of you showing her port side, so she is heading between south and WNW. 292.5° is exactly the edge of the red arc, so SW is the safe answer."}],
+      "NE (045°)"], "C", {note: "Use your toy boats! She is due north of you showing her port side, so she is heading between south and WNW. 292.5° is exactly the edge of the red arc, so SW is the safe answer."}],
     [153, "Rules 21, 23", "The masthead light may be located at other than the fore and aft centerline of a vessel", [
       "less than 20-meters in length.",
       "less than 12-meters in length.",
@@ -134,6 +128,10 @@ addSection({
       "A 100-meter sailing vessel.",
       "A 150-meter vessel engaged in fishing.",
       "A 45-meter vessel engaged in towing."], "A", R],
+    [169, "Rule 23", "At night, a vessel displaying the lights illustrated in DIAGRAM 52 is", [
+      "towing by pushing ahead.", "underway.", "towing a submerged object.", "engaged in dredging."], "B", {diagram: true}],
+    [170, "Rule 23", "The lights illustrated in DIAGRAM 58 are those of a", [
+      "vessel being towed.", "power-driven vessel less than 50-meters in length.", "fishing vessel at anchor.", "sailboat."], "B", {diagram: true}],
     [171, "Rule 23", "A power-driven vessel less than 12-meters in length may, instead of the underway lights for vessels under 50-meters, at night, show which of the following?", [
       "Sidelights and sternlight.",
       "One all-round white light and sidelights.",
@@ -239,6 +237,18 @@ addSection({
       "Two diamonds.",
       "One ball.",
       "One diamond."], "D", R],
+    [196, "Rule 24", "You see the lights illustrated in DIAGRAM 77. Which of the following would it be?", [
+      "A vessel pushing barges ahead.", "A vessel towing barges astern.", "A pipeline.", "A stationary dredge."], "B", {diagram: true}],
+    [197, "Rule 24", "At night, if you saw the lights illustrated, in DIAGRAM 73 what would they indicate?", [
+      "A fishing vessel trolling.", "A vessel laying submarine cable.", "A vessel towing astern.", "A vessel dredging."], "C", {diagram: true}],
+    [198, "Rule 24", "At night you sight the lights illustrated in DIAGRAM 66. What do the lights indicate?", [
+      "A tug with a tow astern.", "A tug with a tow alongside.", "A ship being assisted by a tug.", "A vessel engaged in fishing."], "B", {diagram: true}],
+    [199, "Rule 24", "A vessel displaying the lights illustrated in DIAGRAM 63 is", [
+      "towing astern.", "underway and more than 50-meters in length.", "broken down.", "fishing."], "A", {diagram: true}],
+    [200, "Rule 24", "A vessel displaying the lights illustrated in DIAGRAM 60 is", [
+      "towing.", "being towed.", "broken down.", "fishing."], "A", {diagram: true}],
+    [201, "Rule 24", "A vessel displaying the dayshape shown in DIAGRAM 10", [
+      "is at anchor.", "is not under command.", "has a tow that exceeds 200-meters in length.", "has a tow that is carrying dangerous cargo."], "C", {diagram: true}],
     [202, "Rule 24", "In addition to sidelights what light should a vessel being towed show?", [
       "A sternlight.",
       "Not under command lights.",
@@ -314,6 +324,8 @@ addSection({
       "motorboat underway.",
       "vessel drifting.",
       "sailing vessel."], "D", R],
+    [220, "Rule 25", "At night, a vessel displaying the lights illustrated in DIAGRAM 46 is", [
+      "sailing.", "fishing and making way.", "a pilot boat making way.", "fishing and anchored."], "A", {diagram: true}],
     [221, "Rule 25", "Which vessel may carry her sidelights and sternlight in a combined lantern on the mast?", [
       "An 18-meter sailing vessel.",
       "A 10-meter sailing vessel also being propelled by machinery.",
@@ -323,7 +335,9 @@ addSection({
       "being propelled by power as well as sail.",
       "on a starboard tack.",
       "close-hauled and has difficulty maneuvering.",
-      "fishing as well as sailing."], "A", {src: "rules", diagram: true, note: "The dayshape for a sailing vessel also under power is a cone, point downward."}],
+      "fishing as well as sailing."], "A", {diagram: true, note: "The dayshape for a sailing vessel also under power is a cone, point downward."}],
+    [223, "Rule 25", "Underway at night, a vessel displaying the lights illustrated in DIAGRAM 62 is", [
+      "engaged in fishing.", "mine sweeping.", "pilot boat.", "under sail."], "D", {diagram: true}],
     [224, "Rule 25", "A 15-meter sailing vessel would be required to show", [
       "sidelights, sternlight, and a red light over a green light on the mast.",
       "sidelights, and sternlight, but they may be in a combined lantern on the mast.",

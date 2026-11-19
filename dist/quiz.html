@@ -1065,17 +1065,11 @@ addSection({
 });
 </script>
 <script>
-// Lights & Shapes (Rules 20-25) — transcribed from the U.S. Maritime Academy "Rules of the Road" practice problems.
-// The answer key page for this section has not been photographed yet, so every answer here
-// was worked out from the Navigation Rules text and is flagged {src: "rules"}.
-// Replace with the book's key when it is available.
-//
-// Skipped for now because the answer depends entirely on a diagram that isn't reproduced:
-//   169 (DIAGRAM 52), 170 (DIAGRAM 58), 188 (DIAGRAM 16), 196 (DIAGRAM 77), 197 (DIAGRAM 73),
-//   198 (DIAGRAM 66), 199 (DIAGRAM 63), 200 (DIAGRAM 60), 201 (DIAGRAM 10), 220 (DIAGRAM 46),
-//   223 (DIAGRAM 62)
+// Lights & Shapes (Rules 20-25, #144-224) — transcribed from the U.S. Maritime Academy "Rules of the Road" practice problems.
+// Answers are from the book's answer key (problems 144-321).
+// Not included: #188 (no transcription yet). #149, 180, 189, 194, 212, 216, 217 are eliminated in the book.
 
-const R = {src: "rules"};
+const R = {};
 
 addSection({
   id: "lights-shapes",
@@ -1110,17 +1104,17 @@ addSection({
       "east.",
       "northeast.",
       "northwest.",
-      "southwest."], "D", {src: "rules", note: "The book says: use your toy boats! You see her starboard (green) side from the west, so she must be heading roughly south to west."}],
+      "southwest."], "D", {note: "The book says: Use your toy boats! You see her starboard (green) side from the west, so she must be heading roughly south to west."}],
     [151, "Rule 21", "You see a red sidelight bearing NW. That vessel may be heading", [
       "south.",
       "east.",
       "northeast.",
-      "northwest."], "A", {src: "rules", note: "Use your toy boats! You see her port (red) side from the southeast, so she is heading somewhere between southeast and southwest."}],
+      "northwest."], "A", {note: "Use your toy boats! You see her port (red) side from the southeast, so she is heading somewhere between southeast and southwest."}],
     [152, "Rule 21", "You are heading due east (090°) and observe a vessel's red sidelight on your port beam. The vessel may be heading", [
       "WNW (292.5°)",
       "NNW (337.5°)",
       "SW (225°)",
-      "NE (045°)"], "C", {src: "rules", note: "Use your toy boats! She is due north of you showing her port side, so she is heading between south and WNW. 292.5° is exactly the edge of the red arc, so SW is the safe answer."}],
+      "NE (045°)"], "C", {note: "Use your toy boats! She is due north of you showing her port side, so she is heading between south and WNW. 292.5° is exactly the edge of the red arc, so SW is the safe answer."}],
     [153, "Rules 21, 23", "The masthead light may be located at other than the fore and aft centerline of a vessel", [
       "less than 20-meters in length.",
       "less than 12-meters in length.",
@@ -1201,6 +1195,10 @@ addSection({
       "A 100-meter sailing vessel.",
       "A 150-meter vessel engaged in fishing.",
       "A 45-meter vessel engaged in towing."], "A", R],
+    [169, "Rule 23", "At night, a vessel displaying the lights illustrated in DIAGRAM 52 is", [
+      "towing by pushing ahead.", "underway.", "towing a submerged object.", "engaged in dredging."], "B", {diagram: true}],
+    [170, "Rule 23", "The lights illustrated in DIAGRAM 58 are those of a", [
+      "vessel being towed.", "power-driven vessel less than 50-meters in length.", "fishing vessel at anchor.", "sailboat."], "B", {diagram: true}],
     [171, "Rule 23", "A power-driven vessel less than 12-meters in length may, instead of the underway lights for vessels under 50-meters, at night, show which of the following?", [
       "Sidelights and sternlight.",
       "One all-round white light and sidelights.",
@@ -1306,6 +1304,18 @@ addSection({
       "Two diamonds.",
       "One ball.",
       "One diamond."], "D", R],
+    [196, "Rule 24", "You see the lights illustrated in DIAGRAM 77. Which of the following would it be?", [
+      "A vessel pushing barges ahead.", "A vessel towing barges astern.", "A pipeline.", "A stationary dredge."], "B", {diagram: true}],
+    [197, "Rule 24", "At night, if you saw the lights illustrated, in DIAGRAM 73 what would they indicate?", [
+      "A fishing vessel trolling.", "A vessel laying submarine cable.", "A vessel towing astern.", "A vessel dredging."], "C", {diagram: true}],
+    [198, "Rule 24", "At night you sight the lights illustrated in DIAGRAM 66. What do the lights indicate?", [
+      "A tug with a tow astern.", "A tug with a tow alongside.", "A ship being assisted by a tug.", "A vessel engaged in fishing."], "B", {diagram: true}],
+    [199, "Rule 24", "A vessel displaying the lights illustrated in DIAGRAM 63 is", [
+      "towing astern.", "underway and more than 50-meters in length.", "broken down.", "fishing."], "A", {diagram: true}],
+    [200, "Rule 24", "A vessel displaying the lights illustrated in DIAGRAM 60 is", [
+      "towing.", "being towed.", "broken down.", "fishing."], "A", {diagram: true}],
+    [201, "Rule 24", "A vessel displaying the dayshape shown in DIAGRAM 10", [
+      "is at anchor.", "is not under command.", "has a tow that exceeds 200-meters in length.", "has a tow that is carrying dangerous cargo."], "C", {diagram: true}],
     [202, "Rule 24", "In addition to sidelights what light should a vessel being towed show?", [
       "A sternlight.",
       "Not under command lights.",
@@ -1381,6 +1391,8 @@ addSection({
       "motorboat underway.",
       "vessel drifting.",
       "sailing vessel."], "D", R],
+    [220, "Rule 25", "At night, a vessel displaying the lights illustrated in DIAGRAM 46 is", [
+      "sailing.", "fishing and making way.", "a pilot boat making way.", "fishing and anchored."], "A", {diagram: true}],
     [221, "Rule 25", "Which vessel may carry her sidelights and sternlight in a combined lantern on the mast?", [
       "An 18-meter sailing vessel.",
       "A 10-meter sailing vessel also being propelled by machinery.",
@@ -1390,12 +1402,926 @@ addSection({
       "being propelled by power as well as sail.",
       "on a starboard tack.",
       "close-hauled and has difficulty maneuvering.",
-      "fishing as well as sailing."], "A", {src: "rules", diagram: true, note: "The dayshape for a sailing vessel also under power is a cone, point downward."}],
+      "fishing as well as sailing."], "A", {diagram: true, note: "The dayshape for a sailing vessel also under power is a cone, point downward."}],
+    [223, "Rule 25", "Underway at night, a vessel displaying the lights illustrated in DIAGRAM 62 is", [
+      "engaged in fishing.", "mine sweeping.", "pilot boat.", "under sail."], "D", {diagram: true}],
     [224, "Rule 25", "A 15-meter sailing vessel would be required to show", [
       "sidelights, sternlight, and a red light over a green light on the mast.",
       "sidelights, and sternlight, but they may be in a combined lantern on the mast.",
       "separate sidelights and sternlight.",
       "sidelights only."], "B", R],
+  ]
+});
+</script>
+<script>
+// Lights & Shapes, Rules 25-30 (#225-321) and the International / Inland only Lights & Shapes problems.
+// Transcribed from the U.S. Maritime Academy "Rules of the Road" practice problems.
+// Answers are from the book's answer keys (problems 144-321, International Only 1-10, Inland Only 1-11).
+//
+// Not included: #233 and #188 (the choices are only the letters of shapes in a diagram),
+// and #276-297 (pages 62-63 not photographed yet).
+
+addSection({
+  id: "lights-shapes-2",
+  title: "Lights & Shapes · Rules 25–30",
+  questions: [
+    [225, "Rule 25", "A 25-meter sailing vessel underway must exhibit", [
+      "a sternlight.",
+      "a combined lantern.",
+      "a red light over a green light at the masthead.",
+      "all of the above."], "A"],
+    [226, "Rule 25", "A sail vessel is NOT allowed to show the all-round red over green lights on the mast if", [
+      "she is showing sidelights.",
+      "her sidelights are combined and shown on the fore and aft centerline of the vessel.",
+      "she is showing a sternlight.",
+      "her sidelights and sternlight are combined in one lantern and shown on the mast."], "D"],
+    [227, "Rule 25", "Which vessel would display a cone, apex downward?", [
+      "A fishing vessel with outlying gear.",
+      "A vessel proceeding under sail and machinery.",
+      "A vessel engaged in diving operations.",
+      "A vessel being towed."], "B"],
+    [228, "Rule 25", "What lights must sailboats show when underway at night?", [
+      "Two all-round white lights.",
+      "A stern light.",
+      "Red and green sidelights",
+      "Red and green sidelights and a sternlight."], "D"],
+    [229, "Rule 25", "Which of the following vessels would be required to show a white light from a lantern exhibited in sufficient time to prevent collision?", [
+      "A 26 ft. vessel sailing.",
+      "A rowboat.",
+      "A 6-meter motorboat.",
+      "A small vessel fishing."], "B"],
+    [230, "Rule 25", "Which statement is true concerning a vessel under oars?", [
+      "She must show a sternlight.",
+      "She is allowed to show the same lights as a sailing vessel.",
+      "She must show a fixed all-round white light.",
+      "She must show a dayshape of black cone."], "B"],
+    [231, "Rule 25", "A sailing vessel underway may exhibit", [
+      "a red light over a green light at the masthead.",
+      "a green light over a red light at the masthead.",
+      "two white lights in a vertical line at the stern.",
+      "an all-round white light."], "A"],
+    [232, "Rules 26, 27, 29", "Which vessel may show identifying lights when not actually engaged in her occupation?", [
+      "A fishing vessel.",
+      "A pilot vessel.",
+      "a mineclearance vessel.",
+      "None of the above."], "D"],
+    [235, "Rule 26", "A fishing vessel displaying the lights illustrated in DIAGRAM 67 is", [
+      "anchored.",
+      "underway but not fishing.",
+      "tending a small fishing boat.",
+      "fishing by trawling."], "D", {diagram: true}],
+    [237, "Rule 26", "A vessel engaged in fishing, and at anchor, should exhibit", [
+      "an anchor light.",
+      "sidelights and sternlight.",
+      "three lights in a vertical line, the highest and lowest being red, and the middle being white.",
+      "none of the above."], "D"],
+    [238, "Rule 26", "A vessel which is fishing must show sidelights and a sternlight only when", [
+      "anchored.",
+      "underway.",
+      "dead in the water.",
+      "underway and making way."], "D"],
+    [239, "Rule 26", "At night the lights illustrated in DIAGRAM 76 would indicate a", [
+      "vessel trawling.",
+      "vessel laying submarine cable.",
+      "vessel towing astern.",
+      "vessel dredging."], "A", {diagram: true}],
+    [240, "Rule 26", "Which vessel shall not show her sidelights?", [
+      "Any vessel that is not under command.",
+      "Any fishing vessel that is not making way.",
+      "Any sailing vessel when becalmed.",
+      "Any vessel engaged in underwater operations."], "B"],
+    [241, "Rule 26", "A vessel underway but not making way and fishing other than trawling would show which of the following lights?", [
+      "A white light over a red light.",
+      "A red light over a white light.",
+      "A white light over a red light, sidelights and a sternlight.",
+      "A red light over a white light, sidelights and a sternlight."], "B"],
+    [242, "Rule 26", "A vessel trawling will display a", [
+      "red light over a white light.",
+      "green light over a white light.",
+      "white light over a red light.",
+      "white light over a green light."], "B"],
+    [245, "Rule 26", "A vessel engaged in fishing during the day would show", [
+      "one black ball.",
+      "two cones with bases together.",
+      "a cone, point downward.",
+      "two cones, points together."], "D"],
+    [248, "Rule 26", "What dayshape must be shown by a vessel fishing which has gear extending more than 150-meters horizontally outward from it?", [
+      "One black ball.",
+      "One diamond shape.",
+      "One cone with its apex upwards.",
+      "One basket."], "C"],
+    [249, "Rule 26", "A vessel engaged in fishing must display a light in the direction of any gear that extends outward more than 150-meters. The color of this light is", [
+      "white.",
+      "green.",
+      "red.",
+      "yellow."], "A"],
+    [250, "Rule 26", "Which vessel must show a masthead light abaft of and higher than her identifying lights?", [
+      "A 55-meter vessel fishing.",
+      "55-meter vessel trawling.",
+      "A 100-meter vessel not under command.",
+      "A 20-meter vessel engaged in pilotage duty."], "B"],
+    [251, "Rule 26", "Which vessel must show an after masthead light, if over 50-meters in length?", [
+      "A vessel engaged in fishing.",
+      "A vessel at anchor.",
+      "A vessel not under command.",
+      "A vessel trawling."], "D"],
+    [252, "Rule 26", "At night, what lights would you see on a vessel engaged in fishing?", [
+      "Two red lights, one over the other.",
+      "A green light over a red light.",
+      "A red light over a white light.",
+      "A white light over a red light."], "C"],
+    [253, "Rule 26", "At night a vessel displaying the lights illustrated in DIAGRAM 82 is", [
+      "sailing.", "fishing.", "a pilot boat.", "anchored."], "B", {diagram: true}],
+    [254, "Rule 26", "A vessel displaying the lights illustrated in DIAGRAM 70 is a", [
+      "pilot boat.", "sailboat.", "fishing vessel.", "motorboat."], "C", {diagram: true}],
+    [255, "Rule 26", "A vessel which is underway at night and displaying the lights illustrated in DIAGRAM 69 is", [
+      "engaged in fishing.", "minesweeping.", "under sail.", "a pilot boat."], "A", {diagram: true}],
+    [256, "Rule 26", "A vessel displaying the dayshape illustrated in DIAGRAM 34 is", [
+      "towing.", "fishing.", "anchored.", "being towed."], "B", {diagram: true}],
+    [258, "Rule 27", "You see a vessel displaying the day signal shown in DIAGRAM 6. The vessel is", [
+      "not under command.", "fishing with trawls.", "laying cable.", "aground."], "C", {diagram: true}],
+    [259, "Rule 27", "A vessel showing the day signal shown in DIAGRAM 7 is", [
+      "not under command.", "a dredge underway and dredging.", "fishing.", "a hydrographic survey vessel underway."], "A", {diagram: true}],
+    [260, "Rule 27", "A vessel displaying the dayshapes shown in DIAGRAM 18 is a vessel", [
+      "towing astern with a tow greater than 200-meters in length.", "not under command.", "dredging.", "carrying dangerous cargo."], "B", {diagram: true}],
+    [261, "Rule 27", "A vessel displaying the lights illustrated in DIAGRAM 56 is a vessel", [
+      "towing a barge alongside.", "underway and laying cable.", "at anchor and dredging.", "underway and carrying dangerous cargo."], "B", {diagram: true}],
+    [262, "Rule 27", "A vessel displaying lights illustrated in DIAGRAM 84 is", [
+      "not under command.", "showing improper lights.", "towing.", "dredging."], "A", {diagram: true}],
+    [263, "Rule 27", "Which vessel would have no white lights visible when meeting her head-on?", [
+      "A vessel trawling.",
+      "A vessel restricted in her ability to maneuver.",
+      "A vessel mineclearing.",
+      "A vessel not under command."], "D"],
+    [264, "Rules 27, 18", "You are fishing at night, and you sight a vessel showing three lights in a vertical line. The upper and lower lights are red and the middle light is white. Which statement is true?", [
+      "You must keep out of the way of the other vessel.",
+      "The other vessel is responsible to keep out of your way.",
+      "The other vessel is at anchor.",
+      "The rule of special circumstances applies."], "A"],
+    [265, "Rules 27, 23", "Which vessel must show forward and after masthead lights when making way?", [
+      "A 75-meter vessel restricted in her ability to maneuver.",
+      "A 100-meter sailing vessel.",
+      "A 150-meter vessel engaged in fishing.",
+      "A 45-meter vessel engaged in towing."], "A"],
+    [266, "Rules 27, 3", "By day, you sight a vessel displaying three shapes in a vertical line. The top and bottom shapes are balls, and the middle shape is a diamond. It is a", [
+      "vessel trolling.",
+      "mineclearing vessel.",
+      "trawler",
+      "vessel engaged in replenishment at sea."], "D"],
+    [267, "Rule 27", "A vessel restricted in her ability to maneuver shall", [
+      "turn off her sidelights when not making way.",
+      "when operating in restricted visibility, changes light pattern.",
+      "show a dayshape of two diamonds in a vertical line.",
+      "keep out of the way of a vessel engaged in fishing."], "A"],
+    [268, "Rule 27", "A vessel at night, displaying the lights illustrated in DIAGRAM 83 is", [
+      "fishing.", "not under command.", "towing.", "being towed."], "B", {diagram: true}],
+    [269, "Rule 27", "A vessel displaying the lights illustrated in DIAGRAM 57 is", [
+      "restricted in her ability to maneuver and not making way.",
+      "engaged in fishing and not making way.",
+      "a pilot vessel underway and making way on pilotage duty.",
+      "towing and making way."], "A", {diagram: true}],
+    [270, "Rules 27, 18", "While underway you see a vessel displaying the dayshapes shown in DIAGRAM 6. What action should you take?", [
+      "Maintain course and speed.",
+      "Provide assistance, the other vessel is in distress.",
+      "Stay clear, the other vessel cannot get out of the way.",
+      "Stop your vessel and sound passing signals."], "C", {diagram: true}],
+    [271, "Rule 27", "A vessel is carrying three lights in a vertical line. The highest and lowest of these are red and the middle light is white. Which statement is always true?", [
+      "During the day, she would display three balls in a vertical line.",
+      "If making way, she would show masthead lights at night.",
+      "If at anchor, she need not show anchor lights while displaying identifying lights.",
+      "Her fog signal would consist of a rapid ringing of bell for five seconds every minute."], "B"],
+    [272, "Rule 27", "A vessel restricted in her ability to maneuver which is at anchor must show at night which of the following lights?", [
+      "A red, white, and a red light in a vertical line and anchor lights.",
+      "A red, a white and a red light in a vertical line only.",
+      "Anchor lights only.",
+      "Anchor lights and sidelights only."], "A"],
+    [273, "Rule 27", "What lights are shown by a vessel restricted in her ability to maneuver to indicate that the vessel is making way?", [
+      "Masthead lights, sidelights and sternlight.",
+      "Masthead lights and sidelights only.",
+      "Sidelights and sternlight only.",
+      "Sidelights only ."], "A"],
+    [274, "Rule 27", "By day, when it is impractical for a small vessel engaged in diving operations to display the shapes for a vessel engaged in underwater operations, it shall display", [
+      "three black balls in a vertical line.",
+      "two red balls in a vertical line.",
+      "a black cylinder.",
+      "a rigid replica of the International Code flag \"A\"."], "D"],
+    [275, "Rule 27", "What lights would be shown at night by a vessel which is restricted in her ability to maneuver?", [
+      "Three red lights in a vertical line.",
+      "Three white lights in a vertical line.",
+      "Three lights in a vertical line, the highest and lowest white and the middle red.",
+      "Three lights in a vertical line, the highest and lowest red and the middle white."], "D"],
+    [299, "Rule 29", "A vessel engaged on pilotage duty which is at anchor must show which of the following lights at night?", [
+      "A sternlight only.",
+      "Anchor lights only.",
+      "An all-round white light over a red light only.",
+      "An all-round white light over a red light and anchor lights."], "D"],
+    [300, "Rule 29", "A vessel displaying the lights illustrated in DIAGRAM 53 is a", [
+      "vessel engaged in pilotage duty.", "vessel engaged in fishing.", "vessel under sail.", "power-driven vessel underway."], "A", {diagram: true}],
+    [301, "Rule 29", "A pilot vessel on pilotage duty at night will show sidelights and a sternlight", [
+      "when at anchor.",
+      "only when making way.",
+      "at any time when underway.",
+      "only when identifying lights are not being shown."], "C"],
+    [302, "Rule 30", "A vessel displaying the dayshapes illustrated in DIAGRAM 11 is", [
+      "towing", "conducting underwater operations.", "drifting.", "aground."], "D", {diagram: true}],
+    [303, "Rule 30", "A vessel displaying the lights illustrated in DIAGRAM 44 is", [
+      "towing.", "conducting underwater survey operations.", "drifting.", "aground."], "D", {diagram: true}],
+    [304, "Rule 30", "At night a vessel displaying the lights illustrated in DIAGRAM 65 is", [
+      "fishing.", "anchored.", "being towed.", "drifting."], "B", {diagram: true}],
+    [305, "Rule 30", "Which lights shall a 200-meter vessel exhibit when at anchor?", [
+      "In the forepart of the vessel, a 225 degree white light.",
+      "In the aft part of the vessel, a 112.5 degree white light.",
+      "Any available working lights to illuminate the decks.",
+      "In the forepart of the vessel, a 112.5 degree white light."], "A"],
+    [306, "Rule 30", "What is the minimum length of vessels required to show two anchor lights?", [
+      "40-meters.", "50-meters.", "60-meters.", "70-meters."], "B"],
+    [307, "Rule 30", "A vessel displaying the dayshape illustrated in DIAGRAM 13 is", [
+      "fishing.", "towing.", "being towed.", "anchored."], "D", {diagram: true}],
+    [308, "Rule 30", "An anchor ball need NOT be exhibited by a vessel if she is", [
+      "under 50-meters in length, and anchored in an anchorage.",
+      "over 150-meters in length.",
+      "rigged of sail.",
+      "less than 7-meters in length, and not in or near an area where other vessels normally navigate."], "D"],
+    [309, "Rule 30", "At night, a vessel which is less than 7-meters in length and anchored in an area where other vessels do not normally navigate is", [
+      "not required to show any anchor lights.",
+      "required to show a flare-up light.",
+      "required to show one white light.",
+      "required to show sidelights and a sternlight."], "A"],
+    [310, "Rule 30", "A vessel aground at night is required to show two red lights in a vertical line as well as", [
+      "not under command lights.",
+      "restricted in her ability to maneuver lights.",
+      "anchor lights.",
+      "sidelights and a sternlight."], "C"],
+    [311, "Rule 30", "Which statement is true concerning a vessel of 150-meters in length, at anchor?", [
+      "She may show an all-round white light where it can best be seen.",
+      "She must show an all-round white light forward and a second such light aft.",
+      "The showing of working lights is optional.",
+      "None of the above."], "B"],
+    [312, "Rule 30", "When anchoring a 20-meter vessel at night, you must show", [
+      "one all-round white light.",
+      "two all-round white lights.",
+      "one all-round white light and the sternlight.",
+      "one all-round white light and a flare up light."], "A"],
+    [314, "Rule 30", "What dayshape must be shown by a vessel 25-meters in length aground during daylight hours?", [
+      "One black ball.", "Two black balls.", "Three black balls.", "Four black balls."], "C"],
+    [315, "Rule 30", "What signal would a vessel aground show during daylight?", [
+      "One black ball.", "Two black balls.", "Three black balls.", "Four black balls."], "C"],
+    [316, "Rule 30", "A vessel at anchor will show a", [
+      "ball.", "cone.", "cylinder.", "double cone, apexes together."], "A"],
+    [318, "Rule 30", "Which statement is true concerning vessel of 75-meters in length, at anchor?", [
+      "She must show an all-round white light forward.",
+      "She must show a second all-round white light aft.",
+      "She may use her working lights to illuminate her decks.",
+      "All of the above."], "D"],
+    [319, "Rule 30", "If you anchor your 25-meter vessel in a harbor, what light(s) must you show?", [
+      "One all-round white light.", "Two all-round white lights.", "One all-round red light.", "All the deck house lights."], "A"],
+    [320, "Rule 30", "A vessel at anchor shall display between sunrise and sunset on the forward part of the vessel where it can best be seen", [
+      "one black ball.", "two black balls.", "one red ball.", "two orange and white balls."], "A"],
+    [321, "Rule 30", "Working lights shall be used to illuminate the decks of a vessel", [
+      "over 100-meters at anchor.", "not under command.", "constrained by her draft.", "any of the above."], "A"],
+  ]
+});
+
+addSection({
+  id: "ls-intl",
+  title: "Lights & Shapes · International Only",
+  questions: [
+    [1, "Rule 23", "At night, a power-driven vessel of less than 7-meters in length where its maximum speed does not exceed seven knots must show when underway", [
+      "sidelights and a sternlight.",
+      "the lights required for a vessel more than 7-meters in length.",
+      "sidelights only.",
+      "one all-round white light."], "D"],
+    [2, "Rule 24", "A 20-meter power-driven vessel pushing ahead or towing alongside will display", [
+      "a single white light forward.",
+      "two forward masthead lights in a vertical line.",
+      "two towing lights in a vertical line.",
+      "two all-round red lights where they can best be seen."], "B"],
+    [3, "Rule 24", "Lighting requirements in inland waters are different from those for international waters for", [
+      "barges being pushed ahead.",
+      "vessels constrained by their draft.",
+      "a vessel towing by pushing ahead.",
+      "all of the above."], "D"],
+    [4, "Rule 24", "A power-driven vessel pushing ahead or towing alongside will display", [
+      "a single white light forward.",
+      "two forward masthead lights in a vertical line.",
+      "two towing lights in a vertical line.",
+      "two all-round red lights where they can best be seen."], "B"],
+    [7, "Rule 28", "What dayshape is prescribed for a vessel constrained by her draft?", [
+      "A black cone, apex upward.",
+      "A black cone, apex downward.",
+      "Two vertical black balls.",
+      "A cylinder."], "D"],
+    [8, "Rule 28", "In addition to her running lights, an underway vessel constrained by her draft may carry in a vertical line", [
+      "a red light, white light, red light.",
+      "two red lights.",
+      "two white lights.",
+      "three red lights."], "D"],
+    [9, "Rule 28", "A vessel displaying three red lights in a vertical line is", [
+      "not under command.",
+      "aground.",
+      "dredging.",
+      "constrained by her draft."], "D"],
+    [10, "Rule 28", "A vessel constrained by her draft may display", [
+      "three all-round red lights.",
+      "two 225 degrees red lights.",
+      "three all-round blue lights.",
+      "two 225 degrees blue light"], "A"],
+  ]
+});
+
+addSection({
+  id: "ls-inland",
+  title: "Lights & Shapes · Inland Only",
+  questions: [
+    [1, "Rule 21", "Which is a characteristic of a \"special flashing light\"?", [
+      "It must be yellow in color.",
+      "It must be placed as far forward as possible.",
+      "It must not show through an arc of more than 225°.",
+      "All of the above."], "D"],
+    [2, "Rule 24", "The lights illustrated in DIAGRAM 75 are those of a", [
+      "pipeline.",
+      "vessel towing by pushing ahead.",
+      "vessel being towed astern.",
+      "vessel underway and dredging."], "B", {diagram: true}],
+    [3, "Rule 24", "A special flashing light is used on a vessel", [
+      "being pushed ahead, or towed alongside.",
+      "that is in distress.",
+      "towed astern.",
+      "any of the above."], "A"],
+    [4, "Rule 24", "If your tug is pushing a barge ahead at night, what light(s) should show aft on your vessel?", [
+      "A white sternlight.",
+      "Two red lights.",
+      "Two towing lights.",
+      "Three white lights."], "C"],
+    [5, "Rule 24", "While underway at night, you see two yellow lights displayed in a vertical line. This should indicate to you a/an", [
+      "opening in a pipeline.",
+      "vessel broken down.",
+      "vessel towing by pushing ahead.",
+      "vessel fishing."], "C"],
+    [6, "Rule 24", "What lights are required for a barge, not part of a composite unit, being pushed ahead?", [
+      "Sidelights and a sternlight.",
+      "Sidelights, a special flashing light, and a sternlight.",
+      "Sidelights and a special flashing light.",
+      "Sidelights, a towing light, and a sternlight."], "C"],
+    [7, "Rule 24", "A power-driven vessel when pushing ahead or towing alongside on the Western Rivers above Huey P. Long shall carry", [
+      "two masthead lights, sidelights, and sternlight.",
+      "two masthead lights, sidelights, and two towing lights.",
+      "sidelights and two towing lights.",
+      "one masthead light, sidelights, and sternlight."], "C"],
+    [8, "Rule 24", "A towing vessel pushing ahead on the Western River above the Huey P. Long bridge must show", [
+      "sidelights only.",
+      "sidelights and towing lights.",
+      "sidelights, towing lights, and two masthead lights.",
+      "sidelights, towing lights, and three masthead lights."], "B"],
+    [11, "Rule 30", "A vessel of less than 20-meters at anchor at night in a \"special anchorage area\"", [
+      "must show one white light.",
+      "need not show any lights.",
+      "must show two white lights.",
+      "must show a light only on the approach of another vessel."], "B"],
+  ]
+});
+</script>
+<script>
+// Sound & Light Signals (Rules 32-37) — transcribed from the U.S. Maritime Academy "Rules of the Road" practice problems.
+// Answers are from the book's answer keys (Both 322-415, International Only 1-28, Inland Only 29-67).
+
+addSection({
+  id: "sound-both",
+  title: "Sound & Light Signals · International & Inland",
+  questions: [
+    [322, "Rules 32, 34", "The duration of each blast of whistle signals used in meeting, and crossing, situations is", [
+      "about 1 second.", "2 to 4 seconds.", "4 to 6 seconds.", "8 to 10 seconds."], "A"],
+    [323, "Rules 32, 35", "The duration of each blast of whistle signals used by a power-driven vessel in fog whether making way or underway but making no way is", [
+      "about 1 second.", "2 to 4 seconds.", "4 to 6 seconds.", "8 to 10 seconds."], "C"],
+    [324, "Rule 32", "The term \"short blast\" on the whistle or horn means a duration of", [
+      "1 second.", "4 to 6 seconds.", "8 to 12 seconds.", "12 to 15 seconds."], "A"],
+    [325, "Rule 32", "The duration of a prolonged blast of the whistle is", [
+      "2 to 4 seconds.", "4 to 6 seconds.", "6 to 8 seconds.", "8 to 10 seconds."], "B"],
+    [326, "Rule 33", "Which statement is true regarding equipment for sound signals?", [
+      "A vessel of less than 12-meters in length need not have any sound signaling equipment.",
+      "Any vessel over 12-meters in length must be provided with a gong.",
+      "Manual sounding of the signals must always be possible.",
+      "Automatic sounding of the signals is not permitted."], "C"],
+    [327, "Rule 33", "What is the minimum sound signaling equipment required aboard a vessel 10-meters in length?", [
+      "A bell only.", "A whistle only.", "A bell and a whistle.", "Any means of making an efficient sound signal."], "D"],
+    [328, "Rule 33", "What equipment for fog signals is required for a vessel 30 meters in length?", [
+      "Whistle only.", "Bell only.", "Whistle and bell only.", "Whistle, bell and gong."], "C"],
+    [330, "Rule 33", "Which vessel must have a gong, or other equipment which will make the sound of a gong?", [
+      "A sailing vessel.", "Any vessel over 50-meters.", "Any vessel over 100-meters.", "A power-driven vessel over 75-meters."], "C"],
+    [332, "Rule 34", "Which of the following statements is true concerning the danger signal?", [
+      "Vessels must be in sight of each other in order to use the danger signal.",
+      "Only the stand-on vessel can sound the danger signal.",
+      "Distress signals may be used in place of the danger signal.",
+      "The danger signal consists of four or more short blasts of the whistle."], "A"],
+    [335, "Rule 34", "Two power-driven vessels are crossing as shown in DIAGRAM 42. Vessel \"A\" sounds three short blasts on the whistle. This signal means that vessel \"A\"", [
+      "intends to hold course and speed.", "is sounding the danger signal.", "is backing engines.", "proposes to cross ahead of the other vessel."], "C"],
+    [336, "Rule 34", "A light signal of three flashes means", [
+      "\"I am in doubt as to your actions.\"", "\"my engines are full speed astern.\"", "\"I desire to overtake you.\"", "\"I am operating astern propulsion.\""], "D"],
+    [337, "Rule 34", "At night you observe a vessel ahead to show three flashes of a white light. This signal indicates that the vessel ahead is", [
+      "in distress.", "approaching a bend in the channel.", "operating astern propulsion.", "intending to overtake another vessel."], "C"],
+    [338, "Rule 34", "Three short blasts of the whistle means", [
+      "\"danger.\"", "\"I am in distress.\"", "\"my vessel is towing.\"", "\"I am operating astern propulsion.\""], "D"],
+    [339, "Rule 34", "While underway and in sight of another vessel with risk of collision, you put your engines full speed astern. Which statement concerning whistle signals is true?", [
+      "You must sound three short blasts on the whistle.",
+      "You must sound one blast if backing to starboard.",
+      "You must sound whistle signals only if the vessels are meeting.",
+      "You need not sound any whistle signals."], "A"],
+    [340, "Rule 34", "The whistle signal for a vessel operating astern propulsion is", [
+      "one long blast.", "one prolonged blast.", "three short blasts.", "four or more short blasts."], "C"],
+    [341, "Rule 34", "If your vessel is approaching a bend and you hear a prolonged blast from around the bend, you should", [
+      "back your engines.", "stop your engines and drift.", "answer with one prolonged blast.", "sound the danger signal."], "C"],
+    [342, "Rule 34", "A vessel nearing a bend where other vessels may be obscured shall sound", [
+      "one short blast.", "one long blast.", "two short blasts.", "one prolonged blast."], "D"],
+    [343, "Rules 34, 32", "You are underway and approaching a bend in the channel where vessels approaching from the opposite direction can't be seen. You should sound", [
+      "one blast, 4 to 6 seconds in duration.",
+      "three blasts, 4 to 6 seconds in duration.",
+      "one continuous blast until you are able to see around the bend.",
+      "one blast, 8 to 10 seconds in duration."], "A"],
+    [344, "Rule 34", "You are on a vessel nearing a bend in the channel where, because of the height of the bank, you cannot see a vessel approaching from the opposite direction. You should sound", [
+      "one short blast.", "one prolonged blast.", "one long blast.", "five or more short blasts."], "B"],
+    [345, "Rule 34", "Which of the following statements is true concerning the danger signals?", [
+      "May be sounded by the stand-on vessel only.",
+      "Indicates that the vessel is in distress.",
+      "Is used to indicate a course change.",
+      "May be supplemented by an appropriate light signal."], "D"],
+    [346, "Rule 34", "You are underway in a narrow channel and you are being overtaken by a vessel astern. The overtaking vessel sounds a signal indicating his intention to pass your vessel on your starboard side. If such an action appears dangerous you should sound", [
+      "five short and rapid blasts.",
+      "three short and rapid blasts.",
+      "one prolonged followed by one short blast.",
+      "one prolonged, one short, one prolonged and one short blast in that order."], "A"],
+    [347, "Rule 34", "You are the stand-on vessel in a crossing situation. If the give-way vessel is not taking sufficient action to avoid collision, and you are in doubt, you should sound", [
+      "one short blast and maintain course.", "one short blast and backdown.", "no signal and maneuver at will.", "the danger signal."], "D"],
+    [348, "Rule 34", "In a crossing situation, which vessel, if any, may sound the danger signal?", [
+      "Give-way vessel.", "Stand-on vessel.", "Either vessel.", "Neither vessel."], "C"],
+    [349, "Rule 34", "Which of the following is the danger signal?", [
+      "A continuous sounding of the fog horn.",
+      "Firing a gun every minute.",
+      "Five or more short rapid blasts on the whistle.",
+      "One long blast on the whistle."], "C"],
+    [350, "Rule 34", "The use of the danger signal", [
+      "replaces directional signals.", "makes the other vessel burdened.", "indicates doubt as to the other vessels actions", "makes positive action necessary."], "C"],
+    [351, "Rule 34", "What signal shall be used to indicate doubt that sufficient action is being taken by another vessel to avoid collision?", [
+      "Give at least five short and rapid blasts of the whistle.",
+      "Three long blasts of the whistle.",
+      "Three short and rapid blasts of the whistle.",
+      "One prolonged blast followed by three short blasts of the whistle."], "A"],
+    [352, "Rule 35", "If underway in low visibility sounding fog signals, what changes would you make in the fog signal immediately upon losing the power plant?", [
+      "Begin sounding two prolonged blasts at two-minute intervals.",
+      "Begin sounding one prolonged blast followed by three short blasts at two-minute intervals.",
+      "Begin sounding one prolonged blast followed by two short blasts at two-minute intervals.",
+      "No change should be made in the fog signal."], "C"],
+    [353, "Rule 35", "When should the fog signal of the vessel being towed be sounded?", [
+      "After the towing vessel's fog signal.",
+      "Before the towing vessel's fog signal.",
+      "Approximately one minute after the towing vessel's fog signal.",
+      "If the towing vessel is sounding a fog signal, the vessel towed is not required to sound any fog signal."], "A"],
+    [354, "Rule 35", "A tug is towing three barges in line in restricted visibility. The second vessel of the tow should sound", [
+      "one prolonged and two short blasts.", "one prolonged and three short blasts.", "one short blast.", "no fog signal."], "D"],
+    [357, "Rule 35", "When underway in restricted visibility, you might hear, at intervals of two minutes, any of the following fog signals EXCEPT", [
+      "one prolonged blast.", "two prolonged blasts.", "one prolonged and two short blasts.", "ringing of a bell for five seconds."], "D"],
+    [358, "Rule 35", "While operating a power-driven vessel in fog, you see another vessel on radar who is one-half mile distant on your port bow. You should", [
+      "sound the danger signal.", "exchange passing signals.", "sound one long blast.", "make no change in your fog signal."], "D"],
+    [360, "Rules 35, 19", "You are underway in fog and hear a fog signal of two prolonged blasts on your starboard quarter. You should", [
+      "stop your vessel.", "change your course to the left.", "change course to the right.", "hold your course and speed."], "D"],
+    [362, "Rule 35", "A fog signal of one prolonged blast followed by four short blasts would mean the presence of a", [
+      "vessel being towed.", "fishing vessel trawling.", "vessel at anchor warning of her location", "pilot vessel on station underway."], "D"],
+    [363, "Rule 35", "Your vessel is aground in fog. In addition to the regular anchor signals, you will be sounding", [
+      "three strokes of the gong before and after the rapid ringing of the gong.",
+      "a blast on the whistle.",
+      "three strokes of the bell before and after the rapid ringing of the bell.",
+      "no additional signals."], "C"],
+    [364, "Rule 35", "You are underway in fog and you hear three distinct bell strokes followed by five seconds of rapid bell ringing followed by three distinct bell strokes. This signal indicates a vessel", [
+      "aground.", "engaged in underwater construction.", "at anchor.", "in distress."], "A"],
+    [366, "Rule 35", "A 95-meter vessel aground shall sound which fog signal?", [
+      "A rapid ringing of a bell for 5 seconds every two minutes.",
+      "A whistle signal of one short, one prolonged, and one short blast.",
+      "A long blast of the whistle at intervals not to exceed one minute.",
+      "A rapid ringing of a bell for 5 seconds, preceded and followed by three separate and distinct strokes on the bell."], "D"],
+    [367, "Rule 35", "Which vessel must sound its fog signal at intervals not to exceed one-minute?", [
+      "A power-driven vessel underway, not making way.", "A vessel constrained by her draft.", "A sail vessel.", "A vessel aground."], "D"],
+    [368, "Rule 35", "A vessel anchored in fog may warn an approaching vessel by sounding", [
+      "the whistle continuously.",
+      "one short, one prolonged, and one short blast of the whistle.",
+      "five or more short and rapid blasts of the whistle.",
+      "three distinct strokes on the bell before and after sounding the anchor signal."], "B"],
+    [369, "Rule 35", "You are in charge of a 120-meter power-driven vessel at anchor in fog, sounding the required anchor signals. You hear the fog signal of a vessel underway off your port bow. You may sound", [
+      "at least five short and rapid blasts.", "two short blasts.", "one short, one prolonged, and one short blast.", "three short blasts."], "C"],
+    [370, "Rule 35", "All fog signals shall be sounded every two minutes with the exception of a vessel", [
+      "underway or making way.", "under sail or under tow.", "anchored or aground.", "not under command or restricted in her ability to maneuver."], "C"],
+    [371, "Rule 35", "While underway in fog you hear the rapid ringing of a bell for about five seconds followed by the sounding of a gong for about five seconds. This signal came from a", [
+      "vessel fishing.", "seaplane anchored.", "vessel over 100-meters in length at anchor.", "vessels aground."], "C"],
+    [372, "Rule 35", "While underway in fog you hear the rapid ringing of a bell. What does this signal indicate?", [
+      "A vessel backing down.", "A sailboat underway.", "A vessel at anchor.", "A vessel drifting."], "C"],
+    [373, "Rule 35", "A vessel 50-meters in length and at anchor is required to sound which of the following fog signals?", [
+      "5-second ringing of a bell every minute.",
+      "5-second ringing of a bell every two minutes.",
+      "5-second sounding of a gong every minute.",
+      "5-second sounding of both a bell and gong every two minutes."], "A"],
+    [376, "Rule 35", "If you are operating in restricted visibility, and hear a signal of a rapidly ringing bell followed by the rapid sounding of a gong, it could be", [
+      "a 30-meter power-driven vessel at anchor.", "a 150-meter power vessel aground.", "a vessel in distress.", "a 300-meter power vessel at anchor."], "D"],
+    [377, "Rule 35", "Fog signals for vessels at anchor shall be sounded at intervals of not more than", [
+      "15 minutes.", "5 minutes.", "2 minutes.", "1 minute."], "D"],
+    [378, "Rule 35", "Your vessel is 25-meters long and anchored in restricted visibility. You are required to sound the proper fog signal at intervals of not more than", [
+      "30 seconds.", "1 minute.", "2 minute.", "3 minutes."], "B"],
+    [379, "Rule 35", "Your vessel is at anchor in fog. The fog signal of another vessel, apparently underway, has been growing louder and the danger of collision appears to exist. In addition to the required fog signal, what signal may be used to indicate our presence?", [
+      "Five or more short rapid whistle blasts.",
+      "One short, one prolonged, and one short whistle blast.",
+      "One prolonged followed by two short whistle blasts.",
+      "No other signal may be used."], "B"],
+    [380, "Rule 35", "A pilot vessel may continue to sound an identity signal if she is", [
+      "underway, but not making way.", "not engaged in pilotage duty.", "aground.", "being towed."], "A"],
+    [381, "Rule 35", "A pilot vessel may continue to sound an identity signal if she is", [
+      "aground", "at anchor.", "not under command.", "being towed."], "B"],
+    [382, "Rule 35", "What is the identity fog signal which may be sounded by a vessel engaged in pilotage duty?", [
+      "Two short blasts.", "Three short blasts.", "Four short blasts", "Five short blasts."], "C"],
+    [383, "Rule 35", "When shall a vessel being towed sound her fog signal?", [
+      "Immediately after the towing vessel sounds hers.",
+      "Immediately before the towing vessel sounds hers.",
+      "As close to the mid-cycle of the towing vessel's signals as possible.",
+      "At any time as long as the interval is correct."], "A"],
+    [384, "Rule 35", "A vessel being towed, if manned, shall sound a signal of", [
+      "two short blasts.", "three short blasts.", "one prolonged and two short blasts.", "one prolonged and three short blasts."], "D"],
+    [385, "Rule 35", "A power-driven vessel underway in fog making NO way must sound what blast(s) on the whistle?", [
+      "One long.", "Two prolonged.", "One prolonged.", "One prolonged and two short."], "B"],
+    [386, "Rule 35", "While underway your vessel enters fog. You stop your engines and the vessel is dead in the water. What fog signal should you sound?", [
+      "One prolonged blast every two minutes.",
+      "Two prolonged blasts every two minutes.",
+      "Three short blasts every two minutes.",
+      "One prolonged and two short blasts every two minutes."], "B"],
+    [387, "Rule 35", "While underway in fog you hear another vessel sounding two prolonged blasts every two minutes. This signal indicates a vessel", [
+      "making way through the water.", "drifting.", "towing.", "anchored."], "B"],
+    [389, "Rule 35", "Fog signals, required under the Rules for vessels underway, shall be sounded", [
+      "only on the approach of another vessel.",
+      "only when vessels are in sight of each other.",
+      "at intervals of not more than one minute.",
+      "at intervals of not more than two minutes."], "D"],
+    [390, "Rule 35", "What signal shall a power-driven vessel sound when making way in fog?", [
+      "One short blast every two minutes.",
+      "One prolonged blast every two minutes.",
+      "One prolonged and two short blasts every two minutes.",
+      "Three short blasts every two minutes."], "B"],
+    [391, "Rule 35", "While underway and making way your vessel enters fog. What fog signal should you sound every two minutes?", [
+      "One prolonged.", "Two prolonged.", "Three short.", "A prolonged and two short."], "A"],
+    [392, "Rule 35", "While underway in fog, you hear a prolonged blast from another vessel. This signal indicates a", [
+      "sailboat underway.", "power-driven vessel underway, towing.", "power-driven vessel underway.", "Vessel being towed."], "C"],
+    [393, "Rule 35", "A vessel towing in fog shall sound a fog signal of", [
+      "one short and one prolonged blast every two minutes.",
+      "two prolonged blasts every two minutes.",
+      "one prolonged and two short blasts every two minutes.",
+      "one prolonged blast every two minutes."], "C"],
+    [394, "Rule 35", "Which vessel sounds the same fog signal when underway or at anchor?", [
+      "A sailing vessel.", "A vessel restricted in her ability to maneuver.", "A vessel constrained by her draft.", "A vessel not under command."], "B"],
+    [395, "Rule 35", "A sailing vessel with the wind aft of the beam is navigating in restricted visibility. She should sound", [
+      "three short blasts.", "one prolonged blast.", "one prolonged and two short blasts.", "two prolonged blasts."], "C"],
+    [396, "Rule 35", "Which of the following is the sound signal for a vessel 75-meters in length, restricted in her ability to maneuver, at anchor?", [
+      "Five second ringing of a bell at intervals of not more than one minute.",
+      "One prolonged blast followed by two short blasts at intervals of not more than two minutes.",
+      "Five second ringing of a bell and five second sounding of a gong at intervals of not more than one minute.",
+      "Four short blasts at intervals of not more than two minutes."], "B"],
+    [397, "Rule 35", "A 200-meter vessel restricted in its ability to maneuver, at anchor, will sound a fog signal of", [
+      "a 5 second ringing of a bell forward and a 5 second sounding of a gong aft at intervals of 1 minute.",
+      "one prolonged followed by two short blasts every 2 minutes.",
+      "one prolonged followed by three short blasts every minute.",
+      "one prolonged followed by three short blasts every 2 minutes."], "B"],
+    [398, "Rule 35", "A vessel engaged in fishing while at anchor shall sound a fog signal of", [
+      "one prolonged and two short blasts at two minute intervals.",
+      "one prolonged and three short blasts at two minute intervals.",
+      "a rapid ringing of the bell for five seconds at one minute intervals.",
+      "a sounding of the bell and gong at one minute intervals."], "A"],
+    [399, "Rule 35", "In restricted visibility, a vessel fishing with nets shall sound at intervals of two minutes", [
+      "one prolonged blast.", "one prolonged followed by two short blasts.", "one prolonged followed by three short blasts.", "two prolonged blasts in succession."], "B"],
+    [400, "Rule 35", "While underway and pushing a barge ahead, your vessel enters a heavy rain storm. You should sound", [
+      "a prolonged blast every two minutes.",
+      "two prolonged blasts every two minutes.",
+      "one prolonged and two short blasts every two minutes.",
+      "one long blast every two minutes."], "C"],
+    [401, "Rule 35", "What is the required fog signal for a vessel being towed at night?", [
+      "One prolonged followed by one short blast.",
+      "One prolonged followed by three short blasts.",
+      "One prolonged followed by two short blasts.",
+      "Two prolonged blasts."], "B"],
+    [402, "Rule 35", "In fog, a vessel being towed, if manned, shall sound a fog signal of", [
+      "two short blasts.", "three short blasts.", "one prolonged and two short blasts.", "one prolonged and three short blasts."], "D"],
+    [403, "Rule 35", "Which vessel is to sound a fog signal of one prolonged followed by two short blasts?", [
+      "A vessel not under command.", "A sailing vessel underway.", "A vessel restricted in its ability to maneuver, at anchor.", "All of the above."], "D"],
+    [404, "Rule 35", "While underway in fog you hear a whistle signal consisting of one prolonged blast followed immediately by two short blasts. Such a signal is sounded in fog by", [
+      "vessels at anchor, not engaged in fishing.", "vessels underway and towing.", "vessels in danger.", "pilot vessels."], "A",
+      {note: "This is the book's answer. Under Rule 35 an anchored vessel normally rings a bell; vessels towing, fishing, sailing, NUC and RAM sound one prolonged and two short. The book keys A here."}],
+    [406, "Rule 35", "You are underway, in fog, when you hear a whistle signal of one prolonged blast followed by two short blasts. This signal could indicate a vessel", [
+      "not under command.", "being towed.", "aground.", "all of the above."], "A"],
+    [407, "Rule 35", "Which vessel is required to sound a fog signal of one prolonged followed by two short blasts?", [
+      "A vessel not under command.", "A sailing vessel, underway.", "A vessel restricted in its ability to maneuver, at anchor.", "All of the above."], "D"],
+    [408, "Rule 35", "You are under way in a fog when you hear a whistle signal of one prolonged blast followed by two short blasts. This signal could indicate all of the following EXCEPT a vessel", [
+      "restricted in ability to manuever", "not under command.", "fishing with trawls.", "being towed."], "D"],
+    [409, "Rule 35", "Which vessel does NOT sound a fog signal of one prolonged followed by two short blasts?", [
+      "A vessel dredging.", "A sailing vessel.", "A vessel engaged in fishing.", "A vessel being towed."], "D"],
+    [410, "Rule 35", "While underway in fog, you hear a vessel sound one prolonged blast followed by two short blasts on the whistle. What does this signal indicate?", [
+      "A vessel towing.", "A vessel engaged in pilotage duty.", "A vessel at anchor.", "A vessel aground."], "A"],
+    [411, "Rule 35", "While underway, in fog, you hear a whistle signal of one prolonged blast followed by two short blasts. This signal is blown by a vessel", [
+      "not under command.", "being towed.", "at anchor.", "aground."], "A"],
+    [412, "Rule 35", "While underway in fog you hear a vessel sound one prolonged blast followed by two short blasts. What does this signal indicate?", [
+      "A vessel towing.", "A vessel being towed.", "A vessel at anchor.", "A vessel aground."], "A"],
+    [413, "Rule 35", "If your vessel is underway in fog and you hear one prolonged and three short blasts, this is a", [
+      "vessel not under command.", "sailing vessel.", "vessel in distress.", "vessel being towed."], "D"],
+    [414, "Rule 36", "A vessel may use any sound or light signals to attract the attention of another vessel as long as", [
+      "white lights are not used.",
+      "red and green lights are not used.",
+      "the vessel signals such intentions over the radiotelephone.",
+      "the signal cannot be mistaken for a signal authorized by the Rules."], "D"],
+    [415, "Rule 36", "Which signal, other than a distress signal, can be used by a vessel to attract attention?", [
+      "searchlight.", "continuous sounding of a fog signal apparatus.", "burning barrel.", "orange smoke signal."], "A"],
+  ]
+});
+
+addSection({
+  id: "sound-intl",
+  title: "Sound & Light Signals · International Only",
+  questions: [
+    [2, "Rule 34", "On open water two vessels are in an overtaking situation. The overtaking vessel has just sounded one short blast on the whistle. What is the meaning of this whistle signal?", [
+      "\"I request permission to pass you on my port side.\"",
+      "\"I will maintain course and speed\"",
+      "\"On which side should I pass?\"",
+      "\"I am altering my course to starboard.\""], "D"],
+    [5, "Rules 34, 35", "When two vessels are in sight of one another, all of the following signals may be given EXCEPT", [
+      "a light signal of at least five short and rapid flashes.",
+      "four short whistle blasts.",
+      "one prolonged, one short, one prolonged and one short whistle blasts.",
+      "two short whistle blasts."], "B"],
+    [8, "Rule 34", "In a narrow channel, an overtaking vessel which intends to PASS on the other vessel's port side would sound", [
+      "one prolonged followed by two short blasts.",
+      "one short blast.",
+      "two short blasts.",
+      "two prolonged followed by two short blasts."], "D"],
+    [9, "Rule 34", "Under what circumstances would an overtaking vessel sound a whistle signal of two prolonged followed by one short blast?", [
+      "When overtaking in restricted visibility.",
+      "When overtaking in a narrow channel.",
+      "When overtaking on open waters.",
+      "When no other vessels are in the immediate area."], "B"],
+    [10, "Rule 34", "Two prolonged blasts followed by one short blast on the whistle is a signal which could be sounded by a", [
+      "fishing vessel.", "vessel anchored.", "mineclearing vessel.", "vessel overtaking another."], "D"],
+    [11, "Rule 34", "A vessel sounds one short blast. This signal indicates the vessel", [
+      "intends to alter course to starboard.", "intends to pass starboard to starboard.", "is altering course to starboard.", "intends to pass port to port."], "C"],
+    [12, "Rule 34", "In a crossing situation on International waters, a short blast by the give-way vessel indicates that the vessel", [
+      "is holding course and speed.", "is turning to starboard.", "intends to pass port to port.", "will keep out of the way of the stand-on vessel."], "B"],
+    [13, "Rule 34", "On open water, a power-driven vessel coming up dead astern of another vessel and altering her course to starboard so as to pass on the starboard side of the vessel ahead would sound", [
+      "two short blasts.", "one short blast.", "two prolonged blasts followed by one short blast.", "one long and one short blast."], "B"],
+    [14, "Rule 34", "You are in sight of another vessel in a crossing situation, and the other vessel sounds one short blast. You are going to hold course and speed. You should", [
+      "answer with one short blast.", "answer with two short blasts.", "sound the danger signal.", "sound no whistle signal."], "D"],
+    [15, "Rule 34", "When two vessels are meeting, a short blast whistle signal by either of the vessels indicates", [
+      "\"I am altering course to starboard.\"",
+      "\"I desire to pass starboard to starboard.\"",
+      "\"I desire to pass port to port.\"",
+      "\"I am altering course to port.\""], "A"],
+    [16, "Rule 34", "You are underway in a narrow channel, and you are being overtaken by a vessel astern. After the overtaking vessel sounds the proper signal indicating his intention to pass your vessel on your starboard side, you signal your agreement by sounding", [
+      "one short blast.", "two prolonged blasts.", "two prolonged followed by two short blasts.", "one prolonged, one short, one prolonged and one short blast in that order."], "D"],
+    [17, "Rule 34", "A whistle signal of one prolonged, one short, one prolonged and one short blast is sounded by a vessel", [
+      "at anchor.", "towing a submerged object.", "being overtaken.", "in distress."], "C"],
+    [18, "Rule 34", "Vessel \"A\" is overtaking vessel \"B\" on open waters and will pass without changing course. Vessel \"A\"", [
+      "should sound two short blasts.", "should sound the danger signal.", "should sound one long blast.", "need not sound any whistle signals."], "D"],
+    [19, "Rule 34", "What whistle signal, if any, would be sounded when two vessels are meeting, but will pass clear starboard to starboard?", [
+      "One short blast.", "Two short blasts.", "Five or more short blasts.", "No signal is required."], "D"],
+    [20, "Rules 9, 34", "You are operating a vessel through a narrow channel and your vessel must stay within the channel to be navigated safely. Another vessel is crossing your course from starboard to port, and you are in doubt as to his intentions. You", [
+      "may sound the danger signal.",
+      "must sound the danger signal.",
+      "should sound one short blast to indicate that you are holding course and speed.",
+      "are required to back down."], "A"],
+    [22, "Rule 34", "Vessel \"A\" is overtaking vessel \"B\" on open waters as shown in DIAGRAM 17, and will pass without changing course. Vessel \"A\"", [
+      "should sound two short blasts.", "should sound the danger signal.", "should sound one long blast.", "need not sound any whistle signals."], "D", {diagram: true}],
+    [23, "Rule 34", "Which statement(s) is/are true concerning light signals?", [
+      "The time between flashes shall be about five seconds.",
+      "The time between successive signals shall be not less than ten seconds.",
+      "The light signals are to be used when not using sound signals.",
+      "All of the above."], "B"],
+    [24, "Rule 34", "The light which may be used with a vessel's whistle is to be", [
+      "used when the whistle is broken.", "used prior to sounding the whistle.", "used only at night.", "a white light."], "D"],
+    [25, "Rule 34", "Which signal may be sounded by one of two vessels in sight of each other?", [
+      "Four short blasts on the whistle.",
+      "One prolonged blast on the whistle.",
+      "One short blast on the whistle followed by one flash on a light.",
+      "One short, one prolonged, and one short blast on the whistle."], "C"],
+    [26, "Rule 35", "A vessel not under command sounds the same fog signal as a vessel", [
+      "towing.", "constrained by her draft.", "under sail.", "all of the above."], "D"],
+    [27, "Rule 35", "Which of the following vessels would NOT sound a fog signal of one prolonged and two short blasts?", [
+      "Not under command.", "Constrained by her draft.", "Being towed.", "Sailing."], "C"],
+    [28, "Rule 35", "While underway on the high seas in restricted visibility, you hear a fog signal of one prolonged and two short blasts. It could be any of the following EXCEPT a vessel", [
+      "minesweeping.", "engaged in fishing.", "constrained by her draft.", "being towed."], "D"],
+  ]
+});
+
+addSection({
+  id: "sound-inland",
+  title: "Sound & Light Signals · Inland Only",
+  questions: [
+    [29, "Rule 34", "You have made your vessel up to a tow and are moving from a pier out into the main channel. If your engines are turning ahead, what whistle signal should you sound?", [
+      "One prolonged and two short blasts.", "Three long blasts.", "One prolonged blast.", "Five or more short rapid blasts."], "C"],
+    [30, "Rule 34", "A power-driven vessel, when leaving a dock or berth, is required to sound", [
+      "two short blasts.", "one long blast.", "one prolonged blast.", "no signal."], "C"],
+    [31, "Rule 34", "While underway in a harbor you hear a vessel sound a prolonged blast. What does this signal indicate?", [
+      "A vessel desires to overtake your vessel.", "A vessel is at anchor.", "A vessel is backing her engines.", "A vessel is moving from a dock."], "D"],
+    [32, "Rule 34", "Which statement is true concerning a passing agreement made by radiotelephone?", [
+      "Such an agreement is prohibited by the Rules.",
+      "A vessel which has made such an agreement must also sound whistle signals.",
+      "Whistle signals must still be exchanged when passing within one-half mile of each other.",
+      "If agreement is reached by radiotelephone, whistle signals are optional."], "D"],
+    [33, "Rule 34", "You are overtaking a vessel in a narrow channel and wish to leave her on your starboard side. You may", [
+      "attempt to contact her on the radiotelephone to arrange for the passage.",
+      "proceed to overtake her without sounding whistle signals.",
+      "sound five short blasts.",
+      "any of the above."], "A"],
+    [34, "Rule 34", "Two vessels in a crossing situation have reached agreement as to the intentions of each other over the radiotelephone. In this situation whistle signals", [
+      "are required.", "are not required, but may be sounded.", "are required if crossing within one-half mile.", "are required when crossing within one mile."], "B"],
+    [35, "Rule 34", "You are overtaking another vessel in a narrow channel. You wish to overtake her on her starboard side. You should sound a whistle signal of", [
+      "one short blast", "two prolonged blasts followed by one short blast.", "one prolonged and one short blast.", "at least five short blasts."], "A"],
+    [36, "Rule 34", "You are overtaking another vessel in a narrow channel. The other vessel will have to move to allow you to pass. You wish to overtake the other vessel on her starboard side. Your first whistle signal should be", [
+      "one short blast.", "two short blasts.", "two prolonged blasts followed by one short blast.", "two prolonged blasts followed by two short blasts."], "A"],
+    [37, "Rule 34", "You are underway in a narrow channel, and you are being overtaken by a vessel astern. After the overtaking vessel sounds the proper signal indicating his intentions to pass your vessel on your starboard side, you signal your agreement by sounding", [
+      "one short blast.", "two prolonged blasts.", "two prolonged followed by two short blasts.", "one prolonged, one short, one prolonged and one short blast in that order."], "A"],
+    [38, "Rule 34", "You are overtaking another vessel and sound a whistle signal indicating that you intend to pass the vessel along its starboard side. If the other vessel answers your signal with five short and rapid blasts, you should", [
+      "not overtake the other vessel until both vessels exchange the same passing signal.",
+      "not overtake the other vessel until she sounds another five short and rapid blast signals.",
+      "pass the other vessel along her starboard side.",
+      "sound five short and rapid blasts and pass along her starboard side."], "A"],
+    [39, "Rule 34", "When you are overtaking another vessel and desire to pass on the left or port hand of the vessel ahead, you should sound", [
+      "one short blast.", "one long blast.", "two short blasts.", "two prolonged blasts."], "C"],
+    [40, "Rule 34", "You are meeting another vessel in inland waters, and she sounds one short blast on the whistle. This means that", [
+      "she is changing course to starboard.", "she is changing course to port.", "she intends to leave you on her port side.", "she desires to depart from the Rules."], "C"],
+    [41, "Rule 34", "Under the Inland Navigational Rules, what is the meaning of a one short blast signal used in a meeting situation with another vessel?", [
+      "\"I am turning to starboard.\"", "\"I am turning to port.\"", "\"I intend to leave you on my starboard side.\"", "\"I intend to leave you on my port side.\""], "D"],
+    [42, "Rule 34", "When power-driven vessels are in a crossing situation, a signal of one short blast by either vessel would mean", [
+      "\"I intend to leave you on my port side.\"", "\"I intend to hold course and speed.\"", "\"I intend to change course to starboard.\"", "\"I request a departure from the Rules.\""], "A"],
+    [43, "Rule 34", "Under the Inland Navigational Rules, what is the meaning of a two short blast signal used in a meeting situation with another vessel?", [
+      "\"I am turning to starboard.\"", "\"I am turning to port.\"", "\"I intend to leave you on my starboard side.\"", "\"I intend to leave you on my port side.\""], "C"],
+    [44, "Rule 34", "Two vessels are in a starboard to starboard passing situation and will pass well clear approximately 1/4 mile apart. Which action should each vessel take?", [
+      "Blow a one blast whistle signal and turn to starboard.",
+      "Maintain course and sound no signal.",
+      "Blow a two blast whistle signal and maintain course.",
+      "Blow a three blast whistle signal and turn to port."], "C"],
+    [45, "Rule 34", "Whistle signals shall be exchanged by vessels when", [
+      "they are passing within one-half mile of each other.",
+      "passing agreements have first been made by radio.",
+      "course changes are necessary to pass.",
+      "doubt exists as to which side the vessels will pass on."], "A"],
+    [46, "Rule 34", "Two vessels are meeting on a clear day and will pass less than one-half mile apart. In this situation whistle signals", [
+      "must be exchanged.", "may be exchanged.", "must be exchanged if passing agreements have not been made by radio.", "must be exchanged only if course changes are necessary by either vessel."], "C"],
+    [47, "Rules 9, 34", "You are operating a vessel through a narrow channel and your vessel must stay within the channel to be navigated safely. Another vessel is crossing your course from starboard to port, and you are in doubt as to his intentions. You", [
+      "may sound the danger signal.", "must sound the danger signal.", "should sound one short blast to indicate that you are holding course and speed.", "are required to back down."], "B"],
+    [48, "Rules 34, 9", "You are navigating in a narrow channel and must remain in the channel for safe operation. Another vessel is crossing the channel ahead of you from your starboard and you are doubtful as to the intention of the crossing vessel. You must", [
+      "stop your vessel, since the other vessel has the right of way.",
+      "sound one short blast of the whistle, and turn to starboard.",
+      "sound the danger signal.",
+      "stop your engines, and the sounding of the danger signal is optional."], "C"],
+    [49, "Rules 34, 9", "Your vessel is proceeding down a channel, and can safely navigate only within the channel. Another vessel is crossing your bow from port to starboard, and you are in doubt as to his intentions. Which statement is true?", [
+      "The sounding of the danger signal is optional.",
+      "The sounding of the danger signal is mandatory",
+      "You should sound two short blasts.",
+      "You should sound one prolonged and two short blasts."], "B"],
+    [50, "Rule 34", "Vessels \"A\" an \"B\" are passing in a narrow channel as shown in DIAGRAM 29. Which of the following is true concerning whistle signals between vessels?", [
+      "Both vessels should sound two short blasts.",
+      "Both vessels should sound one short blast.",
+      "Vessel \"A\" should sound one short blast and vessel \"B\" should sound two short blasts.",
+      "Neither vessel should sound any signal as no course change is necessary."], "A", {diagram: true}],
+    [51, "Rule 34", "Two steam vessels are meeting in the situation shown in DIAGRAM 37. One short blast by vessel \"A\" means", [
+      "\"I am altering my course to starboard.\"", "\"I intend to leave you on my port side.\"", "\"My intention is to hold course and speed.\"", "\"I intend to leave you on my starboard side.\""], "B", {diagram: true}],
+    [52, "Rule 34", "Vessel \"A\" and \"B\" are meeting on a river as shown in DIAGRAM 41, and will pass about 1/4 mile apart. What action should the vessels take?", [
+      "Both vessels should continue on course and pass without sounding any whistle signals.",
+      "The vessels should exchange two blast whistle signals and pass starboard to starboard.",
+      "The vessels should exchange one blast whistle signals and pass starboard to starboard.",
+      "The vessels should pass starboard to starboard and must sound whistle signals only if either vessel changes course."], "B", {diagram: true}],
+    [53, "Rule 34", "You are proceeding up a channel in Chesapeake Bay and are meeting an outbound vessel. Responsibilities include", [
+      "keeping to that side of the channel which is on your vessel's port side.",
+      "stopping your vessel and letting the outbound vessel initiate the signals for meeting and passing.",
+      "appropriately answering any whistle signals given by the other vessel.",
+      "giving the outbound vessel the right of way."], "C"],
+    [55, "Rule 34", "What signal must a power-driven vessel give, in addition to one prolonged blast, when backing out of a berth with another vessel in sight?", [
+      "2 short blasts.", "1 blast.", "3 short blasts.", "4 short blasts."], "C"],
+    [56, "Rule 34", "What type of light is required if a vessel uses this light to signal passing intentions?", [
+      "An all-round white light only.", "An all-round yellow light only.", "An all-round white or yellow light.", "Any colored light is acceptable."], "C"],
+    [57, "Rule 34", "The stand-on vessel in a crossing situation sounds one short blast of the whistle. This means that the vessel", [
+      "intends to hold course and speed.", "is changing course to starboard.", "is changing course to port.", "intends to leave the other on her port side."], "D"],
+    [58, "Rule 34", "You are crossing the course of another vessel which is to your starboard. You have reached an agreement by radiotelephone to pass astern of the other vessel. You must", [
+      "sound one short blast.", "sound two short blasts.", "change course to starboard.", "none of the above."], "D"],
+    [59, "Rule 34", "A vessel leaving a dock or berth must sound a prolonged blast of the whistle only if", [
+      "other vessels can be seen approaching.", "she is a power-driven vessel.", "visibility is restricted.", "her engines are going astern."], "B"],
+    [60, "Rule 34", "Which statement is true concerning the light used for maneuvering signals?", [
+      "It must be synchronized with the whistle.", "It may be white or yellow.", "It must be an all-round light.", "All of the above."], "D"],
+    [61, "Rule 34", "At night, a light signal consisting of two flashes by a vessel indicates", [
+      "an intention to communicate over radiotelephone.", "that the vessel is in distress.", "an intention to leave another vessel to port.", "an intention to leave another vessel to starboard."], "D"],
+    [62, "Rule 34", "In a narrow channel, you are underway on vessel \"A\" and desire to overtake vessel \"B\". After you sound two short blasts on your whistle vessel \"B\" sounds five short rapid blasts on the whistle. You should", [
+      "pass with caution on the port side of vessel \"B\".",
+      "hold your relative position, and then initiate another signal after the situation has stabilized.",
+      "answer the five short blast signal then stop your vessel until the other vessel initiates a signal.",
+      "slow or stop and expect radical maneuvers from \"B\"."], "B"],
+    [65, "Rule 34", "You are underway on vessel \"A\" and desire to overtake vessel \"B\" as shown in DIAGRAM 17. After you sound two short blasts on your whistle, vessel \"B\" sounds five short rapid blasts on the whistle. You should", [
+      "pass with caution on the port side of vessel \"B\".",
+      "not attempt to pass vessel \"B\" until that vessel sounds and you answer a passing signal.",
+      "answer the five short blast signal then pass on the port side.",
+      "keep sounding passing signals until the same signal is received from vessel \"B\"."], "D", {diagram: true}],
+    [67, "Rule 35", "Which statement is true concerning the fog signal of a vessel 15-meters in length anchored in a \"special anchorage area\" approved by the Secretary of Transportation?", [
+      "The vessel is not required to sound a fog signal.",
+      "The vessel shall ring a bell of 5 seconds every minute.",
+      "The vessel shall sound one blast of the foghorn ever 2 minutes.",
+      "The vessel shall sound three blasts on the whistle every 2 minutes."], "A"],
+  ]
+});
+</script>
+<script>
+// Annexes / Rules (#416-436) — transcribed from the U.S. Maritime Academy "Rules of the Road" practice problems.
+// Answers are from the book's answer key (problems 416-437).
+
+addSection({
+  id: "annexes",
+  title: "Annexes & Distress Signals",
+  questions: [
+    [416, "Rule 26, Annex II", "Which of the following signals may at some time be exhibited by a vessel trawling?", [
+      "Two white lights in a vertical line.",
+      "A white light over a red light in a vertical line.",
+      "Two red lights in a vertical line.",
+      "Any of the above."], "D"],
+    [417, "Rule 37, Annex IV", "Which of the following may be used as a distress signal?", [
+      "Directing the beam of a searchlight at another vessel.",
+      "A smoke signal giving off orange colored smoke.",
+      "A whistle signal of one prolonged and three short blasts.",
+      "International Code Signal PAN."], "B"],
+    [418, "Rule 37, Annex IV", "Which of the following is a distress signal?", [
+      "A triangular flag above or below a ball.",
+      "The International Code Signal of distress indicated by JV.",
+      "A green smoke signal.",
+      "Flames on the vessel as from a burning tar barrel."], "D"],
+    [419, "Rule 37, Annex IV", "Which of the following actions would indicate a distress signal?", [
+      "Firing of green star shells.",
+      "Sounding five short blasts on whistle.",
+      "Answering a one blast whistle signal with two blasts.",
+      "Having a flaming barrel of oil on deck."], "D"],
+    [420, "Rule 37, Annex IV", "You can indicate that your vessel is in distress by", [
+      "displaying a large red flag.",
+      "displaying three black balls in a vertical line.",
+      "sounding four or more short rapid blasts on the whistle.",
+      "continuously sounding the fog whistle."], "D"],
+    [421, "Rule 37, Annex IV", "A distress signal", [
+      "consists of five or more short blasts of the fog signal apparatus.",
+      "may be used separately or with other distress signals.",
+      "consists of the raising and lowering of a large white flag.",
+      "is used to indicate doubt about another vessel's intentions."], "B"],
+    [422, "Rule 37, Annex IV", "If you saw flames aboard a vessel but could see the vessel was not on fire, you would know that", [
+      "the crew was trying to get warm.",
+      "the vessel required immediate assistance.",
+      "the vessel was attempting to attract the attention of a pilot boat.",
+      "the vessel was being illuminated for identification by aircraft."], "B"],
+    [423, "Rule 37, Annex IV", "An orange flag showing a black circle and square is recognized as being a", [
+      "signal indicating a course change.",
+      "distress signal.",
+      "signal of asking to communicate with another vessel.",
+      "signal indicating danger."], "B"],
+    [424, "Rule 37, Annex IV", "A continuous sounding of a fog-signal apparatus indicates", [
+      "the vessel is in distress.",
+      "the vessel has completed loading dangerous cargo.",
+      "it is safe to pass.",
+      "the vessel is anchored."], "A"],
+    [427, "Rule 37, Annex IV", "A man aboard a vessel, signaling by raising and lowering his outstretched arms to each side, is indicating", [
+      "danger, stay away.",
+      "all is clear, it is safe to pass.",
+      "the vessel is anchored.",
+      "a distress signal."], "D"],
+    [428, "Rule 37, Annex IV", "Continuous sounding of a fog whistle by a vessel is a signal", [
+      "that the vessel is anchored.",
+      "for a request that the draw span of a bridge be opened.",
+      "of distress.",
+      "that the vessel is broken down and drifting."], "C"],
+    [430, "Rule 37, Annex IV", "You are on lookout watch when you sight a vessel displaying the code flag \"LIMA\" below which is a red ball. This indicates", [
+      "a vessel with trolling lines out.",
+      "a vessel getting ready to receive aircraft.",
+      "a vessel aground.",
+      "a vessel in distress."], "D"],
+    [431, "Rule 37, Annex IV", "Which of the following would NOT be a distress signal?", [
+      "Flames on a vessel.",
+      "Vertical motion of a white lantern at night.",
+      "Code flags \"November\" and \"Charlie\".",
+      "Dye marker on the water."], "B"],
+    [432, "Annex IV", "Which of the following would NOT be a distress signal?", [
+      "\"MAYDAY\" sent by radiotelephone.",
+      "Continuous sounding of fog horn.",
+      "Green star shells fire from a launcher.",
+      "Square flag and ball in a vertical line."], "C"],
+    [433, "Rule 26, Annex II", "Trawlers fishing in close proximity may exhibit what additional lights when shooting their nets?", [
+      "Two red lights in a vertical line",
+      "Two yellow lights",
+      "A white light over a red light",
+      "Two white lights in a vertical line"], "D"],
+    [434, "Rule 26, Annex II", "Trawlers fishing in close proximity may exhibit what additional lights when hauling their nets?", [
+      "A white light over a red light",
+      "Two yellow lights",
+      "Two red lights in a vertical line",
+      "Two white lights in a vertical line"], "A"],
+    [435, "Rule 26, Annex II", "Trawlers fishing in close proximity may exhibit what additional lights when their net has come fast upon an obstruction?", [
+      "A white light over a red light",
+      "Two yellow lights",
+      "Two red lights in a vertical line",
+      "Two white lights in a vertical line"], "C"],
+    [436, "Rule 26, Annex II", "A purse seiner when hampered by its fishing gear may exhibit", [
+      "A white light over a red light",
+      "Two white lights",
+      "Two red lights in a vertical line",
+      "Two yellow lights in a vertical line"], "D"],
   ]
 });
 </script>

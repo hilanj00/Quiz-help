@@ -10,17 +10,20 @@ U.S. Maritime Academy "Rules of the Road" practice problems.
   and how many questions.
 - Missed questions are remembered in your browser so you can retake just those.
 
-## Sections so far
+## Sections so far (462 questions)
 
 | Section | File |
 | --- | --- |
 | Rules 1–9 (Both, Inland only, International only) | `data/rules-01-09.js` |
 | Rules 10–19 (Both, Rule 10 TSS, Inland only) | `data/rules-10-19.js` |
-| Lights & Shapes, Rules 20–25 (#144–224) | `data/lights-shapes.js` |
+| Lights & Shapes, #144–224 | `data/lights-shapes.js` |
+| Lights & Shapes, #225–321, plus International only and Inland only | `data/lights-shapes-2.js` |
+| Sound & Light Signals, #322–415, plus International only and Inland only | `data/sound-signals.js` |
+| Annexes & distress signals, #416–436 | `data/annexes.js` |
 
-Answers come from the book's answer keys, except Lights & Shapes: that key hasn't been photographed
-yet, so those answers were worked out from the Rules and are marked `{src: "rules"}`.
-Questions that depend entirely on a book diagram are listed at the top of each data file.
+All answers come from the book's answer keys. Questions that refer to a book diagram are flagged
+`{diagram: true}` and are off by default in the quiz. Lights & Shapes #276–297 (pages 62–63) are not
+in yet.
 
 ## Adding questions
 
