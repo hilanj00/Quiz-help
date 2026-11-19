@@ -61,8 +61,9 @@
   function grade(pct) { return pct >= 90 ? "good" : pct >= 70 ? "ok" : "bad"; }
   const GRADE_WORD = { good: "90% or more", ok: "70 to 89%", bad: "under 70%" };
   function gradeBadge(rec) {
-    if (!rec || !rec.t) return "";
-    const pct = Math.round((rec.c / rec.t) * 100);
+    if (!rec || !rec.t) return `<span class="grade grade-none" title="You haven't taken a test on this section yet"><span class="dot" aria-hidden="true"></span>Not taken</span>`;
+    if (rec.c === rec.t) return `<span class="grade grade-perfect" title="Perfect: ${rec.c} of ${rec.t}"><span class="star" aria-hidden="true">★</span>100%</span>`;
+    const pct = Math.min(99, Math.round((rec.c / rec.t) * 100));
     const g = grade(pct);
     return `<span class="grade grade-${g}" title="Last score: ${rec.c} of ${rec.t} (${GRADE_WORD[g]})"><span class="dot" aria-hidden="true"></span>${pct}%</span>`;
   }
@@ -209,12 +210,14 @@
         <div class="field">
           <div class="field-head">
             <span class="label">Sections · ${selectedHere} of ${sections.length} selected</span>
-            ${sections.some((x) => saved.sectionScores[x.id]) ? `<div class="legend" aria-label="Score colors">
+            ${`<div class="legend" aria-label="Score colors">
               <span class="label">Last score</span>
+              <span class="grade grade-perfect"><span class="star" aria-hidden="true">★</span>100%</span>
               <span class="grade grade-good"><span class="dot" aria-hidden="true"></span>90%+</span>
               <span class="grade grade-ok"><span class="dot" aria-hidden="true"></span>70–89%</span>
               <span class="grade grade-bad"><span class="dot" aria-hidden="true"></span>under 70%</span>
-            </div>` : ""}
+              <span class="grade grade-none"><span class="dot" aria-hidden="true"></span>Not taken</span>
+            </div>`}
             <div class="mini-actions">
               <button type="button" class="link-btn" id="sel-all" ${selectedHere === sections.length ? "disabled" : ""}>Select all</button>
               <button type="button" class="link-btn" id="sel-none" ${selectedHere === 0 ? "disabled" : ""}>Deselect all</button>
