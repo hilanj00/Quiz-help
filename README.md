@@ -9,6 +9,8 @@ U.S. Maritime Academy "Rules of the Road" practice problems.
 - Pick sections, Practice mode (answer shown after each question) or Exam mode (answers at the end),
   and how many questions.
 - Missed questions are remembered in your browser so you can retake just those.
+- **Tip** (or press T) explains the rule behind a question and can cross out up to two wrong answers.
+- **Memory tricks** lists a short saying for every rule. Tips and tricks live in `data/tips.js`.
 
 ## Sections so far (517 questions)
 

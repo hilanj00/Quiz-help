@@ -38,7 +38,7 @@ DIAGRAM_SECTIONS.push({
       "stop until the red lights turn green.",
       "proceed leaving all the lights on your starboard side.",
       "pass between the two sets of vertical lights."], "D"],
-    [3, "Inland", "You are approaching a vessel showing the lights shown in DIAGRAM 75. It is", [
+    [3, "Inland · Rules 13, 14, 15", "You are approaching a vessel showing the lights shown in DIAGRAM 75. It is", [
       "a meeting situation.", "a crossing situation.", "an overtaking situation.", "a special circumstance."], "C"],
     [4, "Both", "You should keep the vessel showing the lights in DIAGRAM 68", [
       "500 meters astern.", "1000 meters away.", "1500 away.", "a safe distance determined by circumstances."], "B"],
