@@ -56,6 +56,17 @@
   const subjectCount = (id) => bank.filter((q) => q.section.subject === id).length;
   const missedHere = () => saved.missed.filter((id) => byId.get(id).section.subject === settings.subject);
 
+  // Last score per section (green 90%+, yellow 70-89%, red under 70%), from regular tests only.
+  saved.sectionScores = saved.sectionScores && typeof saved.sectionScores === "object" ? saved.sectionScores : {};
+  function grade(pct) { return pct >= 90 ? "good" : pct >= 70 ? "ok" : "bad"; }
+  const GRADE_WORD = { good: "90% or more", ok: "70 to 89%", bad: "under 70%" };
+  function gradeBadge(rec) {
+    if (!rec || !rec.t) return "";
+    const pct = Math.round((rec.c / rec.t) * 100);
+    const g = grade(pct);
+    return `<span class="grade grade-${g}" title="Last score: ${rec.c} of ${rec.t} (${GRADE_WORD[g]})"><span class="dot" aria-hidden="true"></span>${pct}%</span>`;
+  }
+
   function updateHeader() {
     const sub = subject();
     const n = subjectCount(sub.id);
@@ -168,7 +179,7 @@
       const hidden = s.items.length - n;
       return `<label class="check" for="sec-${s.id}">
         <input type="checkbox" id="sec-${s.id}" data-sec="${s.id}" ${settings.sections.includes(s.id) ? "checked" : ""}>
-        <span class="name">${esc(s.title)}</span>
+        <span class="name">${esc(s.title)}${gradeBadge(saved.sectionScores[s.id])}</span>
         <span class="count">${n} q${hidden ? ` · +${hidden} diagram` : ""}</span>
       </label>`;
     }).join("");
@@ -198,6 +209,12 @@
         <div class="field">
           <div class="field-head">
             <span class="label">Sections · ${selectedHere} of ${sections.length} selected</span>
+            ${sections.some((x) => saved.sectionScores[x.id]) ? `<div class="legend" aria-label="Score colors">
+              <span class="label">Last score</span>
+              <span class="grade grade-good"><span class="dot" aria-hidden="true"></span>90%+</span>
+              <span class="grade grade-ok"><span class="dot" aria-hidden="true"></span>70–89%</span>
+              <span class="grade grade-bad"><span class="dot" aria-hidden="true"></span>under 70%</span>
+            </div>` : ""}
             <div class="mini-actions">
               <button type="button" class="link-btn" id="sel-all" ${selectedHere === sections.length ? "disabled" : ""}>Select all</button>
               <button type="button" class="link-btn" id="sel-none" ${selectedHere === 0 ? "disabled" : ""}>Deselect all</button>
@@ -264,7 +281,7 @@
       let list = pool();
       if (settings.shuffle) list = shuffle(list);
       if (settings.count !== "all") list = list.slice(0, Number(settings.count));
-      startQuiz(list);
+      startQuiz(list, "test");
     });
     $("#start-missed").addEventListener("click", () => {
       startQuiz(shuffle(missedHere().map((id) => byId.get(id))));
@@ -286,9 +303,9 @@
   function persistSettings() { saved.settings = settings; save(); }
 
   // ---------- Quiz screen ----------
-  function startQuiz(list) {
+  function startQuiz(list, kind = "retake") {
     quiz = {
-      list, idx: 0,
+      list, idx: 0, kind,
       picks: new Array(list.length).fill(-1),
       checked: new Array(list.length).fill(false),
       tips: new Array(list.length).fill(false),
@@ -466,6 +483,21 @@
     const pass = pct >= sub.pass;
     const misses = scored.filter((r) => r.pick !== r.q.answer);
 
+    // Score each section that had questions in this test.
+    const bySection = new Map();
+    for (const r of scored) {
+      const rec = bySection.get(r.q.section) || { c: 0, t: 0 };
+      rec.t++; if (r.pick === r.q.answer) rec.c++;
+      bySection.set(r.q.section, rec);
+    }
+    const recorded = quiz.kind === "test";
+    if (recorded) {
+      for (const [sec, rec] of bySection) saved.sectionScores[sec.id] = { c: rec.c, t: rec.t, at: Date.now() };
+      save();
+    }
+    const sectionRows = [...bySection].map(([sec, rec]) => `
+      <div class="sec-score"><span class="name">${esc(sec.title)}</span>${gradeBadge(rec)}<span class="count">${rec.c} of ${rec.t}</span></div>`).join("");
+
     const review = misses.map((r) => `
       <div class="review-item">
         <div class="tags"><span class="tag rule">${esc(r.q.rule)}</span><span class="tag">${esc(r.q.section.title)} · #${r.q.num}</span></div>
@@ -491,6 +523,10 @@
           <button class="btn ${misses.length ? "" : "primary"}" id="again">New test</button>
         </div>
       </section>
+      ${bySection.size ? `<section class="card"><h2>By section</h2>
+        <div class="sec-scores">${sectionRows}</div>
+        <p class="hint">${recorded ? "These colors now show next to each section when you build a test." : "Retakes of missed questions don't change the section colors; only regular tests do."}</p>
+      </section>` : ""}
       ${misses.length ? `<section class="card"><h2>Review what you missed</h2><div class="review">${review}</div></section>` : ""}`;
 
     const retry = $("#retry");
