@@ -5,7 +5,7 @@
   "use strict";
 
   const LETTERS = ["A", "B", "C", "D", "E", "F"];
-  const PASS_MARK = 90; // The Coast Guard Rules of the Road exam module requires 90%.
+  const SUBJECTS = window.QUIZ_SUBJECTS;
   const STORE_KEY = "rotr-quiz-v1";
 
   // ---------- Build the question bank ----------
@@ -39,9 +39,30 @@
   const saved = load();
   saved.missed = Array.isArray(saved.missed) ? saved.missed.filter((id) => byId.has(id)) : [];
   const settings = Object.assign(
-    { sections: window.QUIZ_SECTIONS.map((s) => s.id), mode: "practice", count: "25", shuffle: true, diagrams: false },
+    { subject: "rules", sections: window.QUIZ_SECTIONS.map((s) => s.id), mode: "practice", count: "25", shuffle: true, diagrams: false },
     saved.settings || {}
   );
+  if (!SUBJECTS.some((x) => x.id === settings.subject)) settings.subject = "rules";
+  // Sections added after the settings were saved start out switched on.
+  const knownSections = new Set(saved.knownSections || window.QUIZ_SECTIONS.map((s) => s.id));
+  for (const sec of window.QUIZ_SECTIONS) {
+    if (!knownSections.has(sec.id) && !settings.sections.includes(sec.id)) settings.sections.push(sec.id);
+  }
+  saved.knownSections = window.QUIZ_SECTIONS.map((s) => s.id);
+  saved.settings = settings;
+  save();
+  const subject = () => SUBJECTS.find((x) => x.id === settings.subject);
+  const subjectSections = (id) => window.QUIZ_SECTIONS.filter((s) => s.subject === id);
+  const subjectCount = (id) => bank.filter((q) => q.section.subject === id).length;
+  const missedHere = () => saved.missed.filter((id) => byId.get(id).section.subject === settings.subject);
+
+  function updateHeader() {
+    const sub = subject();
+    const n = subjectCount(sub.id);
+    $("#subject-title").textContent = sub.title;
+    $("#subject-blurb").textContent = sub.blurb + (n ? ` · ${n} questions` : "");
+    $("#source").textContent = sub.source;
+  }
 
   // ---------- State ----------
   let quiz = null; // { list, idx, picks: [], checked: [] }
@@ -61,7 +82,7 @@
     return a;
   }
   function pool() {
-    return bank.filter((q) => settings.sections.includes(q.section.id) && (settings.diagrams || !q.diagram));
+    return bank.filter((q) => q.section.subject === settings.subject && settings.sections.includes(q.section.id) && (settings.diagrams || !q.diagram));
   }
 
   // ---------- Tips ----------
@@ -132,7 +153,17 @@
   // ---------- Setup screen ----------
   function renderSetup() {
     quiz = null;
-    const secRows = window.QUIZ_SECTIONS.map((s) => {
+    updateHeader();
+    const sub = subject();
+    const sections = subjectSections(sub.id);
+    const subjectTabs = `<nav class="subjects" aria-label="Subject">${SUBJECTS.map((x) => {
+      const n = subjectCount(x.id);
+      return `<button type="button" class="subject" data-subject="${x.id}" aria-pressed="${x.id === sub.id}">
+        <span class="subject-name">${esc(x.title)}</span>
+        <span class="subject-count">${n ? n + " questions" : "Coming soon"}</span>
+      </button>`;
+    }).join("")}</nav>`;
+    const secRows = sections.map((s) => {
       const n = s.items.filter((q) => settings.diagrams || !q.diagram).length;
       const hidden = s.items.length - n;
       return `<label class="check" for="sec-${s.id}">
@@ -146,9 +177,21 @@
       `<button type="button" data-${name}="${val}" aria-pressed="${settings[name] === val}">${label}</button>`).join("");
 
     const available = pool().length;
-    const missedCount = saved.missed.length;
+    const missedCount = missedHere().length;
+    const hasDiagrams = sections.some((s) => s.items.some((q) => q.diagram));
 
-    app.innerHTML = `
+    if (!sections.length) {
+      app.innerHTML = `${subjectTabs}
+        <section class="card empty">
+          <h2>No ${esc(sub.title)} questions yet</h2>
+          <p>Send photos of your ${esc(sub.title)} practice pages and their answer key, and the questions will show up here with the same practice mode, exam mode, tips and missed-question retakes.</p>
+          <p class="hint">Passing score for this exam module: ${sub.pass}%.</p>
+        </section>`;
+      bindSubjectTabs();
+      return;
+    }
+
+    app.innerHTML = `${subjectTabs}
       <section class="card" aria-labelledby="setup-h">
         <h2 id="setup-h">Build your test</h2>
         <div class="field">
@@ -169,8 +212,8 @@
         </div>
         <div class="field">
           <label class="toggle" for="opt-shuffle"><input type="checkbox" id="opt-shuffle" ${settings.shuffle ? "checked" : ""}> Shuffle question order</label>
-          <label class="toggle" for="opt-diagrams"><input type="checkbox" id="opt-diagrams" ${settings.diagrams ? "checked" : ""}> Include questions that refer to a book diagram</label>
-          <p class="hint">The diagrams aren't reproduced here, so those questions are off by default.</p>
+          ${hasDiagrams ? `<label class="toggle" for="opt-diagrams"><input type="checkbox" id="opt-diagrams" ${settings.diagrams ? "checked" : ""}> Include questions that refer to a book diagram</label>
+          <p class="hint">The diagrams aren't reproduced here, so those questions are off by default.</p>` : ""}
         </div>
         <div class="actions">
           <button class="btn primary" id="start" ${available ? "" : "disabled"}>Start test</button>
@@ -178,13 +221,14 @@
           ${missedCount ? `<button class="btn ghost" id="clear-missed">Clear missed list</button>` : ""}
         </div>
       </section>
-      <section class="card tricks-promo">
+      ${sub.id === "rules" ? `<section class="card tricks-promo">
         <div>
           <h2>Memory tricks</h2>
           <p class="hint">Short sayings for every rule, like "Red over red, the captain is dead."</p>
         </div>
         <button class="btn" id="open-tricks">Open memory tricks</button>
-      </section>`;
+      </section>` : ""}`;
+    bindSubjectTabs();
 
     app.querySelectorAll("[data-sec]").forEach((el) => el.addEventListener("change", () => {
       settings.sections = [...app.querySelectorAll("[data-sec]:checked")].map((x) => x.dataset.sec);
@@ -197,7 +241,8 @@
       settings.count = el.dataset.count; persistSettings(); renderSetup();
     }));
     $("#opt-shuffle").addEventListener("change", (e) => { settings.shuffle = e.target.checked; persistSettings(); });
-    $("#opt-diagrams").addEventListener("change", (e) => { settings.diagrams = e.target.checked; persistSettings(); renderSetup(); });
+    const diag = $("#opt-diagrams");
+    if (diag) diag.addEventListener("change", (e) => { settings.diagrams = e.target.checked; persistSettings(); renderSetup(); });
     $("#start").addEventListener("click", () => {
       let list = pool();
       if (settings.shuffle) list = shuffle(list);
@@ -205,11 +250,21 @@
       startQuiz(list);
     });
     $("#start-missed").addEventListener("click", () => {
-      startQuiz(shuffle(saved.missed.map((id) => byId.get(id))));
+      startQuiz(shuffle(missedHere().map((id) => byId.get(id))));
     });
-    $("#open-tricks").addEventListener("click", renderTricks);
+    const tricks = $("#open-tricks");
+    if (tricks) tricks.addEventListener("click", renderTricks);
     const clr = $("#clear-missed");
-    if (clr) clr.addEventListener("click", () => { saved.missed = []; save(); renderSetup(); });
+    if (clr) clr.addEventListener("click", () => {
+      const here = new Set(missedHere());
+      saved.missed = saved.missed.filter((id) => !here.has(id));
+      save(); renderSetup();
+    });
+  }
+  function bindSubjectTabs() {
+    app.querySelectorAll("[data-subject]").forEach((el) => el.addEventListener("click", () => {
+      settings.subject = el.dataset.subject; persistSettings(); renderSetup();
+    }));
   }
   function persistSettings() { saved.settings = settings; save(); }
 
@@ -390,7 +445,8 @@
     const correct = scored.filter((r) => r.pick === r.q.answer).length;
     const total = scored.length;
     const pct = total ? Math.round((correct / total) * 100) : 0;
-    const pass = pct >= PASS_MARK;
+    const sub = subject();
+    const pass = pct >= sub.pass;
     const misses = scored.filter((r) => r.pick !== r.q.answer);
 
     const review = misses.map((r) => `
@@ -410,7 +466,7 @@
           <div class="big ${pass ? "pass" : "fail"}">${pct}%</div>
           <div class="meta">
             <span><b>${correct}</b> of <b>${total}</b> correct${tipsUsed ? ` · tips used on ${tipsUsed}` : ""}</span>
-            <span class="hint">${pass ? "That clears the 90% needed on the Coast Guard Rules of the Road exam." : "The Coast Guard Rules of the Road exam needs 90% to pass. Keep at it."}</span>
+            <span class="hint">${pass ? `That clears the ${sub.pass}% needed on the Coast Guard ${esc(sub.title)} exam.` : `The Coast Guard ${esc(sub.title)} exam needs ${sub.pass}% to pass. Keep at it.`}</span>
           </div>
         </div>
         <div class="actions">
@@ -441,6 +497,5 @@
     }
   });
 
-  $("#total-count").textContent = bank.length;
   renderSetup();
 })();

@@ -1,4 +1,4 @@
-# Rules of the Road Quiz
+# Deck Exam Prep
 
 A simple practice-test website for the USCG Navigation Rules (International & Inland), using the
 U.S. Maritime Academy "Rules of the Road" practice problems.
@@ -27,6 +27,13 @@ U.S. Maritime Academy "Rules of the Road" practice problems.
 All answers come from the book's answer keys. Questions that refer to a book diagram are flagged
 `{diagram: true}` and are off by default in the quiz. Lights & Shapes #276–297 (pages 62–63) are not
 in yet.
+
+## Subjects
+
+Tabs at the top switch between Rules of the Road, Deck Safety, Navigation General and Deck General
+(`data/subjects.js`, which also sets each module's passing score: 90% for Rules, 70% for the rest).
+Deck Safety, Navigation General and Deck General are empty for now: add sections to
+`data/deck-safety.js`, `data/nav-general.js` and `data/deck-general.js` with the matching `subject`.
 
 ## Adding questions
 

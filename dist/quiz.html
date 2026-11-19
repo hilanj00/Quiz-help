@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Rules of the Road Quiz</title>
+<title>Deck Exam Prep</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -109,6 +109,23 @@ h2 {
   text-transform: uppercase;
   color: var(--muted);
 }
+
+/* Subject tabs */
+.subjects { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+.subject {
+  font: inherit; text-align: left; cursor: pointer;
+  display: flex; flex-direction: column; gap: 2px;
+  padding: 10px 12px; min-width: 0;
+  background: var(--surface); color: var(--ink);
+  border: 1.5px solid var(--line); border-radius: 8px;
+}
+.subject:hover { border-color: var(--accent); }
+.subject[aria-pressed="true"] { border-color: var(--accent); background: var(--accent); color: var(--accent-ink); }
+.subject-name { font-family: var(--font-display); font-weight: 600; font-size: 1.1rem; line-height: 1.15; text-transform: uppercase; letter-spacing: 0.02em; }
+.subject-count { font-family: var(--font-mono); font-size: 0.72rem; opacity: 0.8; }
+.subject:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.card.empty p { margin: 0; }
+@media (max-width: 640px) { .subjects { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
 
 /* Setup */
 .sections { display: flex; flex-direction: column; gap: 8px; }
@@ -269,17 +286,54 @@ footer { color: var(--muted); font-size: 0.8rem; text-align: center; }
 <div class="wrap">
   <header class="top">
     <div class="brand">
-      <h1>Rules of the Road</h1>
-      <p>Navigation Rules practice test · International &amp; Inland · <span id="total-count">0</span> questions</p>
+      <h1 id="subject-title">Rules of the Road</h1>
+      <p id="subject-blurb">Navigation Rules · International &amp; Inland</p>
     </div>
     <div class="lights" aria-hidden="true"><span class="r"></span><span class="w"></span><span class="g"></span></div>
   </header>
   <main id="app"></main>
-  <footer>Questions from the U.S. Maritime Academy Rules of the Road practice problems, based on the USCG Navigation Rules and Regulations Handbook.</footer>
+  <footer id="source"></footer>
 </div>
 <script>
   window.QUIZ_SECTIONS = [];
-  function addSection(s) { window.QUIZ_SECTIONS.push(s); }
+  function addSection(s) { s.subject = s.subject || "rules"; window.QUIZ_SECTIONS.push(s); }
+</script>
+<script>
+// The subjects shown as tabs at the top of the site.
+// Each section in a data file belongs to one subject through its `subject` field
+// (sections with no subject belong to "rules").
+// pass = the score needed to pass that Coast Guard exam module (Rules of the Road 90%, the others 70%).
+
+window.QUIZ_SUBJECTS = [
+  {
+    id: "rules",
+    title: "Rules of the Road",
+    blurb: "Navigation Rules · International & Inland",
+    pass: 90,
+    source: "Questions from the U.S. Maritime Academy Rules of the Road practice problems, based on the USCG Navigation Rules and Regulations Handbook.",
+  },
+  {
+    id: "deck-safety",
+    title: "Deck Safety",
+    blurb: "Firefighting, lifesaving, damage control and safety rules",
+    pass: 70,
+    source: "Deck Safety practice questions.",
+  },
+  {
+    id: "nav-general",
+    title: "Navigation General",
+    blurb: "Charts, aids to navigation, tides, weather and instruments",
+    pass: 70,
+    source: "Navigation General practice questions.",
+  },
+  {
+    id: "deck-general",
+    title: "Deck General",
+    blurb: "Seamanship, ship construction, cargo and stability",
+    pass: 70,
+    source: "Deck General practice questions.",
+  },
+];
 </script>
 <script>
 // Rules 1-9 — transcribed from the U.S. Maritime Academy "Rules of the Road" practice problems.
@@ -2585,6 +2639,42 @@ for (const sec of DIAGRAM_SECTIONS) {
 }
 </script>
 <script>
+// Deck Safety questions. Add a section like the example below; set subject: "deck-safety".
+// Each question: [number, "topic", "Question text", ["A", "B", "C", "D"], "B", {note: "optional"}],
+//
+// addSection({
+//   id: "deck-safety-1",
+//   subject: "deck-safety",
+//   title: "Deck Safety · Part 1",
+//   questions: [
+//   ]
+// });
+</script>
+<script>
+// Navigation General questions. Add a section like the example below; set subject: "nav-general".
+// Each question: [number, "topic", "Question text", ["A", "B", "C", "D"], "B", {note: "optional"}],
+//
+// addSection({
+//   id: "nav-general-1",
+//   subject: "nav-general",
+//   title: "Navigation General · Part 1",
+//   questions: [
+//   ]
+// });
+</script>
+<script>
+// Deck General questions. Add a section like the example below; set subject: "deck-general".
+// Each question: [number, "topic", "Question text", ["A", "B", "C", "D"], "B", {note: "optional"}],
+//
+// addSection({
+//   id: "deck-general-1",
+//   subject: "deck-general",
+//   title: "Deck General · Part 1",
+//   questions: [
+//   ]
+// });
+</script>
+<script>
 // Tips and memory tricks for each Rule of the Road.
 // "idea" is the key point to think about (shown by the Tip button without giving away the answer).
 // "trick" is an easy way to remember the rule.
@@ -2803,7 +2893,7 @@ window.RULE_GROUPS = [
   "use strict";
 
   const LETTERS = ["A", "B", "C", "D", "E", "F"];
-  const PASS_MARK = 90; // The Coast Guard Rules of the Road exam module requires 90%.
+  const SUBJECTS = window.QUIZ_SUBJECTS;
   const STORE_KEY = "rotr-quiz-v1";
 
   // ---------- Build the question bank ----------
@@ -2837,9 +2927,30 @@ window.RULE_GROUPS = [
   const saved = load();
   saved.missed = Array.isArray(saved.missed) ? saved.missed.filter((id) => byId.has(id)) : [];
   const settings = Object.assign(
-    { sections: window.QUIZ_SECTIONS.map((s) => s.id), mode: "practice", count: "25", shuffle: true, diagrams: false },
+    { subject: "rules", sections: window.QUIZ_SECTIONS.map((s) => s.id), mode: "practice", count: "25", shuffle: true, diagrams: false },
     saved.settings || {}
   );
+  if (!SUBJECTS.some((x) => x.id === settings.subject)) settings.subject = "rules";
+  // Sections added after the settings were saved start out switched on.
+  const knownSections = new Set(saved.knownSections || window.QUIZ_SECTIONS.map((s) => s.id));
+  for (const sec of window.QUIZ_SECTIONS) {
+    if (!knownSections.has(sec.id) && !settings.sections.includes(sec.id)) settings.sections.push(sec.id);
+  }
+  saved.knownSections = window.QUIZ_SECTIONS.map((s) => s.id);
+  saved.settings = settings;
+  save();
+  const subject = () => SUBJECTS.find((x) => x.id === settings.subject);
+  const subjectSections = (id) => window.QUIZ_SECTIONS.filter((s) => s.subject === id);
+  const subjectCount = (id) => bank.filter((q) => q.section.subject === id).length;
+  const missedHere = () => saved.missed.filter((id) => byId.get(id).section.subject === settings.subject);
+
+  function updateHeader() {
+    const sub = subject();
+    const n = subjectCount(sub.id);
+    $("#subject-title").textContent = sub.title;
+    $("#subject-blurb").textContent = sub.blurb + (n ? ` · ${n} questions` : "");
+    $("#source").textContent = sub.source;
+  }
 
   // ---------- State ----------
   let quiz = null; // { list, idx, picks: [], checked: [] }
@@ -2859,7 +2970,7 @@ window.RULE_GROUPS = [
     return a;
   }
   function pool() {
-    return bank.filter((q) => settings.sections.includes(q.section.id) && (settings.diagrams || !q.diagram));
+    return bank.filter((q) => q.section.subject === settings.subject && settings.sections.includes(q.section.id) && (settings.diagrams || !q.diagram));
   }
 
   // ---------- Tips ----------
@@ -2930,7 +3041,17 @@ window.RULE_GROUPS = [
   // ---------- Setup screen ----------
   function renderSetup() {
     quiz = null;
-    const secRows = window.QUIZ_SECTIONS.map((s) => {
+    updateHeader();
+    const sub = subject();
+    const sections = subjectSections(sub.id);
+    const subjectTabs = `<nav class="subjects" aria-label="Subject">${SUBJECTS.map((x) => {
+      const n = subjectCount(x.id);
+      return `<button type="button" class="subject" data-subject="${x.id}" aria-pressed="${x.id === sub.id}">
+        <span class="subject-name">${esc(x.title)}</span>
+        <span class="subject-count">${n ? n + " questions" : "Coming soon"}</span>
+      </button>`;
+    }).join("")}</nav>`;
+    const secRows = sections.map((s) => {
       const n = s.items.filter((q) => settings.diagrams || !q.diagram).length;
       const hidden = s.items.length - n;
       return `<label class="check" for="sec-${s.id}">
@@ -2944,9 +3065,21 @@ window.RULE_GROUPS = [
       `<button type="button" data-${name}="${val}" aria-pressed="${settings[name] === val}">${label}</button>`).join("");
 
     const available = pool().length;
-    const missedCount = saved.missed.length;
+    const missedCount = missedHere().length;
+    const hasDiagrams = sections.some((s) => s.items.some((q) => q.diagram));
 
-    app.innerHTML = `
+    if (!sections.length) {
+      app.innerHTML = `${subjectTabs}
+        <section class="card empty">
+          <h2>No ${esc(sub.title)} questions yet</h2>
+          <p>Send photos of your ${esc(sub.title)} practice pages and their answer key, and the questions will show up here with the same practice mode, exam mode, tips and missed-question retakes.</p>
+          <p class="hint">Passing score for this exam module: ${sub.pass}%.</p>
+        </section>`;
+      bindSubjectTabs();
+      return;
+    }
+
+    app.innerHTML = `${subjectTabs}
       <section class="card" aria-labelledby="setup-h">
         <h2 id="setup-h">Build your test</h2>
         <div class="field">
@@ -2967,8 +3100,8 @@ window.RULE_GROUPS = [
         </div>
         <div class="field">
           <label class="toggle" for="opt-shuffle"><input type="checkbox" id="opt-shuffle" ${settings.shuffle ? "checked" : ""}> Shuffle question order</label>
-          <label class="toggle" for="opt-diagrams"><input type="checkbox" id="opt-diagrams" ${settings.diagrams ? "checked" : ""}> Include questions that refer to a book diagram</label>
-          <p class="hint">The diagrams aren't reproduced here, so those questions are off by default.</p>
+          ${hasDiagrams ? `<label class="toggle" for="opt-diagrams"><input type="checkbox" id="opt-diagrams" ${settings.diagrams ? "checked" : ""}> Include questions that refer to a book diagram</label>
+          <p class="hint">The diagrams aren't reproduced here, so those questions are off by default.</p>` : ""}
         </div>
         <div class="actions">
           <button class="btn primary" id="start" ${available ? "" : "disabled"}>Start test</button>
@@ -2976,13 +3109,14 @@ window.RULE_GROUPS = [
           ${missedCount ? `<button class="btn ghost" id="clear-missed">Clear missed list</button>` : ""}
         </div>
       </section>
-      <section class="card tricks-promo">
+      ${sub.id === "rules" ? `<section class="card tricks-promo">
         <div>
           <h2>Memory tricks</h2>
           <p class="hint">Short sayings for every rule, like "Red over red, the captain is dead."</p>
         </div>
         <button class="btn" id="open-tricks">Open memory tricks</button>
-      </section>`;
+      </section>` : ""}`;
+    bindSubjectTabs();
 
     app.querySelectorAll("[data-sec]").forEach((el) => el.addEventListener("change", () => {
       settings.sections = [...app.querySelectorAll("[data-sec]:checked")].map((x) => x.dataset.sec);
@@ -2995,7 +3129,8 @@ window.RULE_GROUPS = [
       settings.count = el.dataset.count; persistSettings(); renderSetup();
     }));
     $("#opt-shuffle").addEventListener("change", (e) => { settings.shuffle = e.target.checked; persistSettings(); });
-    $("#opt-diagrams").addEventListener("change", (e) => { settings.diagrams = e.target.checked; persistSettings(); renderSetup(); });
+    const diag = $("#opt-diagrams");
+    if (diag) diag.addEventListener("change", (e) => { settings.diagrams = e.target.checked; persistSettings(); renderSetup(); });
     $("#start").addEventListener("click", () => {
       let list = pool();
       if (settings.shuffle) list = shuffle(list);
@@ -3003,11 +3138,21 @@ window.RULE_GROUPS = [
       startQuiz(list);
     });
     $("#start-missed").addEventListener("click", () => {
-      startQuiz(shuffle(saved.missed.map((id) => byId.get(id))));
+      startQuiz(shuffle(missedHere().map((id) => byId.get(id))));
     });
-    $("#open-tricks").addEventListener("click", renderTricks);
+    const tricks = $("#open-tricks");
+    if (tricks) tricks.addEventListener("click", renderTricks);
     const clr = $("#clear-missed");
-    if (clr) clr.addEventListener("click", () => { saved.missed = []; save(); renderSetup(); });
+    if (clr) clr.addEventListener("click", () => {
+      const here = new Set(missedHere());
+      saved.missed = saved.missed.filter((id) => !here.has(id));
+      save(); renderSetup();
+    });
+  }
+  function bindSubjectTabs() {
+    app.querySelectorAll("[data-subject]").forEach((el) => el.addEventListener("click", () => {
+      settings.subject = el.dataset.subject; persistSettings(); renderSetup();
+    }));
   }
   function persistSettings() { saved.settings = settings; save(); }
 
@@ -3188,7 +3333,8 @@ window.RULE_GROUPS = [
     const correct = scored.filter((r) => r.pick === r.q.answer).length;
     const total = scored.length;
     const pct = total ? Math.round((correct / total) * 100) : 0;
-    const pass = pct >= PASS_MARK;
+    const sub = subject();
+    const pass = pct >= sub.pass;
     const misses = scored.filter((r) => r.pick !== r.q.answer);
 
     const review = misses.map((r) => `
@@ -3208,7 +3354,7 @@ window.RULE_GROUPS = [
           <div class="big ${pass ? "pass" : "fail"}">${pct}%</div>
           <div class="meta">
             <span><b>${correct}</b> of <b>${total}</b> correct${tipsUsed ? ` · tips used on ${tipsUsed}` : ""}</span>
-            <span class="hint">${pass ? "That clears the 90% needed on the Coast Guard Rules of the Road exam." : "The Coast Guard Rules of the Road exam needs 90% to pass. Keep at it."}</span>
+            <span class="hint">${pass ? `That clears the ${sub.pass}% needed on the Coast Guard ${esc(sub.title)} exam.` : `The Coast Guard ${esc(sub.title)} exam needs ${sub.pass}% to pass. Keep at it.`}</span>
           </div>
         </div>
         <div class="actions">
@@ -3239,7 +3385,6 @@ window.RULE_GROUPS = [
     }
   });
 
-  $("#total-count").textContent = bank.length;
   renderSetup();
 })();
 </script>

@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <!-- ARTIFACT-HEAD-START -->
-<title>Rules of the Road Quiz</title>
+<title>Deck Exam Prep</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -17,18 +17,19 @@
 <div class="wrap">
   <header class="top">
     <div class="brand">
-      <h1>Rules of the Road</h1>
-      <p>Navigation Rules practice test · International &amp; Inland · <span id="total-count">0</span> questions</p>
+      <h1 id="subject-title">Rules of the Road</h1>
+      <p id="subject-blurb">Navigation Rules · International &amp; Inland</p>
     </div>
     <div class="lights" aria-hidden="true"><span class="r"></span><span class="w"></span><span class="g"></span></div>
   </header>
   <main id="app"></main>
-  <footer>Questions from the U.S. Maritime Academy Rules of the Road practice problems, based on the USCG Navigation Rules and Regulations Handbook.</footer>
+  <footer id="source"></footer>
 </div>
 <script>
   window.QUIZ_SECTIONS = [];
-  function addSection(s) { window.QUIZ_SECTIONS.push(s); }
+  function addSection(s) { s.subject = s.subject || "rules"; window.QUIZ_SECTIONS.push(s); }
 </script>
+<script src="data/subjects.js"></script>
 <script src="data/rules-01-09.js"></script>
 <script src="data/rules-10-19.js"></script>
 <script src="data/lights-shapes.js"></script>
@@ -36,6 +37,9 @@
 <script src="data/sound-signals.js"></script>
 <script src="data/annexes.js"></script>
 <script src="data/diagrams.js"></script>
+<script src="data/deck-safety.js"></script>
+<script src="data/nav-general.js"></script>
+<script src="data/deck-general.js"></script>
 <script src="data/tips.js"></script>
 <script src="app.js"></script>
 <!-- ARTIFACT-BODY-END -->

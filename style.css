@@ -99,6 +99,23 @@ h2 {
   color: var(--muted);
 }
 
+/* Subject tabs */
+.subjects { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px; }
+.subject {
+  font: inherit; text-align: left; cursor: pointer;
+  display: flex; flex-direction: column; gap: 2px;
+  padding: 10px 12px; min-width: 0;
+  background: var(--surface); color: var(--ink);
+  border: 1.5px solid var(--line); border-radius: 8px;
+}
+.subject:hover { border-color: var(--accent); }
+.subject[aria-pressed="true"] { border-color: var(--accent); background: var(--accent); color: var(--accent-ink); }
+.subject-name { font-family: var(--font-display); font-weight: 600; font-size: 1.1rem; line-height: 1.15; text-transform: uppercase; letter-spacing: 0.02em; }
+.subject-count { font-family: var(--font-mono); font-size: 0.72rem; opacity: 0.8; }
+.subject:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.card.empty p { margin: 0; }
+@media (max-width: 640px) { .subjects { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+
 /* Setup */
 .sections { display: flex; flex-direction: column; gap: 8px; }
 .check {
