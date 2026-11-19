@@ -254,6 +254,39 @@ button:focus-visible, input:focus-visible { outline: 3px solid var(--accent); ou
 .feedback p { margin: 0; }
 .src { color: var(--muted); font-size: 0.85rem; }
 
+/* Practice layout: question on the left, missed list on the right */
+.wrap.wide { max-width: 1060px; }
+.quiz-layout { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 20px; align-items: start; }
+.quiz-main { display: flex; flex-direction: column; gap: 20px; min-width: 0; }
+.missed-panel {
+  position: sticky; top: calc(env(safe-area-inset-top, 0px) + 16px);
+  max-height: calc(100vh - 32px); overflow-y: auto;
+  background: var(--surface); border: 1px solid var(--line); border-top: 4px solid var(--port);
+  border-radius: 10px; padding: 16px;
+  display: flex; flex-direction: column; gap: 12px;
+}
+.missed-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+.missed-head h2 { font-size: 1.15rem; }
+.missed-head .count { font-family: var(--font-mono); font-size: 0.8rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.missed-panel .hint { margin: 0; }
+.missed-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.missed-item {
+  border: 1px solid var(--line); border-left: 4px solid var(--port); border-radius: 8px;
+  padding: 10px 12px; display: flex; flex-direction: column; gap: 6px; align-items: flex-start;
+}
+.missed-item.fixed { border-left-color: var(--stbd); }
+.missed-item.now { border-left-color: var(--accent); background: var(--bg); }
+.missed-top { display: flex; gap: 8px; align-items: baseline; width: 100%; }
+.missed-num { font-family: var(--font-mono); font-weight: 600; font-size: 0.85rem; }
+.missed-status { font-size: 0.8rem; color: var(--port); font-weight: 600; }
+.missed-item.fixed .missed-status { color: var(--stbd); }
+.missed-item.now .missed-status { color: var(--accent); }
+.missed-text { margin: 0; font-size: 0.88rem; color: var(--muted); line-height: 1.4; }
+@media (max-width: 860px) {
+  .quiz-layout { grid-template-columns: minmax(0, 1fr); }
+  .missed-panel { position: static; max-height: none; }
+}
+
 /* Tips */
 .tip-btn { border-color: var(--amber); color: var(--amber); }
 .tip-btn:hover { border-color: var(--amber); background: var(--amber-soft); }

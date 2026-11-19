@@ -265,6 +265,39 @@ button:focus-visible, input:focus-visible { outline: 3px solid var(--accent); ou
 .feedback p { margin: 0; }
 .src { color: var(--muted); font-size: 0.85rem; }
 
+/* Practice layout: question on the left, missed list on the right */
+.wrap.wide { max-width: 1060px; }
+.quiz-layout { display: grid; grid-template-columns: minmax(0, 1fr) 300px; gap: 20px; align-items: start; }
+.quiz-main { display: flex; flex-direction: column; gap: 20px; min-width: 0; }
+.missed-panel {
+  position: sticky; top: calc(env(safe-area-inset-top, 0px) + 16px);
+  max-height: calc(100vh - 32px); overflow-y: auto;
+  background: var(--surface); border: 1px solid var(--line); border-top: 4px solid var(--port);
+  border-radius: 10px; padding: 16px;
+  display: flex; flex-direction: column; gap: 12px;
+}
+.missed-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+.missed-head h2 { font-size: 1.15rem; }
+.missed-head .count { font-family: var(--font-mono); font-size: 0.8rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.missed-panel .hint { margin: 0; }
+.missed-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.missed-item {
+  border: 1px solid var(--line); border-left: 4px solid var(--port); border-radius: 8px;
+  padding: 10px 12px; display: flex; flex-direction: column; gap: 6px; align-items: flex-start;
+}
+.missed-item.fixed { border-left-color: var(--stbd); }
+.missed-item.now { border-left-color: var(--accent); background: var(--bg); }
+.missed-top { display: flex; gap: 8px; align-items: baseline; width: 100%; }
+.missed-num { font-family: var(--font-mono); font-weight: 600; font-size: 0.85rem; }
+.missed-status { font-size: 0.8rem; color: var(--port); font-weight: 600; }
+.missed-item.fixed .missed-status { color: var(--stbd); }
+.missed-item.now .missed-status { color: var(--accent); }
+.missed-text { margin: 0; font-size: 0.88rem; color: var(--muted); line-height: 1.4; }
+@media (max-width: 860px) {
+  .quiz-layout { grid-template-columns: minmax(0, 1fr); }
+  .missed-panel { position: static; max-height: none; }
+}
+
 /* Tips */
 .tip-btn { border-color: var(--amber); color: var(--amber); }
 .tip-btn:hover { border-color: var(--amber); background: var(--amber-soft); }
@@ -3074,6 +3107,7 @@ window.RULE_GROUPS = [
   // ---------- Memory tricks page ----------
   function renderTricks() {
     quiz = null;
+    setWide(false);
     const groups = (window.RULE_GROUPS || []).map((g) => `
       <section class="card">
         <h2>${esc(g.title)}</h2>
@@ -3099,6 +3133,7 @@ window.RULE_GROUPS = [
   // ---------- Setup screen ----------
   function renderSetup() {
     quiz = null;
+    setWide(false);
     updateHeader();
     const sub = subject();
     const sections = subjectSections(sub.id);
@@ -3247,6 +3282,9 @@ window.RULE_GROUPS = [
       checked: new Array(list.length).fill(false),
       tips: new Array(list.length).fill(false),
       struck: list.map(() => []),
+      firstPick: new Array(list.length).fill(-1), // practice: the answer given the first time it was checked
+      retried: new Array(list.length).fill(false),
+      furthest: 0,                                 // practice: the furthest question reached
     };
     renderQuestion();
     window.scrollTo(0, 0);
@@ -3260,6 +3298,7 @@ window.RULE_GROUPS = [
     const pick = picks[idx];
     const done = practice && checked[idx];
     const answeredCount = picks.filter((p) => p >= 0).length;
+    const revisiting = practice && idx < quiz.furthest;
 
     const choices = q.choices.map((c, i) => {
       let cls = "choice";
@@ -3281,7 +3320,7 @@ window.RULE_GROUPS = [
         ${ok ? "" : `<p>The answer is <b>${LETTERS[q.answer]}</b>: ${esc(q.choices[q.answer])}</p>`}
         ${q.note ? `<p>${esc(q.note)}</p>` : ""}
         ${ruleKeys.length ? `<p class="trick"><span class="label">Remember</span> ${esc(TIPS[ruleKeys[0]].trick)}</p>` : ""}
-        <p class="src">${q.fromRules ? "Answer worked out from the Navigation Rules (book key not yet added)." : "Answer from the book's answer key."}</p>
+        <p class="src">${q.fromRules ? "Answer worked out from the Navigation Rules (book key not yet added)." : "Answer from the book's answer key."}${quiz.retried[idx] ? " Retries don't change your score; your first answer counts." : ""}</p>
       </div>`;
     }
 
@@ -3300,20 +3339,21 @@ window.RULE_GROUPS = [
     const last = idx === list.length - 1;
     let nextLabel, nextDisabled;
     if (practice) {
-      nextLabel = done ? (last ? "See results" : "Next question") : "Check answer";
+      nextLabel = done ? (revisiting ? `Back to question ${quiz.furthest + 1}` : last ? "See results" : "Next question") : "Check answer";
       nextDisabled = pick < 0;
     } else {
       nextLabel = last ? "Finish test" : "Next question";
       nextDisabled = false;
     }
 
-    app.innerHTML = `
+    const reached = practice ? quiz.furthest + (checked[quiz.furthest] ? 1 : 0) : idx + (done ? 1 : 0);
+    const main = `
       <div class="progress">
         <div class="progress-row">
-          <span class="label">Question ${idx + 1} of ${list.length}</span>
+          <span class="label">Question ${idx + 1} of ${list.length}${revisiting ? " · trying again" : ""}</span>
           <span class="label">${practice ? "Practice" : `${answeredCount} answered`}</span>
         </div>
-        <div class="bar"><div style="width:${((idx + (done ? 1 : 0)) / list.length) * 100}%"></div></div>
+        <div class="bar"><div style="width:${(reached / list.length) * 100}%"></div></div>
       </div>
       <section class="card" aria-live="polite">
         <div class="tags">
@@ -3328,6 +3368,7 @@ window.RULE_GROUPS = [
         <div class="nav">
           <div class="actions">
             ${!practice && idx > 0 ? `<button class="btn" id="prev">Back</button>` : ""}
+            ${revisiting && !done ? `<button class="btn" id="resume">Skip, back to question ${quiz.furthest + 1}</button>` : ""}
             ${done ? "" : `<button class="btn tip-btn" id="tip" aria-expanded="${tips[idx]}">${tips[idx] ? "Hide tip" : "Tip"}</button>`}
             <button class="btn ghost" id="quit">End test</button>
           </div>
@@ -3335,6 +3376,11 @@ window.RULE_GROUPS = [
         </div>
         <p class="kbd-hint">Keyboard: press A–D or 1–4 to choose, T for a tip, Enter to continue.</p>
       </section>`;
+
+    setWide(practice);
+    app.innerHTML = practice
+      ? `<div class="quiz-layout"><div class="quiz-main">${main}</div>${missedPanel()}</div>`
+      : main;
 
     app.querySelectorAll("[data-choice]").forEach((el) =>
       el.addEventListener("click", () => choose(Number(el.dataset.choice))));
@@ -3346,6 +3392,55 @@ window.RULE_GROUPS = [
     if (strikeBtn) strikeBtn.addEventListener("click", strikeOne);
     const prev = $("#prev");
     if (prev) prev.addEventListener("click", () => { quiz.idx--; renderQuestion(); });
+    const resume = $("#resume");
+    if (resume) resume.addEventListener("click", () => { quiz.idx = quiz.furthest; renderQuestion(); });
+    app.querySelectorAll("[data-retry]").forEach((el) =>
+      el.addEventListener("click", () => tryAgain(Number(el.dataset.retry))));
+  }
+
+  // Practice mode: the questions missed so far in this test, with a way back to each one.
+  function missedPanel() {
+    const { list, firstPick, picks, checked, retried, idx } = quiz;
+    const rows = [];
+    list.forEach((q, i) => {
+      if (firstPick[i] < 0 || firstPick[i] === q.answer) return;
+      let status, cls;
+      if (i === idx && !checked[i]) { status = "Trying again now"; cls = "now"; }
+      else if (retried[i] && checked[i] && picks[i] === q.answer) { status = "Got it on retry"; cls = "fixed"; }
+      else if (retried[i] && checked[i]) { status = "Missed again"; cls = "missed"; }
+      else { status = "Missed"; cls = "missed"; }
+      const canRetry = !(i === idx && !checked[i]);
+      rows.push(`<li class="missed-item ${cls}">
+        <div class="missed-top"><span class="missed-num">Q${i + 1}</span><span class="missed-status">${status}</span></div>
+        <p class="missed-text">${esc(q.text.length > 90 ? q.text.slice(0, 88).trimEnd() + "…" : q.text)}</p>
+        ${canRetry ? `<button type="button" class="link-btn" data-retry="${i}">Try again</button>` : ""}
+      </li>`);
+    });
+    const fixed = rows.filter((r) => r.includes("missed-item fixed")).length;
+    return `<aside class="missed-panel" aria-labelledby="missed-h">
+      <div class="missed-head">
+        <h2 id="missed-h">Missed this test</h2>
+        <span class="count">${rows.length}${fixed ? ` · ${fixed} fixed` : ""}</span>
+      </div>
+      ${rows.length ? `<ol class="missed-list">${rows.join("")}</ol>` : `<p class="hint">Nothing missed yet. Questions you get wrong show up here so you can go back and try them again.</p>`}
+    </aside>`;
+  }
+
+  function tryAgain(i) {
+    if (!quiz) return;
+    quiz.idx = i;
+    quiz.picks[i] = -1;
+    quiz.checked[i] = false;
+    quiz.struck[i] = [];
+    quiz.tips[i] = false;
+    quiz.retried[i] = true;
+    renderQuestion();
+    window.scrollTo(0, 0);
+  }
+
+  function setWide(on) {
+    const wrap = document.querySelector(".wrap");
+    if (wrap) wrap.classList.toggle("wide", !!on);
   }
 
   function toggleTip() {
@@ -3386,12 +3481,22 @@ window.RULE_GROUPS = [
     if (settings.mode === "practice" && !checked[idx]) {
       if (picks[idx] < 0) return;
       checked[idx] = true;
-      recordResult(list[idx], picks[idx] === list[idx].answer);
+      if (quiz.firstPick[idx] < 0) {
+        quiz.firstPick[idx] = picks[idx];
+        recordResult(list[idx], picks[idx] === list[idx].answer);
+      }
       renderQuestion();
+      return;
+    }
+    if (settings.mode === "practice" && idx < quiz.furthest) {
+      quiz.idx = quiz.furthest;
+      renderQuestion();
+      window.scrollTo(0, 0);
       return;
     }
     if (idx === list.length - 1) { finish(); return; }
     quiz.idx++;
+    if (settings.mode === "practice") quiz.furthest = Math.max(quiz.furthest, quiz.idx);
     renderQuestion();
     window.scrollTo(0, 0);
   }
@@ -3407,9 +3512,12 @@ window.RULE_GROUPS = [
   function finish() {
     const { list, picks, checked } = quiz;
     const tipsUsed = quiz.usedTip ? quiz.usedTip.size : 0;
+    setWide(false);
     const practice = settings.mode === "practice";
     // Practice mode only scores questions that were checked; exam mode scores everything shown.
-    const scored = list.map((q, i) => ({ q, pick: picks[i], counted: practice ? checked[i] : true }))
+    const scored = list.map((q, i) => practice
+        ? { q, pick: quiz.firstPick[i], counted: quiz.firstPick[i] >= 0 }
+        : { q, pick: picks[i], counted: true })
       .filter((r) => r.counted);
     if (!practice) scored.forEach((r) => recordResult(r.q, r.pick === r.q.answer));
 

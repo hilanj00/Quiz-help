@@ -140,6 +140,7 @@
   // ---------- Memory tricks page ----------
   function renderTricks() {
     quiz = null;
+    setWide(false);
     const groups = (window.RULE_GROUPS || []).map((g) => `
       <section class="card">
         <h2>${esc(g.title)}</h2>
@@ -165,6 +166,7 @@
   // ---------- Setup screen ----------
   function renderSetup() {
     quiz = null;
+    setWide(false);
     updateHeader();
     const sub = subject();
     const sections = subjectSections(sub.id);
@@ -313,6 +315,9 @@
       checked: new Array(list.length).fill(false),
       tips: new Array(list.length).fill(false),
       struck: list.map(() => []),
+      firstPick: new Array(list.length).fill(-1), // practice: the answer given the first time it was checked
+      retried: new Array(list.length).fill(false),
+      furthest: 0,                                 // practice: the furthest question reached
     };
     renderQuestion();
     window.scrollTo(0, 0);
@@ -326,6 +331,7 @@
     const pick = picks[idx];
     const done = practice && checked[idx];
     const answeredCount = picks.filter((p) => p >= 0).length;
+    const revisiting = practice && idx < quiz.furthest;
 
     const choices = q.choices.map((c, i) => {
       let cls = "choice";
@@ -347,7 +353,7 @@
         ${ok ? "" : `<p>The answer is <b>${LETTERS[q.answer]}</b>: ${esc(q.choices[q.answer])}</p>`}
         ${q.note ? `<p>${esc(q.note)}</p>` : ""}
         ${ruleKeys.length ? `<p class="trick"><span class="label">Remember</span> ${esc(TIPS[ruleKeys[0]].trick)}</p>` : ""}
-        <p class="src">${q.fromRules ? "Answer worked out from the Navigation Rules (book key not yet added)." : "Answer from the book's answer key."}</p>
+        <p class="src">${q.fromRules ? "Answer worked out from the Navigation Rules (book key not yet added)." : "Answer from the book's answer key."}${quiz.retried[idx] ? " Retries don't change your score; your first answer counts." : ""}</p>
       </div>`;
     }
 
@@ -366,20 +372,21 @@
     const last = idx === list.length - 1;
     let nextLabel, nextDisabled;
     if (practice) {
-      nextLabel = done ? (last ? "See results" : "Next question") : "Check answer";
+      nextLabel = done ? (revisiting ? `Back to question ${quiz.furthest + 1}` : last ? "See results" : "Next question") : "Check answer";
       nextDisabled = pick < 0;
     } else {
       nextLabel = last ? "Finish test" : "Next question";
       nextDisabled = false;
     }
 
-    app.innerHTML = `
+    const reached = practice ? quiz.furthest + (checked[quiz.furthest] ? 1 : 0) : idx + (done ? 1 : 0);
+    const main = `
       <div class="progress">
         <div class="progress-row">
-          <span class="label">Question ${idx + 1} of ${list.length}</span>
+          <span class="label">Question ${idx + 1} of ${list.length}${revisiting ? " · trying again" : ""}</span>
           <span class="label">${practice ? "Practice" : `${answeredCount} answered`}</span>
         </div>
-        <div class="bar"><div style="width:${((idx + (done ? 1 : 0)) / list.length) * 100}%"></div></div>
+        <div class="bar"><div style="width:${(reached / list.length) * 100}%"></div></div>
       </div>
       <section class="card" aria-live="polite">
         <div class="tags">
@@ -394,6 +401,7 @@
         <div class="nav">
           <div class="actions">
             ${!practice && idx > 0 ? `<button class="btn" id="prev">Back</button>` : ""}
+            ${revisiting && !done ? `<button class="btn" id="resume">Skip, back to question ${quiz.furthest + 1}</button>` : ""}
             ${done ? "" : `<button class="btn tip-btn" id="tip" aria-expanded="${tips[idx]}">${tips[idx] ? "Hide tip" : "Tip"}</button>`}
             <button class="btn ghost" id="quit">End test</button>
           </div>
@@ -401,6 +409,11 @@
         </div>
         <p class="kbd-hint">Keyboard: press A–D or 1–4 to choose, T for a tip, Enter to continue.</p>
       </section>`;
+
+    setWide(practice);
+    app.innerHTML = practice
+      ? `<div class="quiz-layout"><div class="quiz-main">${main}</div>${missedPanel()}</div>`
+      : main;
 
     app.querySelectorAll("[data-choice]").forEach((el) =>
       el.addEventListener("click", () => choose(Number(el.dataset.choice))));
@@ -412,6 +425,55 @@
     if (strikeBtn) strikeBtn.addEventListener("click", strikeOne);
     const prev = $("#prev");
     if (prev) prev.addEventListener("click", () => { quiz.idx--; renderQuestion(); });
+    const resume = $("#resume");
+    if (resume) resume.addEventListener("click", () => { quiz.idx = quiz.furthest; renderQuestion(); });
+    app.querySelectorAll("[data-retry]").forEach((el) =>
+      el.addEventListener("click", () => tryAgain(Number(el.dataset.retry))));
+  }
+
+  // Practice mode: the questions missed so far in this test, with a way back to each one.
+  function missedPanel() {
+    const { list, firstPick, picks, checked, retried, idx } = quiz;
+    const rows = [];
+    list.forEach((q, i) => {
+      if (firstPick[i] < 0 || firstPick[i] === q.answer) return;
+      let status, cls;
+      if (i === idx && !checked[i]) { status = "Trying again now"; cls = "now"; }
+      else if (retried[i] && checked[i] && picks[i] === q.answer) { status = "Got it on retry"; cls = "fixed"; }
+      else if (retried[i] && checked[i]) { status = "Missed again"; cls = "missed"; }
+      else { status = "Missed"; cls = "missed"; }
+      const canRetry = !(i === idx && !checked[i]);
+      rows.push(`<li class="missed-item ${cls}">
+        <div class="missed-top"><span class="missed-num">Q${i + 1}</span><span class="missed-status">${status}</span></div>
+        <p class="missed-text">${esc(q.text.length > 90 ? q.text.slice(0, 88).trimEnd() + "…" : q.text)}</p>
+        ${canRetry ? `<button type="button" class="link-btn" data-retry="${i}">Try again</button>` : ""}
+      </li>`);
+    });
+    const fixed = rows.filter((r) => r.includes("missed-item fixed")).length;
+    return `<aside class="missed-panel" aria-labelledby="missed-h">
+      <div class="missed-head">
+        <h2 id="missed-h">Missed this test</h2>
+        <span class="count">${rows.length}${fixed ? ` · ${fixed} fixed` : ""}</span>
+      </div>
+      ${rows.length ? `<ol class="missed-list">${rows.join("")}</ol>` : `<p class="hint">Nothing missed yet. Questions you get wrong show up here so you can go back and try them again.</p>`}
+    </aside>`;
+  }
+
+  function tryAgain(i) {
+    if (!quiz) return;
+    quiz.idx = i;
+    quiz.picks[i] = -1;
+    quiz.checked[i] = false;
+    quiz.struck[i] = [];
+    quiz.tips[i] = false;
+    quiz.retried[i] = true;
+    renderQuestion();
+    window.scrollTo(0, 0);
+  }
+
+  function setWide(on) {
+    const wrap = document.querySelector(".wrap");
+    if (wrap) wrap.classList.toggle("wide", !!on);
   }
 
   function toggleTip() {
@@ -452,12 +514,22 @@
     if (settings.mode === "practice" && !checked[idx]) {
       if (picks[idx] < 0) return;
       checked[idx] = true;
-      recordResult(list[idx], picks[idx] === list[idx].answer);
+      if (quiz.firstPick[idx] < 0) {
+        quiz.firstPick[idx] = picks[idx];
+        recordResult(list[idx], picks[idx] === list[idx].answer);
+      }
       renderQuestion();
+      return;
+    }
+    if (settings.mode === "practice" && idx < quiz.furthest) {
+      quiz.idx = quiz.furthest;
+      renderQuestion();
+      window.scrollTo(0, 0);
       return;
     }
     if (idx === list.length - 1) { finish(); return; }
     quiz.idx++;
+    if (settings.mode === "practice") quiz.furthest = Math.max(quiz.furthest, quiz.idx);
     renderQuestion();
     window.scrollTo(0, 0);
   }
@@ -473,9 +545,12 @@
   function finish() {
     const { list, picks, checked } = quiz;
     const tipsUsed = quiz.usedTip ? quiz.usedTip.size : 0;
+    setWide(false);
     const practice = settings.mode === "practice";
     // Practice mode only scores questions that were checked; exam mode scores everything shown.
-    const scored = list.map((q, i) => ({ q, pick: picks[i], counted: practice ? checked[i] : true }))
+    const scored = list.map((q, i) => practice
+        ? { q, pick: quiz.firstPick[i], counted: quiz.firstPick[i] >= 0 }
+        : { q, pick: picks[i], counted: true })
       .filter((r) => r.counted);
     if (!practice) scored.forEach((r) => recordResult(r.q, r.pick === r.q.answer));
 
