@@ -178,6 +178,7 @@
 
     const available = pool().length;
     const missedCount = missedHere().length;
+    const selectedHere = sections.filter((x) => settings.sections.includes(x.id)).length;
     const hasDiagrams = sections.some((s) => s.items.some((q) => q.diagram));
 
     if (!sections.length) {
@@ -195,7 +196,13 @@
       <section class="card" aria-labelledby="setup-h">
         <h2 id="setup-h">Build your test</h2>
         <div class="field">
-          <span class="label">Sections</span>
+          <div class="field-head">
+            <span class="label">Sections · ${selectedHere} of ${sections.length} selected</span>
+            <div class="mini-actions">
+              <button type="button" class="link-btn" id="sel-all" ${selectedHere === sections.length ? "disabled" : ""}>Select all</button>
+              <button type="button" class="link-btn" id="sel-none" ${selectedHere === 0 ? "disabled" : ""}>Deselect all</button>
+            </div>
+          </div>
           <div class="sections">${secRows}</div>
         </div>
         <div class="options">
@@ -231,9 +238,19 @@
     bindSubjectTabs();
 
     app.querySelectorAll("[data-sec]").forEach((el) => el.addEventListener("change", () => {
-      settings.sections = [...app.querySelectorAll("[data-sec]:checked")].map((x) => x.dataset.sec);
+      const others = settings.sections.filter((id) => !sections.some((x) => x.id === id));
+      settings.sections = [...others, ...[...app.querySelectorAll("[data-sec]:checked")].map((x) => x.dataset.sec)];
       persistSettings(); renderSetup();
     }));
+    const hereIds = sections.map((x) => x.id);
+    $("#sel-all").addEventListener("click", () => {
+      settings.sections = [...new Set([...settings.sections, ...hereIds])];
+      persistSettings(); renderSetup();
+    });
+    $("#sel-none").addEventListener("click", () => {
+      settings.sections = settings.sections.filter((id) => !hereIds.includes(id));
+      persistSettings(); renderSetup();
+    });
     app.querySelectorAll("[data-mode]").forEach((el) => el.addEventListener("click", () => {
       settings.mode = el.dataset.mode; persistSettings(); renderSetup();
     }));
