@@ -504,6 +504,7 @@
             <button class="btn primary" id="g-play">Play 10 rounds</button>
             <button class="btn" id="g-flash">Flash cards</button>
             <button class="btn" id="g-learn">Learn the lights</button>
+            <button class="btn" id="g-shapes">Learn the shapes</button>
           </div>
         </div>
       </section>
@@ -514,6 +515,7 @@
     root.querySelector("#g-back").addEventListener("click", exit);
     root.querySelector("#g-play").addEventListener("click", startGame);
     root.querySelector("#g-learn").addEventListener("click", () => learn());
+    root.querySelector("#g-shapes").addEventListener("click", learnShapes);
     root.querySelector("#g-flash").addEventListener("click", () => flashSetup());
     window.scrollTo(0, 0);
   }
@@ -528,7 +530,8 @@
     state = null; flash = null;
     if (openId) return card(openId, "ahead");
     root.innerHTML = `
-      <div class="actions"><button class="btn" id="g-home">Back to game</button><button class="btn primary" id="g-flash">Flash cards</button><button class="btn" id="g-play">Play 10 rounds</button></div>
+      <div class="actions"><button class="btn" id="g-home">Back to game</button><button class="btn primary" id="g-flash">Flash cards</button><button class="btn" id="g-play">Play 10 rounds</button><button class="btn" id="g-shapes">Learn the shapes</button></div>
+      <section class="card"><h2>Learn the lights</h2><p class="hint">Tap a vessel to see its lights from every side and what each one means.</p></section>
       ${GROUPS.map(([g, title]) => `
         <section class="card">
           <h2>${esc(title)}</h2>
@@ -542,18 +545,20 @@
     root.querySelector("#g-home").addEventListener("click", home);
     root.querySelector("#g-play").addEventListener("click", startGame);
     root.querySelector("#g-flash").addEventListener("click", () => flashSetup());
+    root.querySelector("#g-shapes").addEventListener("click", learnShapes);
     root.querySelectorAll("[data-open]").forEach((el) => el.addEventListener("click", () => card(el.dataset.open, "ahead")));
     window.scrollTo(0, 0);
   }
 
-  function card(id, view) {
+  function card(id, view, from = "lights") {
     const v = byId.get(id);
     const views = viewsFor(v);
     if (!views.includes(view)) view = views[0];
-    const i = VESSELS.indexOf(v);
-    const prev = VESSELS[(i - 1 + VESSELS.length) % VESSELS.length], next = VESSELS[(i + 1) % VESSELS.length];
+    const deck = from === "shapes" ? VESSELS.filter((x) => x.day) : VESSELS;
+    const i = Math.max(0, deck.indexOf(v));
+    const prev = deck[(i - 1 + deck.length) % deck.length], next = deck[(i + 1) % deck.length];
     root.innerHTML = `
-      <div class="actions"><button class="btn" id="g-list">All vessels</button></div>
+      <div class="actions"><button class="btn" id="g-list">${from === "shapes" ? "All shapes" : "All vessels"}</button></div>
       <section class="card">
         <div class="tags"><span class="tag rule">${esc(GROUPS.find((g) => g[0] === v.group)[1])}</span>${v.inland ? `<span class="tag warn">Inland</span>` : ""}</div>
         <h2>${esc(v.name)}</h2>
@@ -568,10 +573,74 @@
           <button class="btn" id="g-next">${esc(next.name)} →</button>
         </div>
       </section>`;
-    root.querySelector("#g-list").addEventListener("click", () => learn());
-    root.querySelectorAll("[data-view]").forEach((el) => el.addEventListener("click", () => card(id, el.dataset.view)));
-    root.querySelector("#g-prev").addEventListener("click", () => card(prev.id, view));
-    root.querySelector("#g-next").addEventListener("click", () => card(next.id, view));
+    root.querySelector("#g-list").addEventListener("click", () => (from === "shapes" ? learnShapes() : learn()));
+    root.querySelectorAll("[data-view]").forEach((el) => el.addEventListener("click", () => card(id, el.dataset.view, from)));
+    root.querySelector("#g-prev").addEventListener("click", () => card(prev.id, view, from));
+    root.querySelector("#g-next").addEventListener("click", () => card(next.id, view, from));
+    window.scrollTo(0, 0);
+  }
+
+  // ---------- Learn the shapes ----------
+  const SHAPE_KEY = [
+    ["ball", "Ball", "1 ball = anchored. 2 balls = not under command. 3 balls = aground. Top and bottom of ball-diamond-ball = restricted. 3 balls on the mast and yardarms = mineclearance.", "More balls, more trouble: 1 anchored, 2 broken, 3 stuck."],
+    ["diamond", "Diamond", "Tow over 200 m (on the tug and on the tow). Middle of ball-diamond-ball = restricted in ability to maneuver. Two diamonds = the side of a dredge you may pass.", "Diamond = a long tow, like a long string of diamonds."],
+    ["hourglass", "Two cones, points together", "Fishing: trawling or any other fishing.", "The hourglass says it's time to fish."],
+    ["coneUp", "Cone, point up", "Fishing gear stretching more than 150 m from the boat, shown toward the gear.", "Point up, the gear is out."],
+    ["coneDown", "Cone, point down", "A sailing vessel that is also using her engine.", "Engine on = cone points down, like the motor pushing down."],
+    ["cylinder", "Cylinder", "Constrained by her draft (International only).", "CBD = Cylinder By Day."],
+    ["flagA", "Code flag A", "A small vessel with divers down, when she can't show ball-diamond-ball.", "Flag A: Alpha, divers Below."],
+  ];
+  const SHAPE_COMBOS = [
+    ["One ball", "Anchored"], ["Two balls", "Not under command"], ["Three balls in a line", "Aground"],
+    ["Ball-diamond-ball", "Restricted in ability to maneuver"], ["Three balls in a triangle (mast + yardarms)", "Mineclearance, keep 1000 m away"],
+    ["Ball-diamond-ball + 2 balls one side, 2 diamonds the other", "Dredging: pass on the diamond side"],
+    ["Diamond", "Towing, tow over 200 m"], ["Two cones, points together", "Fishing"],
+    ["Cone, point down", "Sailing and motoring"], ["Cylinder", "Constrained by draft"], ["Flag A", "Divers down"],
+  ];
+  function shapeIcon(kind) {
+    const vb = kind === "flagA" ? "-6 -18 48 40" : kind === "hourglass" ? "-14 -22 28 44" : "-14 -14 28 28";
+    return `<svg viewBox="${vb}" class="shape-icon" aria-hidden="true">${shape(kind, 0, 0)}</svg>`;
+  }
+  function learnShapes() {
+    state = null; flash = null;
+    const dayVessels = VESSELS.filter((v) => v.day);
+    root.innerHTML = `
+      <div class="actions"><button class="btn" id="g-home">Back to game</button><button class="btn primary" id="g-flash">Flash cards: day shapes</button><button class="btn" id="g-learn">Learn the lights</button></div>
+      <section class="card">
+        <h2>Learn the shapes</h2>
+        <p class="hint">Day shapes are black and hung where they can best be seen. They do the job of the signal lights in daylight.</p>
+        <ul class="shape-key">${SHAPE_KEY.map(([k, name, means, trick]) => `
+          <li class="shape-row">
+            <span class="shape-pic">${shapeIcon(k)}</span>
+            <span class="shape-text">
+              <strong>${esc(name)}</strong>
+              <span>${esc(means)}</span>
+              <span class="trick"><span class="label">Remember</span> ${esc(trick)}</span>
+            </span>
+          </li>`).join("")}</ul>
+      </section>
+      <section class="card">
+        <h2>Quick reference</h2>
+        <div class="combo-table" role="table" aria-label="Day shapes and what they mean">
+          ${SHAPE_COMBOS.map(([a, b]) => `<div class="combo-row" role="row"><span role="cell">${esc(a)}</span><span role="cell">${esc(b)}</span></div>`).join("")}
+        </div>
+      </section>
+      <section class="card">
+        <h2>Vessels and their shapes</h2>
+        <div class="vessel-grid">${dayVessels.map((v) => `
+          <button type="button" class="vessel-tile" data-open="${v.id}">
+            ${daySVG(v, { aria: v.name + " day shapes" })}
+            <span class="vessel-name">${esc(v.name)}</span>
+            <span class="vessel-say">${esc(v.say)}</span>
+          </button>`).join("")}</div>
+      </section>`;
+    root.querySelector("#g-home").addEventListener("click", home);
+    root.querySelector("#g-learn").addEventListener("click", () => learn());
+    root.querySelector("#g-flash").addEventListener("click", () => {
+      try { localStorage.setItem(STORE + "-flash", "day"); } catch (e) { /* storage unavailable */ }
+      flashStart("day");
+    });
+    root.querySelectorAll("[data-open]").forEach((el) => el.addEventListener("click", () => card(el.dataset.open, "day", "shapes")));
     window.scrollTo(0, 0);
   }
 
@@ -844,6 +913,7 @@
         <div class="actions">
           <button class="btn primary" id="g-again">Play again</button>
           <button class="btn" id="g-learn">Learn the lights</button>
+          <button class="btn" id="g-shapes">Learn the shapes</button>
           <button class="btn ghost" id="g-home">Game menu</button>
         </div>
       </section>
@@ -856,6 +926,7 @@
           </button>`).join("")}</div></section>` : ""}`;
     root.querySelector("#g-again").addEventListener("click", startGame);
     root.querySelector("#g-learn").addEventListener("click", () => learn());
+    root.querySelector("#g-shapes").addEventListener("click", learnShapes);
     root.querySelector("#g-home").addEventListener("click", home);
     root.querySelectorAll("[data-open]").forEach((el) => el.addEventListener("click", () => card(el.dataset.open, el.dataset.view)));
     state = null;
