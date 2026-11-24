@@ -28,6 +28,11 @@ All answers come from the book's answer keys. Questions that refer to a book dia
 `{diagram: true}` and are off by default in the quiz. Lights & Shapes #276–297 (pages 62–63) are not
 in yet.
 
+## Lights & Shapes game
+
+`game.js` draws each vessel's lights (from ahead, both sides and astern) and day shapes, with a
+Learn deck and quick 10-round games. Vessel patterns and sayings are in the `VESSELS` list at the top.
+
 ## Subjects
 
 Tabs at the top switch between Rules of the Road, Deck Safety, Navigation General and Deck General

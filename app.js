@@ -177,6 +177,14 @@
         <span class="subject-count">${n ? n + " questions" : "Coming soon"}</span>
       </button>`;
     }).join("")}</nav>`;
+    const gameCard = window.LightsGame ? `<section class="card game-promo">
+        <div class="game-promo-pic" aria-hidden="true">${window.LightsGame.preview("nuc-way", "ahead")}</div>
+        <div class="game-promo-text">
+          <h2>Lights &amp; Shapes game</h2>
+          <p class="hint">Learn which lights and day shapes belong to which boat, then play quick 10-round games.</p>
+          <div class="actions"><button class="btn primary" id="open-game">Play the game</button></div>
+        </div>
+      </section>` : "";
     const secRows = sections.map((s) => {
       const n = s.items.filter((q) => settings.diagrams || !q.diagram).length;
       const hidden = s.items.length - n;
@@ -196,17 +204,18 @@
     const hasDiagrams = sections.some((s) => s.items.some((q) => q.diagram));
 
     if (!sections.length) {
-      app.innerHTML = `${subjectTabs}
+      app.innerHTML = `${subjectTabs}${gameCard}
         <section class="card empty">
           <h2>No ${esc(sub.title)} questions yet</h2>
           <p>Send photos of your ${esc(sub.title)} practice pages and their answer key, and the questions will show up here with the same practice mode, exam mode, tips and missed-question retakes.</p>
           <p class="hint">Passing score for this exam module: ${sub.pass}%.</p>
         </section>`;
       bindSubjectTabs();
+      bindGame();
       return;
     }
 
-    app.innerHTML = `${subjectTabs}
+    app.innerHTML = `${subjectTabs}${gameCard}
       <section class="card" aria-labelledby="setup-h">
         <h2 id="setup-h">Build your test</h2>
         <div class="field">
@@ -258,6 +267,7 @@
         <button class="btn" id="open-tricks">Open memory tricks</button>
       </section>` : ""}`;
     bindSubjectTabs();
+    bindGame();
 
     app.querySelectorAll("[data-sec]").forEach((el) => el.addEventListener("change", () => {
       const others = settings.sections.filter((id) => !sections.some((x) => x.id === id));
@@ -299,6 +309,10 @@
       saved.missed = saved.missed.filter((id) => !here.has(id));
       save(); renderSetup();
     });
+  }
+  function bindGame() {
+    const g = $("#open-game");
+    if (g) g.addEventListener("click", () => { setWide(false); window.LightsGame.open(app, renderSetup); });
   }
   function bindSubjectTabs() {
     app.querySelectorAll("[data-subject]").forEach((el) => el.addEventListener("click", () => {
