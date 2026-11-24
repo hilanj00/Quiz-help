@@ -490,7 +490,7 @@
   }
 
   function home() {
-    state = null;
+    state = null; flash = null;
     const best = loadBest();
     root.innerHTML = `
       <div class="actions"><button class="btn" id="g-back">Back to tests</button></div>
@@ -502,6 +502,7 @@
           ${best.score != null ? `<p class="hint">Best game: ${best.score} of 10${best.streak ? ` · longest streak ${best.streak}` : ""}</p>` : ""}
           <div class="actions">
             <button class="btn primary" id="g-play">Play 10 rounds</button>
+            <button class="btn" id="g-flash">Flash cards</button>
             <button class="btn" id="g-learn">Learn the lights</button>
           </div>
         </div>
@@ -513,6 +514,7 @@
     root.querySelector("#g-back").addEventListener("click", exit);
     root.querySelector("#g-play").addEventListener("click", startGame);
     root.querySelector("#g-learn").addEventListener("click", () => learn());
+    root.querySelector("#g-flash").addEventListener("click", () => flashSetup());
     window.scrollTo(0, 0);
   }
 
@@ -523,10 +525,10 @@
   ];
 
   function learn(openId) {
-    state = null;
+    state = null; flash = null;
     if (openId) return card(openId, "ahead");
     root.innerHTML = `
-      <div class="actions"><button class="btn" id="g-home">Back to game</button><button class="btn primary" id="g-play">Play 10 rounds</button></div>
+      <div class="actions"><button class="btn" id="g-home">Back to game</button><button class="btn primary" id="g-flash">Flash cards</button><button class="btn" id="g-play">Play 10 rounds</button></div>
       ${GROUPS.map(([g, title]) => `
         <section class="card">
           <h2>${esc(title)}</h2>
@@ -539,6 +541,7 @@
         </section>`).join("")}`;
     root.querySelector("#g-home").addEventListener("click", home);
     root.querySelector("#g-play").addEventListener("click", startGame);
+    root.querySelector("#g-flash").addEventListener("click", () => flashSetup());
     root.querySelectorAll("[data-open]").forEach((el) => el.addEventListener("click", () => card(el.dataset.open, "ahead")));
     window.scrollTo(0, 0);
   }
@@ -569,6 +572,135 @@
     root.querySelectorAll("[data-view]").forEach((el) => el.addEventListener("click", () => card(id, el.dataset.view)));
     root.querySelector("#g-prev").addEventListener("click", () => card(prev.id, view));
     root.querySelector("#g-next").addEventListener("click", () => card(next.id, view));
+    window.scrollTo(0, 0);
+  }
+
+  // ---------- Flash cards ----------
+  // Every vessel in the Learn deck becomes a card. The front shows its lights (or day shapes);
+  // tapping flips it to the name, what each light means and the saying.
+  let flash = null;
+  const FLASH_MODES = [
+    ["ahead", "Night, from ahead"],
+    ["mixed", "Night, any angle"],
+    ["day", "Day shapes"],
+  ];
+  function flashSetup() {
+    state = null; flash = null;
+    let mode = "ahead";
+    try { mode = localStorage.getItem(STORE + "-flash") || "ahead"; } catch (e) { /* storage unavailable */ }
+    const count = (m) => VESSELS.filter((v) => (m === "day" ? !!v.day : true)).length;
+    root.innerHTML = `
+      <div class="actions"><button class="btn" id="g-home">Game menu</button></div>
+      <section class="card">
+        <h2>Flash cards</h2>
+        <p>Look at the lights, say what it is, then tap the card to check. Mark each card <b>Got it</b> or <b>Study again</b>; the ones to study again come back until you know them all.</p>
+        <div class="field">
+          <span class="label">Show me</span>
+          <div class="seg">${FLASH_MODES.map(([m, t]) => `<button type="button" data-fm="${m}" aria-pressed="${m === mode}">${t}</button>`).join("")}</div>
+          <p class="hint" id="fm-hint">${count(mode)} cards</p>
+        </div>
+        <div class="actions"><button class="btn primary" id="f-start">Start flash cards</button></div>
+      </section>`;
+    root.querySelector("#g-home").addEventListener("click", home);
+    root.querySelectorAll("[data-fm]").forEach((el) => el.addEventListener("click", () => {
+      mode = el.dataset.fm;
+      try { localStorage.setItem(STORE + "-flash", mode); } catch (e) { /* storage unavailable */ }
+      root.querySelectorAll("[data-fm]").forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.fm === mode)));
+      root.querySelector("#fm-hint").textContent = count(mode) + " cards";
+    }));
+    root.querySelector("#f-start").addEventListener("click", () => flashStart(mode));
+    window.scrollTo(0, 0);
+  }
+  function flashView(v, mode) {
+    if (mode === "day") return "day";
+    if (mode === "ahead") return lightsFor(v, "ahead").length ? "ahead" : "stbd";
+    return pick(viewsFor(v).filter((w) => w !== "day"));
+  }
+  function flashStart(mode) {
+    const deck = shuffle(VESSELS.filter((v) => (mode === "day" ? !!v.day : true)))
+      .map((v) => ({ v, view: flashView(v, mode) }));
+    flash = { mode, queue: deck, total: deck.length, known: 0, again: 0, flipped: false, firstTry: new Set(), seen: new Set() };
+    flashCard();
+  }
+  function flashCard() {
+    const f = flash;
+    if (!f.queue.length) return flashDone();
+    const { v, view } = f.queue[0];
+    const angle = view === "day" ? "By day" : `At night, ${VIEWS[view].toLowerCase()}`;
+    root.innerHTML = `
+      <div class="progress">
+        <div class="progress-row">
+          <span class="label">${f.known} of ${f.total} known</span>
+          <span class="label">${f.queue.length} left${f.again ? ` · ${f.again} to study again` : ""}</span>
+        </div>
+        <div class="bar"><div style="width:${(f.known / f.total) * 100}%"></div></div>
+      </div>
+      <button type="button" class="flashcard ${f.flipped ? "flipped" : ""}" id="f-card" aria-expanded="${f.flipped}"
+        aria-label="${f.flipped ? esc(v.name) : "Flash card. Tap to reveal the answer"}">
+        <span class="label">${esc(angle)}</span>
+        <span class="scene-wrap">${picture(v, view, { aria: f.flipped ? v.name : "Mystery vessel" })}</span>
+        ${f.flipped ? `
+          <span class="flash-answer">
+            <span class="flash-name">${esc(v.name)}${v.inland ? ` <span class="tag warn">Inland</span>` : ""}</span>
+            ${dotRow(meanings(v, view))}
+            <span class="trick"><span class="label">Remember</span> ${esc(v.say)}</span>
+          </span>` : `<span class="flash-prompt">What is it? Tap to reveal</span>`}
+      </button>
+      <div class="nav">
+        <button class="btn ghost" id="f-quit">Stop</button>
+        ${f.flipped ? `<div class="actions">
+          <button class="btn" id="f-again">Study again</button>
+          <button class="btn primary" id="f-got">Got it</button>
+        </div>` : `<button class="btn primary" id="f-flip">Reveal answer</button>`}
+      </div>
+      <p class="kbd-hint">Keyboard: Space to flip, 1 = study again, 2 = got it.</p>`;
+    root.querySelector("#f-card").addEventListener("click", flashFlip);
+    root.querySelector("#f-quit").addEventListener("click", flashSetup);
+    const fl = root.querySelector("#f-flip"); if (fl) fl.addEventListener("click", flashFlip);
+    const ag = root.querySelector("#f-again"); if (ag) ag.addEventListener("click", () => flashMark(false));
+    const go = root.querySelector("#f-got"); if (go) go.addEventListener("click", () => flashMark(true));
+  }
+  function flashFlip() { if (!flash) return; flash.flipped = !flash.flipped; flashCard(); }
+  function flashMark(ok) {
+    const f = flash;
+    if (!f || !f.flipped) return;
+    const c = f.queue.shift();
+    if (ok) { f.known++; if (!f.seen.has(c.v.id)) f.firstTry.add(c.v.id); }
+    else {
+      if (!f.seen.has(c.v.id)) f.again++;
+      // Bring it back a few cards later, from a fresh angle in "any angle" mode.
+      const at = Math.min(f.queue.length, 3);
+      f.queue.splice(at, 0, { v: c.v, view: f.mode === "mixed" ? flashView(c.v, "mixed") : c.view });
+    }
+    f.seen.add(c.v.id);
+    f.flipped = false;
+    flashCard();
+    window.scrollTo(0, 0);
+  }
+  function flashDone() {
+    const f = flash;
+    const first = f.firstTry.size;
+    root.innerHTML = `
+      <section class="card">
+        <h2>Deck done</h2>
+        <div class="score">
+          <div class="big ${first === f.total ? "pass" : "fail"}">${first}/${f.total}</div>
+          <div class="meta">
+            <span>Known on the first try.</span>
+            <span class="hint">${f.again ? `${f.again} card${f.again === 1 ? "" : "s"} needed another look.` : "You knew every card the first time."}</span>
+          </div>
+        </div>
+        <div class="actions">
+          <button class="btn primary" id="f-restart">Shuffle and go again</button>
+          <button class="btn" id="f-setup">Change cards</button>
+          <button class="btn" id="g-play">Play 10 rounds</button>
+        </div>
+      </section>`;
+    const mode = f.mode;
+    flash = null;
+    root.querySelector("#f-restart").addEventListener("click", () => flashStart(mode));
+    root.querySelector("#f-setup").addEventListener("click", flashSetup);
+    root.querySelector("#g-play").addEventListener("click", startGame);
     window.scrollTo(0, 0);
   }
 
@@ -606,6 +738,7 @@
   }
 
   function startGame() {
+    flash = null;
     const rounds = [];
     let lastId = null;
     while (rounds.length < 10) {
@@ -729,9 +862,19 @@
     window.scrollTo(0, 0);
   }
 
-  function exit() { state = null; root = null; if (onExit) onExit(); }
+  function exit() { state = null; flash = null; root = null; if (onExit) onExit(); }
 
   document.addEventListener("keydown", (e) => {
+    if (flash && root && !e.metaKey && !e.ctrlKey && !e.altKey) {
+      if (e.key === " " || e.key === "Enter") {
+        if (!flash.flipped) { flashFlip(); e.preventDefault(); }
+        else if (e.key === "Enter") { flashMark(true); e.preventDefault(); }
+        return;
+      }
+      if (e.key === "1") { flashMark(false); e.preventDefault(); return; }
+      if (e.key === "2") { flashMark(true); e.preventDefault(); return; }
+      return;
+    }
     if (!state || !root || e.metaKey || e.ctrlKey || e.altKey) return;
     const k = e.key.toUpperCase();
     const li = "ABCD".indexOf(k);

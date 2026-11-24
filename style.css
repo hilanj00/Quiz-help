@@ -63,6 +63,8 @@ body {
   gap: 20px;
 }
 
+#app { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+
 header.top { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
 .brand { display: flex; flex-direction: column; gap: 2px; }
 .brand h1 {
@@ -340,6 +342,21 @@ button:focus-visible, input:focus-visible { outline: 3px solid var(--accent); ou
 .pic-choice.wrong .key { background: var(--port); color: #fff; border-color: var(--port); }
 .pic-choice:disabled { cursor: default; }
 .pic-name { font-size: 0.8rem; font-weight: 600; line-height: 1.3; }
+.flashcard {
+  font: inherit; color: var(--ink); text-align: left; cursor: pointer; width: 100%;
+  background: var(--surface); border: 1.5px solid var(--line); border-radius: 14px;
+  padding: 16px; display: flex; flex-direction: column; gap: 12px; align-items: stretch;
+  box-shadow: 0 2px 0 var(--line);
+}
+.flashcard:hover { border-color: var(--accent); }
+.flashcard:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.flashcard.flipped { border-color: var(--accent); border-top: 4px solid var(--accent); }
+.flashcard .scene-wrap { display: block; }
+.flash-prompt { text-align: center; font-weight: 600; color: var(--accent); padding: 6px 0; }
+.flash-answer { display: flex; flex-direction: column; gap: 10px; animation: flash-in 0.2s ease-out; }
+.flash-name { font-family: var(--font-display); font-weight: 700; font-size: 1.4rem; text-transform: uppercase; letter-spacing: 0.02em; line-height: 1.15; }
+@keyframes flash-in { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+@media (prefers-reduced-motion: reduce) { .flash-answer { animation: none; } }
 .game-card .feedback .light-list { margin: 4px 0; }
 @media (max-width: 480px) { .game-promo-pic { flex-basis: 100%; } }
 
