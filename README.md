@@ -10,6 +10,7 @@ U.S. Maritime Academy "Rules of the Road" practice problems.
   and how many questions.
 - Missed questions are remembered in your browser so you can retake just those.
 - **Tip** (or press T) explains the rule behind a question and can cross out up to two wrong answers.
+- After you answer, **Remember** shows a tip written for that question (`data/explain-rules.js`).
 - **Memory tricks** lists a short saying for every rule. Tips and tricks live in `data/tips.js`.
 
 ## Sections so far (517 questions)

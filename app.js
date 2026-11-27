@@ -127,6 +127,13 @@
     }
     return keys.slice(0, 3);
   }
+  // The "Remember" line after answering: the question's own tip, or the rule's saying if it has none.
+  function rememberFor(q) {
+    const own = (window.QUESTION_TIPS || {})[q.id];
+    if (own) return own;
+    const k = rulesFor(q)[0];
+    return k ? TIPS[k].trick : "";
+  }
   function tipCard(k) {
     const t = TIPS[k];
     const label = k.startsWith("Annex") ? k : "Rule " + k;
@@ -366,7 +373,7 @@
         <strong>${ok ? "Correct" : "Incorrect"}</strong>
         ${ok ? "" : `<p>The answer is <b>${LETTERS[q.answer]}</b>: ${esc(q.choices[q.answer])}</p>`}
         ${q.note ? `<p>${esc(q.note)}</p>` : ""}
-        ${ruleKeys.length ? `<p class="trick"><span class="label">Remember</span> ${esc(TIPS[ruleKeys[0]].trick)}</p>` : ""}
+        ${rememberFor(q) ? `<p class="trick"><span class="label">Remember</span> ${esc(rememberFor(q))}</p>` : ""}
         <p class="src">${q.fromRules ? "Answer worked out from the Navigation Rules (book key not yet added)." : "Answer from the book's answer key."}${quiz.retried[idx] ? " Retries don't change your score; your first answer counts." : ""}</p>
       </div>`;
     }
@@ -597,7 +604,7 @@
         <p class="yours">Your answer: ${r.pick >= 0 ? `${LETTERS[r.pick]}. ${esc(r.q.choices[r.pick])}` : "not answered"}</p>
         <p class="correct">Correct: ${LETTERS[r.q.answer]}. ${esc(r.q.choices[r.q.answer])}</p>
         ${r.q.note ? `<p class="src">${esc(r.q.note)}</p>` : ""}
-        ${(() => { const k = rulesFor(r.q)[0]; return k ? `<p class="trick"><span class="label">Remember</span> ${esc(TIPS[k].trick)}</p>` : ""; })()}
+        ${rememberFor(r.q) ? `<p class="trick"><span class="label">Remember</span> ${esc(rememberFor(r.q))}</p>` : ""}
       </div>`).join("");
 
     app.innerHTML = `
