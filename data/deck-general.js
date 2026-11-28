@@ -8,3 +8,7 @@
 //   questions: [
 //   ]
 // });
+
+// Book answer key for the "Practice Deck General Exam" (book page 175), photographed before the
+// questions. Use these answers when the questions are added.
+window.DECK_GENERAL_KEY = "ACBDADABDA" + "DDADCADCAD" + "BDADBDDADC" + "CCCADBAABB" + "BCADADACDC";
