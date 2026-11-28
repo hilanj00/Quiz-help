@@ -42,7 +42,8 @@ Tabs at the top switch between Rules of the Road, Deck Safety, Navigation Genera
 (`data/subjects.js`, which also sets each module's passing score: 90% for Rules, 70% for the rest).
 Deck Safety has the 50-question Practice Deck Safety Exam (`data/deck-safety.js`; answers worked out,
 book key not yet added). Deck General has the 50-question Practice Deck General Exam with the book's key (`data/deck-general.js`).
-Navigation General is empty for now: add sections to
+Navigation General has the 50-question Sample Navigation General Exam with the book's key
+(`data/nav-general.js`). To add more, add sections to
 `data/deck-safety.js`, `data/nav-general.js` and `data/deck-general.js` with the matching `subject`.
 
 ## Adding questions

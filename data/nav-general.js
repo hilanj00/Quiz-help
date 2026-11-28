@@ -1,10 +1,164 @@
-// Navigation General questions. Add a section like the example below; set subject: "nav-general".
-// Each question: [number, "topic", "Question text", ["A", "B", "C", "D"], "B", {note: "optional"}],
-//
-// addSection({
-//   id: "nav-general-1",
-//   subject: "nav-general",
-//   title: "Navigation General · Part 1",
-//   questions: [
-//   ]
-// });
+// Navigation General — U.S. Maritime Academy "Sample Navigation General Exam" (book pages 71–79).
+// Answers are from the book's answer key (page 80).
+// Questions marked LOOKUP need the 1983 Tide Tables, Tidal Current Tables, Light List or Coast Pilot
+// excerpts used in class; the quiz says so after you answer.
+
+window.NAV_GENERAL_KEY = "DDBBCABDDD" + "ABAACBCCAC" + "CBADBDCBDB" + "BCDADCBDCD" + "ABAADCBBDA";
+
+(function () {
+  const LOOKUP = { note: "Look-up question: the answer comes from the 1983 Tide Tables, Tidal Current Tables or Light List excerpts used with the book. Practice the look-up with your class copies." };
+  const Q = [
+    [1, "Compass", "The difference between true north and magnetic north is called", ["Deviation.", "Compass Error.", "PSC.", "Variation."]],
+    [2, "Publications", "Which publications would you use in foreign waters?", ["Light List and Coast Pilot", "Light List and NW Crusing Guide", "List of Lights and U.S. Tide Tables", "List of Lights and Sailing Directions"]],
+    [3, "Tides and currents", "What is the velocity of the first AM maximum ebb current (DST) at Lynnhaven Inlet on August 2nd, 1983?", ["10.8 k", "1.08 k", "1.8 k", "0.18 k"], LOOKUP],
+    [4, "Aids to navigation", "What U.S. agency maintains federal aids to navigation?", ["National Ocean Service", "Coast Guard", "Homeland Security", "Corps of Engineers"]],
+    [5, "Aids to navigation", "What type of daymark is used to mark the port side of a channel when entering from sea?", ["Green Can", "Red Nun", "Green Square", "Red Triangle"]],
+    [6, "Tides and currents", "At what time will the afternoon slack water (turning to flood) occur at Chesapeake Bay Bridge Tunnel (at the Tail of the Horseshoe) on September 22nd, 1983? (You are keeping DST).", ["1857", "1830", "2102", "2129"], LOOKUP],
+    [7, "Chart basics", "How many minutes are there in one degree of latitude?", ["90'", "60'", "Depends on the mid latitude", "60 tenths"]],
+    [8, "Aids to navigation", "You have been advised by a broadcast notice to mariners that joint military exercises are underway in an area designated as \"Whiskey-Gulf\". The area would be marked by", ["Green and Red buoys.", "Blue flashing lights on buoys and patrol vessels.", "Red flashing lights.", "Yellow buoys."]],
+    [9, "Aids to navigation", "Even numbered aids to navigation in the IALA \"B\" system should be", ["left to starboard when leaving a channel out to sea.", "left to port when entering a channel from seaward.", "left on either side when leaving a channel to sea.", "left to port when leaving a channel out to sea."]],
+    [10, "Time", "How many degrees are there in a time zone?", ["60° of long.", "15° of lat.", "It depends on your latitude.", "15° of long."]],
+    [11, "Aids to navigation", "You see ahead a buoy with a red band over a green band. When returning from seaward to stay in the preferred channel you should", ["leave the buoy to starboard.", "leave the buoy to port.", "pass on either side.", "navigate with caution due to isolated danger."]],
+    [12, "Light ranges", "What is the geographic range of Currituck Beach Light if your height of eye is 35 feet?", ["16.3 nm", "21.5 nm", "15.4 nm", "13.9 nm"], LOOKUP],
+    [13, "Light characteristics", "An aid marked on the chart as Fl (2+1) indicates", ["Composite group-flashing.", "Group-flashing.", "Occulting.", "Flashing red twice, green once in every period."]],
+    [14, "Compass", "The local magnetic disturbance of the ship's compass caused by shipboard \"attractors\" is called", ["Deviation.", "Variation.", "Compass Error.", "Magnetic Diffusion."]],
+    [15, "Aids to navigation", "In the U.S. Lateral System of buoys, what type of daymark is used to mark the starboard side of the channel when entering from sea?", ["Red square", "Green triangle", "Red triangle", "Green buoy"]],
+    [16, "Tides and currents", "When the range of tides are less than normal they are called", ["spring tides.", "neap tides.", "slack tides.", "low tides."]],
+    [17, "Aids to navigation", "Proceeding from \"seaward\" for the purpose of the direction IALA system \"B\" would be", ["easterly on the Gulf Coast.", "northerly on the Atlantic Coast.", "northerly on the Pacific Coast.", "all of the above."]],
+    [18, "Light characteristics", "A preferred channel mark exhibits what light characteristic ?", ["Fl", "Oc", "Fl (2+1)", "Mo (A)"]],
+    [19, "Light ranges", "What is the luminous range of Currituck Beach light if the visibility is 5.5 nm?", ["12 nm", "16 nm", "9 nm", "124' T"], LOOKUP],
+    [20, "Light characteristics", "Which characteristic may NOT be displayed by a green lighted buoy marking the port side of a channel when entering from seaward ?", ["Occulting", "Flashing (2)", "Fixed", "Isophase"]],
+    [21, "Tides and currents", "A brief period of time when there is no horizontal movement of water or a minimum before ebb or flood is called", ["ebb current.", "flood current.", "slack current.", "the stand of current."]],
+    [22, "Electronics", "A radar beacon which produces a coded response when triggered by a radar signal is called a", ["RACOR.", "RACON.", "RADON.", "RABCON."]],
+    [23, "Light characteristics", "A light in which all durations of light and darkness are equal is called", ["Isophase.", "Flashing.", "Equaphase.", "Isorythmic."]],
+    [24, "Aids to navigation", "In the U.S. Lateral System of buoys, what type of daymark is used to mark the port side of the channel when entering from sea?", ["Red square", "Green triangle", "Red triangle", "Green square"]],
+    [25, "Light ranges", "What is the geographic range of Cape Henry light if your height of eye is 15 feet?", ["15.1 nm", "19.2 nm", "23.4 nm", "12.7 nm"], LOOKUP],
+    [26, "Light ranges", "The maximum distance at which a light may be seen due to the curvature of the Earth is the", ["nominal range.", "luminous range.", "charted range.", "geographic range."]],
+    [27, "Aids to navigation", "A red buoy has a yellow triangle on it. This is a(n)", ["information or regulatory buoy that has lateral significance.", "lateral buoy that should be kept to port.", "buoy of lateral significance that is part of the ICW.", "special purpose buoy."]],
+    [28, "Electronics", "What should you apply to a fathometer reading to determine the depth of water?", ["Subtract height of tide for time given.", "Add the distance from the transducer to the waterline.", "Add the draft of the vessel.", "Subtract the distance from the transducer to the waterline."]],
+    [29, "Publications", "Mariners are kept informed of a buoy that is off station by", ["marine broadcast to mariners.", "notice to mariners.", "local notice to mariners.", "All of the above."]],
+    [30, "Tides and currents", "What is the time and height of the PM high tide (DST) at Virginia Beach on August 27th, 1983?", ["1225 at 3.4 ft.", "2309 at 3.3 ft.", "1225 at 2.5 ft.", "1830 at 1.1 ft."], LOOKUP],
+    [31, "Electronics", "Radar makes the most accurate determination of the", ["direction of the target.", "distance to a target.", "size of the target.", "shape of the target."]],
+    [32, "Chart basics", "A Great Circle", ["surrounds the globe but does not bisect it.", "cuts through all meridians at right angles.", "bisects the earth into equal halves.", "run east and west 180° from Greenwich."]],
+    [33, "Light ranges", "What is the luminous range of Chesapeake light if the visibility is 1 nm?", ["4.8 nm", "12° E", "3.2 nm", "4 nm"], LOOKUP],
+    [34, "Aids to navigation", "You see a buoy dead ahead with a green top over a red bottom. This indicates that", ["the preferred channel is to starboard.", "you should leave the buoy to starboard.", "the preferred channel is to port.", "it is a safe water buoy."]],
+    [35, "Compass", "The algebraic sum of variation and deviation is called", ["PSC (per steering compass).", "Steering error.", "True correction.", "Compass error."]],
+    [36, "Aids to navigation", "Yellow buoys", ["are always numbered and lettered.", "indicate you are in the ICW.", "may be lettered.", "may be numbered."]],
+    [37, "Compass", "Connected points of equal variation are called", ["Agonic.", "Isogonic.", "Isophase.", "Running latitude."]],
+    [38, "Aids to navigation", "A buoy with a \"Morse Code A\" characteristic is", ["Group-flashing.", "indicating a preferred channel.", "a special purpose buoy.", "a safe water buoy."]],
+    [39, "Aids to navigation", "Proceeding from \"seaward\" for the purpose of the direction IALA system \"B\" would be", ["easterly on the Gulf Coast.", "northerly on the Atlantic Coast.", "northerly on the Pacific Coast.", "southerly on the Mississippi River."]],
+    [40, "Tides and currents", "What is the time of the first PM (DST) maximum flood current at Little Creek (north of east jetty) on Oct. 5th, 1983?", ["2103", "2205", "1923", "1903"], LOOKUP],
+    [41, "Publications", "Where would you look up the meaning of a symbol off a chart?", ["Chart #1", "Light List", "Glossary of terms", "Coast Pilot"]],
+    [42, "Chart basics", "A chart with a scale of 1:40,000 is a:", ["Coast Chart", "Harbor Chart", "Sailing Chart", "General Chart"]],
+    [43, "Publications", "What volume of Light List would you use in Hawaii?", ["VOL. VI", "VOL. V", "VOL. I", "VOL. III"]],
+    [44, "Aids to navigation", "Odd numbered aids to navigation in the IALA \"B\" system should be", ["left to starboard when leaving a channel out to sea.", "left to starboard when entering a channel from seaward.", "left on either side when leaving a channel to sea.", "left to port when leaving a channel out to sea."]],
+    [45, "Aids to navigation", "In the IALA Region \"A\" system, returning from sea is:", ["considered southerly", "considered northerly", "Red, right, returning", "Red, left, returning"]],
+    [46, "Publications", "In the Light List, what is the height Wolf Trap Light?", ["18 ft", "21 m", "52 ft", "68 ft"], LOOKUP],
+    [47, "Communications", "in the Coast Pilot the IMO Standard phonetic for the letter K is:", ["Kate", "Kilo", "Kiss", "Korny"]],
+    [48, "Tides and currents", "What is the time and velocity of the first PM (DST) maximum flood 1 mile north of Cape Henry Light on Sept. 7th, 1983?", ["1506 at 2.1 k", "2148 at 1.65 k", "2113 at 1.5 k", "1606 at 1.8 k"], LOOKUP],
+    [49, "Compass", "On a 1990 Chart, the Variation is listed as 15° W with an annual increase of 6'. What would the Variation be in 2000?", ["10° E", "10° W", "14° W", "16° W"]],
+    [50, "Communications", "Which of the following VHF stations can be used for non-commercial purposes?", ["68", "13", "16", "22 A"]],
+  ];
+  addSection({
+    id: "nav-general-1",
+    subject: "nav-general",
+    title: "Sample Navigation General Exam",
+    questions: Q.map(([n, topic, text, choices, flags]) => [n, topic, text, choices, window.NAV_GENERAL_KEY[n - 1], flags || {}]),
+  });
+})();
+
+window.QUESTION_TIPS = window.QUESTION_TIPS || {};
+Object.assign(window.QUESTION_TIPS, {
+  "nav-general-1-1": "VARIATION = true north vs magnetic north (it's the EARTH, printed on the compass rose). DEVIATION = your own SHIP's magnetism.",
+  "nav-general-1-2": "Foreign waters: NGA's List of Lights and Sailing Directions. U.S. waters: Coast Guard Light List and NOAA Coast Pilot.",
+  "nav-general-1-3": "Current Tables look-up: find Lynnhaven Inlet, read the first morning ebb for Aug 2, and add 1 hour for daylight time.",
+  "nav-general-1-4": "The U.S. COAST GUARD maintains federal aids to navigation. NOAA (National Ocean Service) makes the charts.",
+  "nav-general-1-5": "Entering from sea, the port side is GREEN with SQUARE daymarks (odd numbers). Red triangles are on the starboard side.",
+  "nav-general-1-6": "Current Tables look-up: find the afternoon slack before flood for Sept 22, apply the station's time difference, then add 1 hour for DST.",
+  "nav-general-1-7": "1 degree = 60 minutes of arc. And 1 minute of LATITUDE = 1 nautical mile.",
+  "nav-general-1-8": "Military exercise and other special areas are marked with YELLOW (special purpose) buoys.",
+  "nav-general-1-9": "IALA B: even numbers are RED. Red right returning means red is on your PORT side when you're leaving to sea.",
+  "nav-general-1-10": "360° ÷ 24 hours = 15° of LONGITUDE per time zone.",
+  "nav-general-1-11": "The top band shows the preferred channel. Red on top = treat it as a RED buoy: returning, keep it to starboard.",
+  "nav-general-1-12": "Geographic range = 1.17 × √(height of eye) + 1.17 × √(height of light). Light List gives the light's height.",
+  "nav-general-1-13": "Fl (2+1) = composite group-flashing: a group of 2 flashes then 1 flash. That's the preferred channel characteristic.",
+  "nav-general-1-14": "DEVIATION comes from the ship's own steel and electronics, and changes with heading.",
+  "nav-general-1-15": "Entering from sea, starboard side = RED, TRIANGLE daymarks, even numbers. Red Right Returning.",
+  "nav-general-1-16": "NEAP tides = smaller range (quarter moons). SPRING tides = bigger range (new and full moon).",
+  "nav-general-1-17": "Book key C. Conventional direction: north and west on the Pacific coast, clockwise around the U.S.",
+  "nav-general-1-18": "Preferred channel marks flash Fl (2+1), composite group flashing.",
+  "nav-general-1-19": "Luminous range: use the Luminous Range Diagram with the nominal range (Light List) and the meteorological visibility.",
+  "nav-general-1-20": "Book key C (fixed). Lateral buoy lights flash, occult or show quick or isophase rhythms in green or red.",
+  "nav-general-1-21": "SLACK water = no horizontal current. STAND = no vertical change in the tide height.",
+  "nav-general-1-22": "RACON = RAdar beaCON. It answers your radar with a Morse code mark on the screen.",
+  "nav-general-1-23": "ISOPHASE = light and dark periods are EQUAL (iso = equal).",
+  "nav-general-1-24": "Port side entering from sea = GREEN SQUARE.",
+  "nav-general-1-25": "Geographic range: 1.17√15 + 1.17√(light height from the Light List).",
+  "nav-general-1-26": "GEOGRAPHIC range is limited by the curve of the Earth. Luminous range is limited by the light's strength and visibility.",
+  "nav-general-1-27": "Yellow triangles and squares on lateral aids mark the Intracoastal Waterway route. Triangle = treat as a red (starboard hand) mark on the ICW.",
+  "nav-general-1-28": "A fathometer measures from the transducer. ADD the transducer depth to get depth from the waterline.",
+  "nav-general-1-29": "Off-station buoys are announced in broadcast notices, Notices to Mariners and Local Notices to Mariners. All of the above.",
+  "nav-general-1-30": "Tide Tables look-up: find Virginia Beach (subordinate station), apply time and height differences, and add 1 hour for DST.",
+  "nav-general-1-31": "Radar is best at RANGE (distance). Its bearings are less accurate because of beam width.",
+  "nav-general-1-32": "A great circle cuts the Earth into two EQUAL halves (the equator and every meridian are great circles).",
+  "nav-general-1-33": "Luminous range diagram: Chesapeake light's nominal range plus 1 nm visibility.",
+  "nav-general-1-34": "Green on top = preferred channel is like a green buoy: keep it to port, so the preferred channel is to STARBOARD.",
+  "nav-general-1-35": "Compass ERROR = variation + deviation (with their E/W signs).",
+  "nav-general-1-36": "Book key C: yellow special-purpose buoys may be LETTERED, never numbered.",
+  "nav-general-1-37": "ISOGONIC lines join points of equal variation. The AGONIC line is where variation is zero.",
+  "nav-general-1-38": "Mo (A) = dot-dash = SAFE WATER buoy (red and white vertical stripes).",
+  "nav-general-1-39": "Book key C: northerly on the Pacific coast (clockwise around North America).",
+  "nav-general-1-40": "Current Tables look-up: Little Creek, Oct 5, first afternoon maximum flood, plus 1 hour DST.",
+  "nav-general-1-41": "Chart No. 1 is the key to every chart symbol and abbreviation.",
+  "nav-general-1-42": "Larger than 1:50,000 = HARBOR chart. 1:50,000 to 1:150,000 = coast chart.",
+  "nav-general-1-43": "Light List Volume VI covers the Pacific coast and Pacific islands, including Hawaii.",
+  "nav-general-1-44": "Odd = GREEN. Green is on your starboard side when you're leaving to sea.",
+  "nav-general-1-45": "Region A (Europe, Africa, most of Asia) is the opposite of the U.S.: RED is LEFT returning.",
+  "nav-general-1-46": "Light List look-up: Wolf Trap Light's height is in the Light List entry.",
+  "nav-general-1-47": "IMO/NATO phonetic alphabet: K = KILO.",
+  "nav-general-1-48": "Current Tables look-up: Cape Henry, Sept 7, first afternoon maximum flood, plus 1 hour DST.",
+  "nav-general-1-49": "10 years × 6' = 60' = 1°. Variation is increasing, so 15°W becomes 16°W.",
+  "nav-general-1-50": "Channel 68 is for non-commercial (recreational) vessels. 13 = bridge-to-bridge, 16 = distress and calling, 22A = Coast Guard.",
+});
+
+Object.assign(window.MNEMONICS = window.MNEMONICS || {}, {
+  ng_compass: ["Compass error", "\"Can Dead Men Vote Twice: Compass, Deviation, Magnetic, Variation, True.\" Earth = Variation, Ship = Deviation.", "Compass error = variation + deviation. Isogonic lines join equal variation; agonic = zero."],
+  ng_lateral: ["U.S. buoys", "\"Red Right Returning: Red, Right, Triangles, Even. Green, left, Squares, Odd.\"", "Entering from sea: red triangles (even) on starboard, green squares (odd) on port. Region A is the reverse."],
+  ng_preferred: ["Preferred channel and safe water", "\"The TOP color tells you which way to treat it.\" \"Mo(A) = dot-dash = safe to pass.\"", "Red over green: treat as red. Green over red: treat as green. Fl (2+1) light. Safe water: red-and-white stripes, Morse A."],
+  ng_seaward: ["Direction from seaward", "\"Clockwise around the U.S.: north up the East, west along the Gulf, north up the West.\"", "Returning from sea follows the conventional direction clockwise around North America."],
+  ng_yellow: ["Yellow aids", "\"Yellow = special: Lettered, not numbered. Yellow shapes = ICW.\"", "Special-purpose buoys are yellow and may be lettered. Yellow triangles and squares mark the Intracoastal Waterway."],
+  ng_lights: ["Light characteristics", "\"ISO = Equal. Occulting = Off briefly. Flashing = On briefly.\"", "Isophase: equal light and dark. Fl (2+1): composite group flashing."],
+  ng_ranges: ["Light ranges", "\"Geographic = Globe's curve. Luminous = Lamp and weather. Nominal = Normal (10 nm visibility).\"", "Geographic range = 1.17√eye + 1.17√light height."],
+  ng_tides: ["Tides and currents", "\"Spring Springs high (big range). Neap is Not much. Slack = no Sideways flow.\"", "Look-ups: find the station, apply differences, add 1 hour for DST."],
+  ng_charts: ["Charts and position", "\"60 minutes, 60 miles of latitude to a degree. 15° of longitude to an hour.\"", "1' latitude = 1 nm. Great circles bisect the Earth. Harbor charts are larger than 1:50,000."],
+  ng_pubs: ["Publications", "\"U.S.: Light List + Coast Pilot. Foreign: List of Lights + Sailing Directions. Symbols: Chart No. 1.\"", "Coast Guard keeps the aids and the Light List (Vol VI = Pacific). Notices to Mariners report changes."],
+  ng_electronics: ["Radar and depth", "\"Radar Ranges Right. Add the transducer, don't subtract.\"", "Radar is most accurate for distance; RACONs reply with Morse. Add transducer depth to a fathometer reading."],
+  ng_radio: ["Radio channels", "\"16 distress, 13 bridge-to-bridge, 22A Coast Guard, 68 for Fun.\"", "IMO phonetic alphabet: Alpha, Bravo… Kilo."],
+});
+Object.assign(window.MNEMONIC_WHY = window.MNEMONIC_WHY || {}, {
+  ng_compass: "A compass never points exactly true; correcting for both errors keeps your course where you think it is.",
+  ng_lateral: "One color and shape system lets any mariner find the safe side of a channel.",
+  ng_preferred: "Where channels split, the mark tells you which branch is the main one.",
+  ng_seaward: "Buoys need a 'returning' direction even where there's no obvious harbor entrance.",
+  ng_yellow: "Special areas and the ICW need their own markings that don't get confused with channel sides.",
+  ng_lights: "Each light's rhythm is its signature, so you can tell which aid you're looking at.",
+  ng_ranges: "Knowing when a light should appear helps you confirm your position.",
+  ng_tides: "Depth and current change through the day; timing them keeps you off the bottom and in control.",
+  ng_charts: "Latitude and longitude tie charts, time and distance together.",
+  ng_pubs: "Official publications keep every mariner working from the same, current information.",
+  ng_electronics: "Electronics help, but only if you know their strengths and how to correct their readings.",
+  ng_radio: "Assigned channels keep distress and working traffic from drowning each other out.",
+});
+(function () {
+  const map = {
+    1: "ng_compass", 2: "ng_pubs", 3: "ng_tides", 4: "ng_pubs", 5: "ng_lateral", 6: "ng_tides", 7: "ng_charts", 8: "ng_yellow",
+    9: "ng_lateral", 10: "ng_charts", 11: "ng_preferred", 12: "ng_ranges", 13: "ng_lights", 14: "ng_compass", 15: "ng_lateral",
+    16: "ng_tides", 17: "ng_seaward", 18: "ng_preferred", 19: "ng_ranges", 20: "ng_lights", 21: "ng_tides", 22: "ng_electronics",
+    23: "ng_lights", 24: "ng_lateral", 25: "ng_ranges", 26: "ng_ranges", 27: "ng_yellow", 28: "ng_electronics", 29: "ng_pubs",
+    30: "ng_tides", 31: "ng_electronics", 32: "ng_charts", 33: "ng_ranges", 34: "ng_preferred", 35: "ng_compass", 36: "ng_yellow",
+    37: "ng_compass", 38: "ng_preferred", 39: "ng_seaward", 40: "ng_tides", 41: "ng_pubs", 42: "ng_charts", 43: "ng_pubs",
+    44: "ng_lateral", 45: "ng_lateral", 46: "ng_pubs", 47: "ng_radio", 48: "ng_tides", 49: "ng_compass", 50: "ng_radio",
+  };
+  window.QUESTION_MNEMONIC = window.QUESTION_MNEMONIC || {};
+  for (const [n, k] of Object.entries(map)) window.QUESTION_MNEMONIC["nav-general-1-" + n] = k;
+})();
