@@ -422,6 +422,10 @@ span.mnemonic .device, span.mnemonic .meaning { display: block; }
 .mnemonic .meaning { font-size: 0.9rem; color: var(--muted); }
 .trick-item summary .trick-title:first-child { grid-column: 1 / -1; color: var(--muted); font-size: 0.85rem; }
 .trick-item summary .trick-title:first-child + .trick-line { grid-column: 1 / -1; }
+.choice.not-sure { border-style: dashed; color: var(--muted); }
+.choice.not-sure .key { border-style: dashed; }
+.choice.not-sure.selected { color: var(--ink); border-style: solid; }
+.choice.not-sure.wrong { color: var(--ink); border-style: solid; }
 .choice.struck { opacity: 0.45; }
 .choice.struck .txt { text-decoration: line-through; }
 

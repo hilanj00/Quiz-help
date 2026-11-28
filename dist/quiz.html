@@ -433,6 +433,10 @@ span.mnemonic .device, span.mnemonic .meaning { display: block; }
 .mnemonic .meaning { font-size: 0.9rem; color: var(--muted); }
 .trick-item summary .trick-title:first-child { grid-column: 1 / -1; color: var(--muted); font-size: 0.85rem; }
 .trick-item summary .trick-title:first-child + .trick-line { grid-column: 1 / -1; }
+.choice.not-sure { border-style: dashed; color: var(--muted); }
+.choice.not-sure .key { border-style: dashed; }
+.choice.not-sure.selected { color: var(--ink); border-style: solid; }
+.choice.not-sure.wrong { color: var(--ink); border-style: solid; }
 .choice.struck { opacity: 0.45; }
 .choice.struck .txt { text-decoration: line-through; }
 
@@ -4753,7 +4757,7 @@ window.MNEMONIC_WHY = {
           let cls = "choice";
           if (done) { if (i === r.answer) cls += " right"; else if (i === picked) cls += " wrong"; }
           return `<button class="${cls}" data-g="${i}" ${done ? "disabled" : ""}><span class="key">${"ABCD"[i]}</span><span class="txt">${esc(o.name)}</span></button>`;
-        }).join("")}</div>`;
+        }).join("")}${notSureBtn(done, picked)}</div>`;
     } else {
       body = `
         <p class="question">Which picture shows <b>${esc(r.v.name.toLowerCase())}</b>${r.view === "day" ? " by day" : `, ${viewText}`}?</p>
@@ -4763,13 +4767,14 @@ window.MNEMONIC_WHY = {
           return `<button class="${cls}" data-g="${i}" ${done ? "disabled" : ""} aria-label="Picture ${"ABCD"[i]}">
             <span class="key">${"ABCD"[i]}</span>${picture(o, r.view, { aria: "Picture " + "ABCD"[i] })}
             ${done ? `<span class="pic-name">${esc(o.name)}</span>` : ""}</button>`;
-        }).join("")}</div>`;
+        }).join("")}</div>
+        <div class="choices">${notSureBtn(done, picked)}</div>`;
     }
     let feedback = "";
     if (done) {
       const ok = picked === r.answer;
       feedback = `<div class="feedback ${ok ? "right" : "wrong"}" role="status">
-        <strong>${ok ? (state.streak >= 3 ? `Correct · ${state.streak} in a row` : "Correct") : "Not quite"}</strong>
+        <strong>${ok ? (state.streak >= 3 ? `Correct · ${state.streak} in a row` : "Correct") : picked === 9 ? "Not sure · marked incorrect" : "Not quite"}</strong>
         ${ok ? "" : `<p>That was <b>${esc(r.v.name)}</b>.</p>`}
         ${dotRow(meanings(r.v, r.view))}
         <p class="trick"><span class="label">Remember</span> ${esc(r.v.say)}</p>
@@ -4792,7 +4797,7 @@ window.MNEMONIC_WHY = {
           <button class="btn ghost" id="g-quit">Quit game</button>
           ${done ? `<button class="btn primary" id="g-next">${state.i === 9 ? "See score" : "Next round"}</button>` : ""}
         </div>
-        <p class="kbd-hint">Keyboard: A–D or 1–4 to answer, Enter for the next round.</p>
+        <p class="kbd-hint">Keyboard: A–D or 1–4 to answer, N if not sure, Enter for the next round.</p>
       </section>`;
     root.querySelectorAll("[data-g]").forEach((el) => el.addEventListener("click", () => answer(Number(el.dataset.g))));
     root.querySelector("#g-quit").addEventListener("click", home);
@@ -4800,6 +4805,9 @@ window.MNEMONIC_WHY = {
     if (nx) { nx.addEventListener("click", nextRound); nx.focus({ preventScroll: true }); }
   }
 
+  function notSureBtn(done, picked) {
+    return `<button class="choice not-sure ${done && picked === 9 ? "wrong" : ""}" data-g="9" ${done ? "disabled" : ""}><span class="key">?</span><span class="txt">Not sure</span></button>`;
+  }
   function answer(i) {
     if (!state || state.picks[state.i] != null) return;
     const r = state.rounds[state.i];
@@ -4873,6 +4881,7 @@ window.MNEMONIC_WHY = {
     const k = e.key.toUpperCase();
     const li = "ABCD".indexOf(k);
     if (li >= 0) { answer(li); e.preventDefault(); return; }
+    if (k === "N" || k === "5") { answer(9); e.preventDefault(); return; }
     if (/^[1-4]$/.test(k)) { answer(Number(k) - 1); e.preventDefault(); return; }
     if (e.key === "Enter" && state.picks[state.i] != null) { nextRound(); e.preventDefault(); }
   });
@@ -4894,6 +4903,7 @@ window.MNEMONIC_WHY = {
 
   const LETTERS = ["A", "B", "C", "D", "E", "F"];
   const SUBJECTS = window.QUIZ_SUBJECTS;
+  const NOT_SURE = 9; // the "Not sure" choice; always counts as wrong
   const STORE_KEY = "rotr-quiz-v1";
 
   // ---------- Build the question bank ----------
@@ -5328,13 +5338,19 @@ window.MNEMONIC_WHY = {
       if (out) cls += " struck";
       return `<button class="${cls}" data-choice="${i}" ${done || out ? "disabled" : ""} ${out ? 'aria-label="Crossed out: ' + esc(c) + '"' : ""}>
         <span class="key">${LETTERS[i]}</span><span class="txt">${esc(c)}</span></button>`;
-    }).join("");
+    }).join("") + (() => {
+      let cls = "choice not-sure";
+      if (done && pick === NOT_SURE) cls += " wrong";
+      else if (!done && pick === NOT_SURE) cls += " selected";
+      return `<button class="${cls}" data-choice="${NOT_SURE}" ${done ? "disabled" : ""}>
+        <span class="key">?</span><span class="txt">Not sure</span></button>`;
+    })();
 
     let feedback = "";
     if (done) {
       const ok = pick === q.answer;
       feedback = `<div class="feedback ${ok ? "right" : "wrong"}" role="status">
-        <strong>${ok ? "Correct" : "Incorrect"}</strong>
+        <strong>${ok ? "Correct" : pick === NOT_SURE ? "Not sure · marked incorrect" : "Incorrect"}</strong>
         ${ok ? "" : `<p>The answer is <b>${LETTERS[q.answer]}</b>: ${esc(q.choices[q.answer])}</p>`}
         ${q.note ? `<p>${esc(q.note)}</p>` : ""}
         ${rememberFor(q) ? `<p class="trick"><span class="label">Remember</span> ${esc(rememberFor(q))}</p>` : ""}
@@ -5394,7 +5410,7 @@ window.MNEMONIC_WHY = {
           </div>
           <button class="btn primary" id="next" ${nextDisabled ? "disabled" : ""}>${nextLabel}</button>
         </div>
-        <p class="kbd-hint">Keyboard: press A–D or 1–4 to choose, T for a tip, Enter to continue.</p>
+        <p class="kbd-hint">Keyboard: press A–D or 1–4 to choose, N if not sure, T for a tip, Enter to continue.</p>
       </section>`;
 
     setWide(practice);
@@ -5489,7 +5505,7 @@ window.MNEMONIC_WHY = {
     if (!quiz) return;
     const { idx, checked } = quiz;
     if (settings.mode === "practice" && checked[idx]) return;
-    if (i >= quiz.list[idx].choices.length) return;
+    if (i >= quiz.list[idx].choices.length && i !== NOT_SURE) return;
     if (quiz.struck[idx].includes(i)) return;
     quiz.picks[idx] = i;
     renderQuestion();
@@ -5573,7 +5589,7 @@ window.MNEMONIC_WHY = {
       <div class="review-item">
         <div class="tags"><span class="tag rule">${esc(r.q.rule)}</span><span class="tag">${esc(r.q.section.title)} · #${r.q.num}</span></div>
         <p>${esc(r.q.text)}</p>
-        <p class="yours">Your answer: ${r.pick >= 0 ? `${LETTERS[r.pick]}. ${esc(r.q.choices[r.pick])}` : "not answered"}</p>
+        <p class="yours">Your answer: ${r.pick === NOT_SURE ? "Not sure" : r.pick >= 0 ? `${LETTERS[r.pick]}. ${esc(r.q.choices[r.pick])}` : "not answered"}</p>
         <p class="correct">Correct: ${LETTERS[r.q.answer]}. ${esc(r.q.choices[r.q.answer])}</p>
         ${r.q.note ? `<p class="src">${esc(r.q.note)}</p>` : ""}
         ${rememberFor(r.q) ? `<p class="trick"><span class="label">Remember</span> ${esc(rememberFor(r.q))}</p>` : ""}
@@ -5615,6 +5631,7 @@ window.MNEMONIC_WHY = {
     const k = e.key.toUpperCase();
     const li = LETTERS.indexOf(k);
     if (li >= 0 && li < 4) { choose(li); e.preventDefault(); return; }
+    if (k === "N" || k === "5") { choose(NOT_SURE); e.preventDefault(); return; }
     if (/^[1-4]$/.test(k)) { choose(Number(k) - 1); e.preventDefault(); return; }
     if (k === "T") { toggleTip(); e.preventDefault(); return; }
     if (e.key === "Enter") {

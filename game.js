@@ -871,7 +871,7 @@
           let cls = "choice";
           if (done) { if (i === r.answer) cls += " right"; else if (i === picked) cls += " wrong"; }
           return `<button class="${cls}" data-g="${i}" ${done ? "disabled" : ""}><span class="key">${"ABCD"[i]}</span><span class="txt">${esc(o.name)}</span></button>`;
-        }).join("")}</div>`;
+        }).join("")}${notSureBtn(done, picked)}</div>`;
     } else {
       body = `
         <p class="question">Which picture shows <b>${esc(r.v.name.toLowerCase())}</b>${r.view === "day" ? " by day" : `, ${viewText}`}?</p>
@@ -881,13 +881,14 @@
           return `<button class="${cls}" data-g="${i}" ${done ? "disabled" : ""} aria-label="Picture ${"ABCD"[i]}">
             <span class="key">${"ABCD"[i]}</span>${picture(o, r.view, { aria: "Picture " + "ABCD"[i] })}
             ${done ? `<span class="pic-name">${esc(o.name)}</span>` : ""}</button>`;
-        }).join("")}</div>`;
+        }).join("")}</div>
+        <div class="choices">${notSureBtn(done, picked)}</div>`;
     }
     let feedback = "";
     if (done) {
       const ok = picked === r.answer;
       feedback = `<div class="feedback ${ok ? "right" : "wrong"}" role="status">
-        <strong>${ok ? (state.streak >= 3 ? `Correct · ${state.streak} in a row` : "Correct") : "Not quite"}</strong>
+        <strong>${ok ? (state.streak >= 3 ? `Correct · ${state.streak} in a row` : "Correct") : picked === 9 ? "Not sure · marked incorrect" : "Not quite"}</strong>
         ${ok ? "" : `<p>That was <b>${esc(r.v.name)}</b>.</p>`}
         ${dotRow(meanings(r.v, r.view))}
         <p class="trick"><span class="label">Remember</span> ${esc(r.v.say)}</p>
@@ -910,7 +911,7 @@
           <button class="btn ghost" id="g-quit">Quit game</button>
           ${done ? `<button class="btn primary" id="g-next">${state.i === 9 ? "See score" : "Next round"}</button>` : ""}
         </div>
-        <p class="kbd-hint">Keyboard: A–D or 1–4 to answer, Enter for the next round.</p>
+        <p class="kbd-hint">Keyboard: A–D or 1–4 to answer, N if not sure, Enter for the next round.</p>
       </section>`;
     root.querySelectorAll("[data-g]").forEach((el) => el.addEventListener("click", () => answer(Number(el.dataset.g))));
     root.querySelector("#g-quit").addEventListener("click", home);
@@ -918,6 +919,9 @@
     if (nx) { nx.addEventListener("click", nextRound); nx.focus({ preventScroll: true }); }
   }
 
+  function notSureBtn(done, picked) {
+    return `<button class="choice not-sure ${done && picked === 9 ? "wrong" : ""}" data-g="9" ${done ? "disabled" : ""}><span class="key">?</span><span class="txt">Not sure</span></button>`;
+  }
   function answer(i) {
     if (!state || state.picks[state.i] != null) return;
     const r = state.rounds[state.i];
@@ -991,6 +995,7 @@
     const k = e.key.toUpperCase();
     const li = "ABCD".indexOf(k);
     if (li >= 0) { answer(li); e.preventDefault(); return; }
+    if (k === "N" || k === "5") { answer(9); e.preventDefault(); return; }
     if (/^[1-4]$/.test(k)) { answer(Number(k) - 1); e.preventDefault(); return; }
     if (e.key === "Enter" && state.picks[state.i] != null) { nextRound(); e.preventDefault(); }
   });

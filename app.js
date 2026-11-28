@@ -6,6 +6,7 @@
 
   const LETTERS = ["A", "B", "C", "D", "E", "F"];
   const SUBJECTS = window.QUIZ_SUBJECTS;
+  const NOT_SURE = 9; // the "Not sure" choice; always counts as wrong
   const STORE_KEY = "rotr-quiz-v1";
 
   // ---------- Build the question bank ----------
@@ -440,13 +441,19 @@
       if (out) cls += " struck";
       return `<button class="${cls}" data-choice="${i}" ${done || out ? "disabled" : ""} ${out ? 'aria-label="Crossed out: ' + esc(c) + '"' : ""}>
         <span class="key">${LETTERS[i]}</span><span class="txt">${esc(c)}</span></button>`;
-    }).join("");
+    }).join("") + (() => {
+      let cls = "choice not-sure";
+      if (done && pick === NOT_SURE) cls += " wrong";
+      else if (!done && pick === NOT_SURE) cls += " selected";
+      return `<button class="${cls}" data-choice="${NOT_SURE}" ${done ? "disabled" : ""}>
+        <span class="key">?</span><span class="txt">Not sure</span></button>`;
+    })();
 
     let feedback = "";
     if (done) {
       const ok = pick === q.answer;
       feedback = `<div class="feedback ${ok ? "right" : "wrong"}" role="status">
-        <strong>${ok ? "Correct" : "Incorrect"}</strong>
+        <strong>${ok ? "Correct" : pick === NOT_SURE ? "Not sure · marked incorrect" : "Incorrect"}</strong>
         ${ok ? "" : `<p>The answer is <b>${LETTERS[q.answer]}</b>: ${esc(q.choices[q.answer])}</p>`}
         ${q.note ? `<p>${esc(q.note)}</p>` : ""}
         ${rememberFor(q) ? `<p class="trick"><span class="label">Remember</span> ${esc(rememberFor(q))}</p>` : ""}
@@ -506,7 +513,7 @@
           </div>
           <button class="btn primary" id="next" ${nextDisabled ? "disabled" : ""}>${nextLabel}</button>
         </div>
-        <p class="kbd-hint">Keyboard: press A–D or 1–4 to choose, T for a tip, Enter to continue.</p>
+        <p class="kbd-hint">Keyboard: press A–D or 1–4 to choose, N if not sure, T for a tip, Enter to continue.</p>
       </section>`;
 
     setWide(practice);
@@ -601,7 +608,7 @@
     if (!quiz) return;
     const { idx, checked } = quiz;
     if (settings.mode === "practice" && checked[idx]) return;
-    if (i >= quiz.list[idx].choices.length) return;
+    if (i >= quiz.list[idx].choices.length && i !== NOT_SURE) return;
     if (quiz.struck[idx].includes(i)) return;
     quiz.picks[idx] = i;
     renderQuestion();
@@ -685,7 +692,7 @@
       <div class="review-item">
         <div class="tags"><span class="tag rule">${esc(r.q.rule)}</span><span class="tag">${esc(r.q.section.title)} · #${r.q.num}</span></div>
         <p>${esc(r.q.text)}</p>
-        <p class="yours">Your answer: ${r.pick >= 0 ? `${LETTERS[r.pick]}. ${esc(r.q.choices[r.pick])}` : "not answered"}</p>
+        <p class="yours">Your answer: ${r.pick === NOT_SURE ? "Not sure" : r.pick >= 0 ? `${LETTERS[r.pick]}. ${esc(r.q.choices[r.pick])}` : "not answered"}</p>
         <p class="correct">Correct: ${LETTERS[r.q.answer]}. ${esc(r.q.choices[r.q.answer])}</p>
         ${r.q.note ? `<p class="src">${esc(r.q.note)}</p>` : ""}
         ${rememberFor(r.q) ? `<p class="trick"><span class="label">Remember</span> ${esc(rememberFor(r.q))}</p>` : ""}
@@ -727,6 +734,7 @@
     const k = e.key.toUpperCase();
     const li = LETTERS.indexOf(k);
     if (li >= 0 && li < 4) { choose(li); e.preventDefault(); return; }
+    if (k === "N" || k === "5") { choose(NOT_SURE); e.preventDefault(); return; }
     if (/^[1-4]$/.test(k)) { choose(Number(k) - 1); e.preventDefault(); return; }
     if (k === "T") { toggleTip(); e.preventDefault(); return; }
     if (e.key === "Enter") {
