@@ -406,6 +406,8 @@ button:focus-visible, input:focus-visible { outline: 3px solid var(--accent); ou
 .book-diagram .dg-label.small { font: 600 10px var(--font-mono); }
 .review-item .diagram { flex-basis: 240px; }
 
+.missing-diagram { margin: 0; padding: 10px 12px; border-radius: 8px; border: 1px dashed var(--amber); background: var(--amber-soft); font-size: 0.9rem; }
+
 /* Tips */
 .tip-btn { border-color: var(--amber); color: var(--amber); }
 .tip-btn:hover { border-color: var(--amber); background: var(--amber-soft); }

@@ -21,6 +21,7 @@
         num, rule, text, choices,
         answer: LETTERS.indexOf(answer),
         diagram: !!flags.diagram,
+        bookDiagram: flags.bookDiagram || "",
         diagrams: window.BookDiagrams ? window.BookDiagrams.numbersIn(text) : [],
         fromRules: flags.src === "rules",
         note: flags.note || "",
@@ -33,6 +34,7 @@
   // A question can be asked if every diagram it mentions has been drawn.
   const drawable = (q) => q.diagrams.every((n) => window.BookDiagrams && window.BookDiagrams.has(n));
   function diagramFigure(q) {
+    if (q.bookDiagram) return `<p class="missing-diagram">This question uses book diagram ${esc(q.bookDiagram)}, which isn't in the site yet. Send a photo of that diagram page and it will show here.</p>`;
     if (!q.diagrams.length || !window.BookDiagrams) return "";
     return `<div class="diagram-row">${q.diagrams.map((n) => `<figure class="diagram">
       ${window.BookDiagrams.render(n)}<figcaption>Diagram ${n}</figcaption></figure>`).join("")}</div>`;
