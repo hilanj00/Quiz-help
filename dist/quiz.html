@@ -165,6 +165,25 @@ h2 {
 .sec-score .grade { margin-left: 0; }
 .sec-score .count { font-family: var(--font-mono); font-size: 0.8rem; color: var(--muted); white-space: nowrap; }
 
+/* Score history */
+.prev { display: inline-flex; gap: 4px; margin-left: 6px; vertical-align: 1px; }
+.mini {
+  font-family: var(--font-mono); font-size: 0.68rem; font-weight: 600; font-variant-numeric: tabular-nums;
+  padding: 0 5px; border-radius: 999px; border: 1px solid currentColor; opacity: 0.75; white-space: nowrap;
+}
+.mini-good { color: var(--stbd); }
+.mini-ok { color: var(--amber); }
+.mini-bad { color: var(--port); }
+.mini-perfect { color: var(--gold); border-color: var(--gold-star); }
+.recent { display: flex; flex-direction: column; gap: 8px; padding: 12px; border-radius: 8px; background: var(--bg); }
+.recent-list { display: flex; flex-direction: column; gap: 6px; }
+.recent-item { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.recent-item .grade { margin-left: 0; min-width: 64px; justify-content: center; }
+.recent-meta { font-size: 0.85rem; color: var(--muted); font-variant-numeric: tabular-nums; }
+.trend { font-family: var(--font-mono); font-size: 0.75rem; font-weight: 600; color: var(--muted); }
+.trend.up { color: var(--stbd); }
+.trend.down { color: var(--port); }
+
 /* Setup */
 .field-head { display: flex; align-items: center; justify-content: space-between; gap: 8px 12px; flex-wrap: wrap; }
 .mini-actions { display: flex; gap: 6px; flex-wrap: wrap; }
@@ -4937,6 +4956,35 @@ window.MNEMONIC_WHY = {
     return `<span class="grade grade-${g}" title="Last score: ${rec.c} of ${rec.t} (${GRADE_WORD[g]})"><span class="dot" aria-hidden="true"></span>${pct}%</span>`;
   }
 
+  // Last 3 scores per section (newest first), and last 3 whole tests per subject.
+  saved.sectionHistory = saved.sectionHistory && typeof saved.sectionHistory === "object" ? saved.sectionHistory : {};
+  for (const [id, rec] of Object.entries(saved.sectionScores)) {
+    if (!saved.sectionHistory[id] && rec && rec.t) saved.sectionHistory[id] = [rec];
+  }
+  saved.testHistory = saved.testHistory && typeof saved.testHistory === "object" ? saved.testHistory : {};
+  const pctOf = (r) => Math.round((r.c / r.t) * 100);
+  function miniScore(rec) {
+    const p = rec.c === rec.t ? 100 : Math.min(99, pctOf(rec));
+    const g = p === 100 ? "perfect" : grade(p);
+    return `<span class="mini mini-${g}" title="${rec.c} of ${rec.t}">${p === 100 ? "★" : ""}${p}%</span>`;
+  }
+  function historyBadges(id) {
+    const hist = saved.sectionHistory[id] || [];
+    if (!hist.length) return gradeBadge(null);
+    const older = hist.slice(1, 3);
+    return gradeBadge(hist[0]) + (older.length
+      ? `<span class="prev" aria-label="Earlier scores">${older.map(miniScore).join("")}</span>` : "");
+  }
+  function trendWord(hist) {
+    if (hist.length < 2) return "";
+    const d = pctOf(hist[0]) - pctOf(hist[hist.length - 1]);
+    return d > 0 ? `<span class="trend up">▲ up ${d} points</span>` : d < 0 ? `<span class="trend down">▼ down ${-d} points</span>` : `<span class="trend">steady</span>`;
+  }
+  function fmtDate(at) {
+    if (!at) return "";
+    try { return new Date(at).toLocaleDateString(undefined, { month: "short", day: "numeric" }); } catch (e) { return ""; }
+  }
+
   function updateHeader() {
     const sub = subject();
     const n = subjectCount(sub.id);
@@ -5102,7 +5150,7 @@ window.MNEMONIC_WHY = {
       const hidden = s.items.length - n;
       return `<label class="check" for="sec-${s.id}">
         <input type="checkbox" id="sec-${s.id}" data-sec="${s.id}" ${settings.sections.includes(s.id) ? "checked" : ""}>
-        <span class="name">${esc(s.title)}${gradeBadge(saved.sectionScores[s.id])}</span>
+        <span class="name">${esc(s.title)}${historyBadges(s.id)}</span>
         <span class="count">${n} q${hidden ? ` · +${hidden} diagram` : ""}</span>
       </label>`;
     }).join("");
@@ -5127,14 +5175,26 @@ window.MNEMONIC_WHY = {
       return;
     }
 
+    const tests = saved.testHistory[sub.id] || [];
+    const recent = tests.length ? `<div class="recent">
+        <div class="field-head"><span class="label">Last ${tests.length === 1 ? "test" : tests.length + " tests"}</span>${trendWord(tests)}</div>
+        <div class="recent-list">${tests.map((r, i) => `
+          <div class="recent-item">
+            ${gradeBadge(r)}
+            <span class="recent-meta">${r.c} of ${r.t}${r.mode === "exam" ? " · exam" : " · practice"}${fmtDate(r.at) ? " · " + fmtDate(r.at) : ""}</span>
+            ${i === 0 ? `<span class="tag">latest</span>` : ""}
+          </div>`).join("")}</div>
+      </div>` : "";
+
     app.innerHTML = `${subjectTabs}${gameCard}
       <section class="card" aria-labelledby="setup-h">
         <h2 id="setup-h">Build your test</h2>
+        ${recent}
         <div class="field">
           <div class="field-head">
             <span class="label">Sections · ${selectedHere} of ${sections.length} selected</span>
             ${`<div class="legend" aria-label="Score colors">
-              <span class="label">Last score</span>
+              <span class="label">Score colors (newest first, then the 2 before)</span>
               <span class="grade grade-perfect"><span class="star" aria-hidden="true">★</span>100%</span>
               <span class="grade grade-good"><span class="dot" aria-hidden="true"></span>90%+</span>
               <span class="grade grade-ok"><span class="dot" aria-hidden="true"></span>70–89%</span>
@@ -5498,11 +5558,17 @@ window.MNEMONIC_WHY = {
     }
     const recorded = quiz.kind === "test";
     if (recorded) {
-      for (const [sec, rec] of bySection) saved.sectionScores[sec.id] = { c: rec.c, t: rec.t, at: Date.now() };
+      const at = Date.now();
+      for (const [sec, rec] of bySection) {
+        const entry = { c: rec.c, t: rec.t, at };
+        saved.sectionScores[sec.id] = entry;
+        saved.sectionHistory[sec.id] = [entry, ...(saved.sectionHistory[sec.id] || [])].slice(0, 3);
+      }
+      if (total) saved.testHistory[sub.id] = [{ c: correct, t: total, at, mode: settings.mode }, ...(saved.testHistory[sub.id] || [])].slice(0, 3);
       save();
     }
     const sectionRows = [...bySection].map(([sec, rec]) => `
-      <div class="sec-score"><span class="name">${esc(sec.title)}</span>${gradeBadge(rec)}<span class="count">${rec.c} of ${rec.t}</span></div>`).join("");
+      <div class="sec-score"><span class="name">${esc(sec.title)}</span>${recorded ? historyBadges(sec.id) : gradeBadge(rec)}<span class="count">${rec.c} of ${rec.t}</span></div>`).join("");
 
     const review = misses.map((r) => `
       <div class="review-item">
