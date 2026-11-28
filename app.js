@@ -301,12 +301,11 @@
     app.innerHTML = `${subjectTabs}${gameCard}
       <section class="card" aria-labelledby="setup-h">
         <h2 id="setup-h">Build your test</h2>
-        ${recent}
         <div class="field">
           <div class="field-head">
             <span class="label">Sections · ${selectedHere} of ${sections.length} selected</span>
             ${`<div class="legend" aria-label="Score colors">
-              <span class="label">Score colors (newest first, then the 2 before)</span>
+              <span class="label">Score colors</span>
               <span class="grade grade-perfect"><span class="star" aria-hidden="true">★</span>100%</span>
               <span class="grade grade-good"><span class="dot" aria-hidden="true"></span>90%+</span>
               <span class="grade grade-ok"><span class="dot" aria-hidden="true"></span>70–89%</span>
