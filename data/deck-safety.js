@@ -1,9 +1,8 @@
 // Deck Safety — U.S. Maritime Academy "Practice Deck Safety Exam" (book pages 179–187).
-// The answer key page hasn't been photographed yet, so every answer is worked out from standard
-// references and flagged {src: "rules"}. Replace with the book's key when it's available.
+// Answers are from the book's answer key (page 189).
 // Each question: [number, "topic", "Question text", ["A", "B", "C", "D"], "answer", {flags}]
 
-const DS = { src: "rules" };
+const DS = {};
 
 addSection({
   id: "deck-safety-1",
@@ -25,8 +24,7 @@ addSection({
     [7, "Survival craft", "Sealing Clamps on a life raft are used to", [
       "Reseal leftover food containers", "Repair tears in the ceiling of the raft", "Repair underwater holes in the buoyancy tubes", "Seal the entranceway flap in inclement weather"], "C", DS],
     [8, "Survival craft", "An advantage of the Gravity Davit for lifeboats is", [
-      "There is no training required to use it", "The lifeboat can be launched even at high degrees of list", "It launches automatically", "It is simple to use and the lifeboat can be launched by 1 person"], "B",
-      { src: "rules", note: "Gravity davits are also simple enough for one person to release, so D is arguable. Check this one against the book's key." }],
+      "There is no training required to use it", "The lifeboat can be launched even at high degrees of list", "It launches automatically", "It is simple to use and the lifeboat can be launched by 1 person"], "D", DS],
     [9, "Firefighting", "The 3 elements required for combustion are", [
       "Fuel, Oxygen and Light", "Heat, Fuel and Ignition", "Oxygen, Fuel and Heat", "Wind, Fuel and Oxygen"], "C", DS],
     [10, "Heavy weather", "Your vessel is broken down in heavy seas. To reduce the risk of capsizing", [
@@ -106,8 +104,7 @@ addSection({
     [47, "Towing", "What is the danger of bridle legs being of different lengths?", [
       "There will be more strain on the longer leg making it prone to breakage", "There will be more strain on the shorter leg making it prone to breakage", "The longer leg may tangle in the prop", "The Shorter leg may twist and roll the tow"], "B", DS],
     [48, "Stability", "Which statement is true in regard to stability?", [
-      "The wider the vessel the greater range of stability it will have", "The narrower the vessel the greater the range of stability it will have", "A wider vessel will be less stable", "Width has nothing to do with range of stability"], "A",
-      { src: "rules", note: "Exam-prep answer. Strictly, beam mostly raises initial stiffness; range of stability also depends on freeboard and the center of gravity." }],
+      "The wider the vessel the greater range of stability it will have", "The narrower the vessel the greater the range of stability it will have", "A wider vessel will be less stable", "Width has nothing to do with range of stability"], "A", DS],
     [49, "Stability", "Heel is", [
       "The inclination of a ship due to an internal force", "The inclination of a ship due to placement to the cargo", "The inclination of a ship due to an external force", "The pitch angle of a ship due to an external force"], "C", DS],
     [50, "Stability", "Loll is", [
@@ -125,7 +122,7 @@ Object.assign(window.QUESTION_TIPS, {
   "deck-safety-1-5": "Pitch-poling = flipping END over END: the bow digs into the trough and the stern goes over the top.",
   "deck-safety-1-6": "Oil and fuel fires are Class B. Foam smothers them by blanketing the surface. Water spreads burning oil.",
   "deck-safety-1-7": "Sealing clamps fit through a hole in a buoyancy tube and screw down to seal it, even below the waterline. Small holes above water use patches.",
-  "deck-safety-1-8": "Gravity davits use the boat's own weight to swing out and lower it, so they work even when the ship has a list.",
+  "deck-safety-1-8": "Gravity davits use the boat's own weight to swing out and lower it: one person releases the brake and the boat lowers itself. (They also work with a list, but the book's answer is simplicity.)",
   "deck-safety-1-9": "Fire triangle: OXYGEN, FUEL, HEAT. Take any one away and the fire goes out.",
   "deck-safety-1-10": "A sea anchor (drogue) holds the bow into the seas so a disabled boat doesn't lie beam-on and roll over.",
   "deck-safety-1-11": "All three are distress signals. N over C flags and a continuous foghorn are international; the 50–70 flash white strobe is Inland only.",
@@ -165,7 +162,7 @@ Object.assign(window.QUESTION_TIPS, {
   "deck-safety-1-45": "A thimble is a metal eye fitted inside a line's loop to protect it from chafing where it meets chain or a shackle.",
   "deck-safety-1-46": "Mousing = wiring the shackle pin to the shackle body so it can't unscrew.",
   "deck-safety-1-47": "The SHORTER bridle leg takes most of the load, so it breaks first. Keep both legs equal.",
-  "deck-safety-1-48": "Exam answer: more beam = more stability. A wide, shallow boat resists heeling better than a narrow one.",
+  "deck-safety-1-48": "More beam = more stability. A wide, shallow boat resists heeling better than a narrow one.",
   "deck-safety-1-49": "HEEL comes from an EXTERNAL force (wind, waves, turning). LIST comes from an INTERNAL cause (uneven cargo or fuel).",
   "deck-safety-1-50": "Loll: a vessel with negative GM flops to one side and hangs there, or flops to the other. Lowering the center of gravity is the fix.",
 });
