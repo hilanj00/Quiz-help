@@ -145,6 +145,7 @@
     [/sail/i, "25"], [/power-driven|underway/i, "23"],
   ];
   function rulesFor(q) {
+    if (q.section.subject !== "rules") return [];
     const keys = [];
     const add = (k) => { if (TIPS[k] && !keys.includes(k)) keys.push(k); };
     for (const m of q.rule.matchAll(/Annex\s+([IV]+)/g)) add("Annex " + m[1]);
@@ -226,7 +227,7 @@
             ${(window.MNEMONIC_WHY || {})[k] ? `<p class="why"><span class="label">Why</span> ${esc(window.MNEMONIC_WHY[k])}</p>` : ""}
           </details>`).join("")}</div>
       </section>`).join("");
-    const count = Object.keys(M).length;
+    const count = (window.MNEMONIC_GROUPS || []).reduce((n, [, keys]) => n + keys.filter((k) => M[k]).length, 0);
     const tab = (window.__tricksTab = window.__tricksTab || "mnemonics");
     app.innerHTML = `
       <div class="actions"><button class="btn" id="back">Back to test setup</button></div>
@@ -465,7 +466,7 @@
         ${rememberFor(q) ? `<p class="trick"><span class="label">Remember</span> ${esc(rememberFor(q))}</p>` : ""}
         ${whyLine(q)}
         ${mnemonicLine(q)}
-        <p class="src">${q.fromRules ? "Answer worked out from the Navigation Rules (book key not yet added)." : "Answer from the book's answer key."}${quiz.retried[idx] ? " Retries don't change your score; your first answer counts." : ""}</p>
+        <p class="src">${q.fromRules ? (q.section.subject === "rules" ? "Answer worked out from the Navigation Rules (book key not yet added)." : "Answer worked out from standard deck references (book key not yet added).") : "Answer from the book's answer key."}${quiz.retried[idx] ? " Retries don't change your score; your first answer counts." : ""}</p>
       </div>`;
     }
 

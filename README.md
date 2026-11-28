@@ -40,7 +40,8 @@ Learn deck and quick 10-round games. Vessel patterns and sayings are in the `VES
 
 Tabs at the top switch between Rules of the Road, Deck Safety, Navigation General and Deck General
 (`data/subjects.js`, which also sets each module's passing score: 90% for Rules, 70% for the rest).
-Deck Safety, Navigation General and Deck General are empty for now: add sections to
+Deck Safety has the 50-question Practice Deck Safety Exam (`data/deck-safety.js`; answers worked out,
+book key not yet added). Navigation General and Deck General are empty for now: add sections to
 `data/deck-safety.js`, `data/nav-general.js` and `data/deck-general.js` with the matching `subject`.
 
 ## Adding questions
