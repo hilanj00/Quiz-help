@@ -388,6 +388,17 @@ button:focus-visible, input:focus-visible { outline: 3px solid var(--accent); ou
 .tip-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .trick { margin: 0; }
 .trick .label { margin-right: 6px; color: var(--amber); font-weight: 600; }
+.mnemonic {
+  margin-top: 2px; padding: 10px 12px; border-radius: 8px;
+  background: var(--surface); border: 1px dashed var(--accent);
+  display: flex; flex-direction: column; gap: 4px;
+}
+.mnemonic .label { color: var(--accent); }
+.mnemonic p { margin: 0; }
+.mnemonic .device, .trick-line.device { font-family: var(--font-display); font-weight: 600; font-size: 1.15rem; line-height: 1.25; letter-spacing: 0.01em; }
+.mnemonic .meaning { font-size: 0.9rem; color: var(--muted); }
+.trick-item summary .trick-title:first-child { grid-column: 1 / -1; color: var(--muted); font-size: 0.85rem; }
+.trick-item summary .trick-title:first-child + .trick-line { grid-column: 1 / -1; }
 .choice.struck { opacity: 0.45; }
 .choice.struck .txt { text-decoration: line-through; }
 

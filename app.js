@@ -134,6 +134,18 @@
     const k = rulesFor(q)[0];
     return k ? TIPS[k].trick : "";
   }
+  // The mnemonic device for the fact a question tests.
+  function mnemonicFor(q) {
+    const key = (window.QUESTION_MNEMONIC || {})[q.id];
+    const m = key && (window.MNEMONICS || {})[key];
+    return m ? { key, topic: m[0], device: m[1], meaning: m[2] } : null;
+  }
+  function mnemonicLine(q) {
+    const m = mnemonicFor(q);
+    if (!m) return "";
+    return `<div class="mnemonic"><span class="label">Mnemonic · ${esc(m.topic)}</span>
+      <p class="device">${esc(m.device)}</p><p class="meaning">${esc(m.meaning)}</p></div>`;
+  }
   function tipCard(k) {
     const t = TIPS[k];
     const label = k.startsWith("Annex") ? k : "Rule " + k;
@@ -159,13 +171,31 @@
             <p>${esc(TIPS[k].idea)}</p>
           </details>`).join("")}</div>
       </section>`).join("");
+    const M = window.MNEMONICS || {};
+    const devices = (window.MNEMONIC_GROUPS || []).map(([title, keys]) => `
+      <section class="card">
+        <h2>${esc(title)}</h2>
+        <div class="trick-list">${keys.filter((k) => M[k]).map((k) => `
+          <details class="trick-item">
+            <summary><span class="trick-title">${esc(M[k][0])}</span>
+              <span class="trick-line device">${esc(M[k][1])}</span></summary>
+            <p>${esc(M[k][2])}</p>
+          </details>`).join("")}</div>
+      </section>`).join("");
+    const count = Object.keys(M).length;
+    const tab = (window.__tricksTab = window.__tricksTab || "mnemonics");
     app.innerHTML = `
       <div class="actions"><button class="btn" id="back">Back to test setup</button></div>
       <section class="card">
         <h2>Memory tricks</h2>
-        <p class="hint">One easy way to remember each rule. Tap a rule to read what it says.</p>
+        <div class="seg" role="group" aria-label="Show">
+          <button type="button" data-tt="mnemonics" aria-pressed="${tab === "mnemonics"}">Mnemonics (${count})</button>
+          <button type="button" data-tt="rules" aria-pressed="${tab === "rules"}">Rule by rule</button>
+        </div>
+        <p class="hint">${tab === "mnemonics" ? "A memory device for every fact the test asks about. Tap one to see what it unlocks. The same device appears after each question that tests it." : "One saying for each rule. Tap a rule to read what it says."}</p>
       </section>
-      ${groups}`;
+      ${tab === "mnemonics" ? devices : groups}`;
+    app.querySelectorAll("[data-tt]").forEach((el) => el.addEventListener("click", () => { window.__tricksTab = el.dataset.tt; renderTricks(); }));
     $("#back").addEventListener("click", renderSetup);
     window.scrollTo(0, 0);
   }
@@ -269,7 +299,7 @@
       ${sub.id === "rules" ? `<section class="card tricks-promo">
         <div>
           <h2>Memory tricks</h2>
-          <p class="hint">Short sayings for every rule, like "Red over red, the captain is dead."</p>
+          <p class="hint">Mnemonics for every fact on the test, like "Nobody Really Cares For Sailing Power Planes."</p>
         </div>
         <button class="btn" id="open-tricks">Open memory tricks</button>
       </section>` : ""}`;
@@ -374,6 +404,7 @@
         ${ok ? "" : `<p>The answer is <b>${LETTERS[q.answer]}</b>: ${esc(q.choices[q.answer])}</p>`}
         ${q.note ? `<p>${esc(q.note)}</p>` : ""}
         ${rememberFor(q) ? `<p class="trick"><span class="label">Remember</span> ${esc(rememberFor(q))}</p>` : ""}
+        ${mnemonicLine(q)}
         <p class="src">${q.fromRules ? "Answer worked out from the Navigation Rules (book key not yet added)." : "Answer from the book's answer key."}${quiz.retried[idx] ? " Retries don't change your score; your first answer counts." : ""}</p>
       </div>`;
     }
@@ -605,6 +636,7 @@
         <p class="correct">Correct: ${LETTERS[r.q.answer]}. ${esc(r.q.choices[r.q.answer])}</p>
         ${r.q.note ? `<p class="src">${esc(r.q.note)}</p>` : ""}
         ${rememberFor(r.q) ? `<p class="trick"><span class="label">Remember</span> ${esc(rememberFor(r.q))}</p>` : ""}
+        ${mnemonicLine(r.q)}
       </div>`).join("");
 
     app.innerHTML = `
