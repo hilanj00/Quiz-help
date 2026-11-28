@@ -484,6 +484,39 @@
   const shuffle = (a) => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
   const pick = (a) => a[Math.floor(Math.random() * a.length)];
 
+  // ---------- Mnemonics (shared with the quizzes, from data/mnemonics.js) ----------
+  // Which device goes with each vessel: night lights, day shapes, and (where different) the view from astern.
+  const VESSEL_MN = {
+    "power-small": { night: "powerlights" }, "power-large": { night: "powerlights" }, "power-tiny": { night: "sizes" },
+    hovercraft: { night: "hover" }, sail: { night: "sailbasic" }, "sail-rg": { night: "sailrg" },
+    motorsail: { night: "motorsail", day: "motorsail" },
+    "tow-short": { night: "towcount", astern: "towstern" }, "tow-long": { night: "towcount", astern: "towstern", day: "towcount" },
+    "push-intl": { night: "push" }, "push-inland": { night: "push" }, towed: { night: "towed", day: "towcount" },
+    "barge-pushed": { night: "specialflash" },
+    trawl: { night: "trawl", day: "hourglass" }, fish: { night: "trawl", day: "hourglass" }, "fish-stopped": { night: "fishway", day: "hourglass" },
+    "nuc-way": { night: "nuc", day: "balls" }, "nuc-stopped": { night: "nuc", day: "balls" },
+    "ram-way": { night: "ramlights", day: "ramlights" }, "ram-anchor": { night: "ramlights", day: "ramlights" },
+    dredge: { night: "dredge", day: "dredge" }, diving: { night: "ramlights", day: "flagA" }, mine: { night: "mine", day: "mine" },
+    cbd: { night: "cbd", day: "cbd" }, pilot: { night: "pilot" }, "pilot-anchor": { night: "pilot" },
+    "anchor-small": { night: "anchorlights", day: "balls" }, "anchor-large": { night: "anchorlights", day: "balls" },
+    aground: { night: "aground", day: "balls" },
+  };
+  const SHAPE_MN = { ball: "balls", diamond: "towcount", hourglass: "hourglass", coneUp: "gear", coneDown: "motorsail", cylinder: "cbd", flagA: "flagA" };
+  function mnemonic(key) {
+    const m = key && (window.MNEMONICS || {})[key];
+    return m ? `<div class="mnemonic"><span class="label">Mnemonic · ${esc(m[0])}</span>
+      <p class="device">${esc(m[1])}</p><p class="meaning">${esc(m[2])}</p></div>` : "";
+  }
+  function vesselKey(v, view) {
+    const m = VESSEL_MN[v.id] || {};
+    return view === "day" ? (m.day || m.night) : view === "astern" ? (m.astern || m.night) : m.night;
+  }
+  function vesselMnemonic(v, view) { return mnemonic(vesselKey(v, view)); }
+  function vesselWhy(v, view, tag = "p") {
+    const why = (window.MNEMONIC_WHY || {})[vesselKey(v, view)];
+    return why ? `<${tag} class="why"><span class="label">Why this rule exists</span> ${esc(why)}</${tag}>` : "";
+  }
+
   function dotRow(rows) {
     return `<ul class="light-list">${rows.map(([c, t]) =>
       `<li>${c ? `<span class="lamp" style="--lamp:${COLOR[c]}"></span>` : `<span class="lamp none"></span>`}<span>${esc(t)}</span></li>`).join("")}</ul>`;
@@ -511,6 +544,7 @@
       <section class="card">
         <h2>What each light means</h2>
         ${dotRow(LIGHT_KEY.map(([c, n, t]) => [c, `${n}: ${t}`]))}
+        ${mnemonic("sidelook")}${mnemonic("arcs")}${mnemonic("lightswhen")}
       </section>`;
     root.querySelector("#g-back").addEventListener("click", exit);
     root.querySelector("#g-play").addEventListener("click", startGame);
@@ -567,6 +601,8 @@
         <div class="scene-wrap">${picture(v, view, { aria: `${v.name}, ${VIEWS[view].toLowerCase()}` })}</div>
         ${dotRow(meanings(v, view))}
         <p class="trick"><span class="label">Remember</span> ${esc(v.say)}</p>
+        ${vesselWhy(v, view)}
+        ${vesselMnemonic(v, view)}
         <p class="hint">${esc(v.about)}</p>
         <div class="nav">
           <button class="btn" id="g-prev">← ${esc(prev.name)}</button>
@@ -616,6 +652,7 @@
               <strong>${esc(name)}</strong>
               <span>${esc(means)}</span>
               <span class="trick"><span class="label">Remember</span> ${esc(trick)}</span>
+              ${mnemonic(SHAPE_MN[k]).replace(/<(\/?)(div|p)\b/g, "<$1span")}
             </span>
           </li>`).join("")}</ul>
       </section>
@@ -713,6 +750,8 @@
             <span class="flash-name">${esc(v.name)}${v.inland ? ` <span class="tag warn">Inland</span>` : ""}</span>
             ${dotRow(meanings(v, view))}
             <span class="trick"><span class="label">Remember</span> ${esc(v.say)}</span>
+            ${vesselWhy(v, view, "span")}
+            ${vesselMnemonic(v, view).replace(/<(\/?)(div|p)\b/g, "<$1span")}
           </span>` : `<span class="flash-prompt">What is it? Tap to reveal</span>`}
       </button>
       <div class="nav">
@@ -852,6 +891,8 @@
         ${ok ? "" : `<p>That was <b>${esc(r.v.name)}</b>.</p>`}
         ${dotRow(meanings(r.v, r.view))}
         <p class="trick"><span class="label">Remember</span> ${esc(r.v.say)}</p>
+        ${vesselWhy(r.v, r.view)}
+        ${vesselMnemonic(r.v, r.view)}
       </div>`;
     }
     root.innerHTML = `

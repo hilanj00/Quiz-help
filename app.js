@@ -140,6 +140,11 @@
     const m = key && (window.MNEMONICS || {})[key];
     return m ? { key, topic: m[0], device: m[1], meaning: m[2] } : null;
   }
+  function whyLine(q) {
+    const m = mnemonicFor(q);
+    const why = m && (window.MNEMONIC_WHY || {})[m.key];
+    return why ? `<p class="why"><span class="label">Why this rule exists</span> ${esc(why)}</p>` : "";
+  }
   function mnemonicLine(q) {
     const m = mnemonicFor(q);
     if (!m) return "";
@@ -180,6 +185,7 @@
             <summary><span class="trick-title">${esc(M[k][0])}</span>
               <span class="trick-line device">${esc(M[k][1])}</span></summary>
             <p>${esc(M[k][2])}</p>
+            ${(window.MNEMONIC_WHY || {})[k] ? `<p class="why"><span class="label">Why</span> ${esc(window.MNEMONIC_WHY[k])}</p>` : ""}
           </details>`).join("")}</div>
       </section>`).join("");
     const count = Object.keys(M).length;
@@ -404,6 +410,7 @@
         ${ok ? "" : `<p>The answer is <b>${LETTERS[q.answer]}</b>: ${esc(q.choices[q.answer])}</p>`}
         ${q.note ? `<p>${esc(q.note)}</p>` : ""}
         ${rememberFor(q) ? `<p class="trick"><span class="label">Remember</span> ${esc(rememberFor(q))}</p>` : ""}
+        ${whyLine(q)}
         ${mnemonicLine(q)}
         <p class="src">${q.fromRules ? "Answer worked out from the Navigation Rules (book key not yet added)." : "Answer from the book's answer key."}${quiz.retried[idx] ? " Retries don't change your score; your first answer counts." : ""}</p>
       </div>`;
@@ -636,6 +643,7 @@
         <p class="correct">Correct: ${LETTERS[r.q.answer]}. ${esc(r.q.choices[r.q.answer])}</p>
         ${r.q.note ? `<p class="src">${esc(r.q.note)}</p>` : ""}
         ${rememberFor(r.q) ? `<p class="trick"><span class="label">Remember</span> ${esc(rememberFor(r.q))}</p>` : ""}
+        ${whyLine(r.q)}
         ${mnemonicLine(r.q)}
       </div>`).join("");
 

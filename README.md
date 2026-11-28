@@ -11,6 +11,7 @@ U.S. Maritime Academy "Rules of the Road" practice problems.
 - Missed questions are remembered in your browser so you can retake just those.
 - **Tip** (or press T) explains the rule behind a question and can cross out up to two wrong answers.
 - After you answer, **Remember** shows a tip written for that question (`data/explain-rules.js`).
+- Each tip also says **why the rule exists** (`MNEMONIC_WHY` in `data/mnemonics.js`).
 - Each question also shows a **Mnemonic** device for the fact it tests (`data/mnemonics.js`); all of them are on the Memory tricks page.
 - **Memory tricks** lists a short saying for every rule. Tips and tricks live in `data/tips.js`.
 

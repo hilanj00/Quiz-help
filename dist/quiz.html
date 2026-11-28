@@ -399,12 +399,16 @@ button:focus-visible, input:focus-visible { outline: 3px solid var(--accent); ou
 .tip-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .trick { margin: 0; }
 .trick .label { margin-right: 6px; color: var(--amber); font-weight: 600; }
+.why { margin: 0; }
+span.why { display: block; }
+.why .label { margin-right: 6px; color: var(--stbd); font-weight: 600; }
 .mnemonic {
   margin-top: 2px; padding: 10px 12px; border-radius: 8px;
   background: var(--surface); border: 1px dashed var(--accent);
   display: flex; flex-direction: column; gap: 4px;
 }
 .mnemonic .label { color: var(--accent); }
+span.mnemonic .device, span.mnemonic .meaning { display: block; }
 .mnemonic p { margin: 0; }
 .mnemonic .device, .trick-line.device { font-family: var(--font-display); font-weight: 600; font-size: 1.15rem; line-height: 1.25; letter-spacing: 0.01em; }
 .mnemonic .meaning { font-size: 0.9rem; color: var(--muted); }
@@ -3759,6 +3763,102 @@ window.MNEMONIC_GROUPS = [
   ["Sound and light signals (Rules 32–37)", ["blasts", "equipment", "maneuverintl", "inlandsignals", "radio", "dock", "danger", "channelovertake", "bend", "lightsignals", "fogpower", "fogspecial", "fogtowed", "foganchor", "anchorwarn", "fogintervals", "pilotfog", "fogsmall", "attention"]],
   ["Annexes", ["distress", "annex2"]],
 ];
+
+// Why each rule exists, in one short line. Shown with the Remember tip.
+window.MNEMONIC_WHY = {
+  where: "Ships cross borders, so everyone at sea needs one shared set of rules; busy U.S. harbors and rivers get local tweaks.",
+  inlandwaters: "Rivers, harbors and the Great Lakes have currents, bends and barge traffic the open sea doesn't, so they get their own rules.",
+  close: "Some special vessels physically can't fit the standard lights, but others still need to recognize them.",
+  rule2: "No rulebook covers every situation; this stops anyone from steering into a collision just because 'the rule said so'.",
+  underway: "A vessel that isn't held by an anchor, the shore or the bottom can move, so others must treat her as moving traffic.",
+  insight: "Steering rules depend on both crews seeing each other and acting together; radar alone can't show what the other ship is doing.",
+  rv: "Fog isn't the only danger; anything that blocks sight takes away your main tool for avoiding collision.",
+  length: "One clear way to measure means every vessel lands in the same size category for lights and gear.",
+  vessel: "Anything that can move on the water can hit something, so everything that floats has to follow the rules.",
+  power: "An engine lets a vessel stop and turn on demand, so she's expected to get out of the way of less maneuverable vessels.",
+  fishdef: "Only gear that actually ties a boat down earns extra rights; trolling lines don't stop a boat from maneuvering.",
+  nucram: "Other vessels need to know WHY a ship can't move, broken or busy, to judge how she'll behave.",
+  ram: "Some jobs physically pin a ship in place; stopping them mid-job can be dangerous, so others must go around.",
+  cbd: "A deep ship in shallow water can't swerve without running aground, so she needs space in the channel.",
+  lookout: "Most collisions happen because nobody was watching; you can't avoid what you don't see.",
+  safespeed: "Speed decides how much time you have to react; it has to match the conditions, not the engine.",
+  cbdr: "A bearing that never changes means both ships are headed for the same spot at the same time.",
+  doubt: "Guessing wrong in a close situation can sink a ship; assuming the worst gives you a margin of safety.",
+  action: "Small, late turns confuse the other vessel; big, early ones make your intentions obvious.",
+  channel: "Channels are narrow and big ships can't leave them, so keeping right and staying out of their way prevents head-on jams.",
+  downbound: "A vessel going with the current can't stop or steer as easily, so she gets to choose how to pass.",
+  riverx: "Vessels running up and down a river are stuck in its channel; a crosser can easily wait or go behind.",
+  tss: "Like a highway with lanes, separating traffic directions in busy waters cuts head-on encounters.",
+  sail: "Without engines, sailboats need a simple, wind-based way to know who moves.",
+  overtake: "The vessel behind can see everything ahead and chooses to pass, so she carries the responsibility.",
+  headon: "If both turned whichever way they liked, they could turn into each other; one rule (both right) makes it predictable.",
+  crossing: "Two ships crossing need one clear answer about who moves, or both might turn the same way.",
+  giveway: "Early, big action lets the other vessel see you're keeping clear, so she doesn't panic and turn too.",
+  standon: "If the stand-on vessel holds steady, the give-way vessel can plan around her; she acts only when it's clearly going wrong.",
+  pecking: "The less a vessel can maneuver, the more rights she gets; the most able vessel does the dodging.",
+  fogradar: "Without seeing each other, two ships turning the wrong way could turn INTO each other; these rules prevent that.",
+  fogheard: "A fog signal tells you a ship is near but not exactly where; slowing down buys time to find out.",
+  lightswhen: "Lights let others see who you are and what you're doing when they can't see your hull.",
+  arcs: "Each light shines only in certain directions, so the lights you see tell you which way a vessel is heading.",
+  sidelook: "Red and green tell you which side of a vessel you're seeing, so you can work out her heading at night.",
+  sizes: "Small boats can't carry all the lights a ship can, so the rules scale with size.",
+  combined: "Small boats don't have room to spread sidelights apart, so one combined lantern is allowed.",
+  powerlights: "The masthead light says 'I have an engine'; two on a big ship show which way her long hull is pointed.",
+  onduty: "Special lights claim special rights; showing them when not working would mislead other vessels.",
+  hover: "A hovercraft moves fast and differently from a hull in the water, so she needs a light no other vessel uses.",
+  towcount: "A towline can be hard to see at night; extra masthead lights warn you not to cut between the tug and her tow.",
+  towstern: "From behind, the yellow light tells you there's a towline ahead of you, so you don't pass too close.",
+  towed: "A towed vessel can't steer herself, so she shows only where she is, not that she has power.",
+  submerged: "A half-sunk tow is almost invisible; lights at each end show how long it is so no one runs over it.",
+  helper: "Saving lives comes first; a ship helping in an emergency shouldn't be blocked by not having proper towing lights.",
+  push: "A pusher's barges stretch far ahead of her, so others need to know the 'boat' is much longer than it looks.",
+  composite: "A pusher locked to its barge moves as one rigid vessel, so it's treated and lit as one.",
+  inlandlights: "Rivers are full of barge tows, so Inland adds lights to make them easier to recognize.",
+  specialflash: "A barge pushed ahead has no engine and is far from the tug; the flashing light marks the very front of the tow.",
+  huey: "Above that bridge the river is crowded with tows, and the tug's lights are positioned for river conditions.",
+  sailbasic: "No masthead light means 'no engine'; you instantly know she's a sailboat that can't stop easily.",
+  sailrg: "An optional high signal makes sailboats easier to spot above the clutter of shore lights.",
+  motorsail: "Using an engine gives her power-driven abilities, so she loses sailing rights and must show it.",
+  oars: "A rowboat or tiny sailboat can't carry real navigation lights, but must still be seen in time.",
+  trawl: "Fishing gear limits a boat's movement; the colors tell you what kind of gear, trawl or nets, she's dragging.",
+  fishway: "Sidelights show a heading; a fishing boat that isn't moving has none, so they go off.",
+  hourglass: "By day, a fishing boat with gear out needs a clear signal that she can't easily get out of your way.",
+  gear: "Long nets or lines spread far from the boat; the signal shows which side to stay away from.",
+  nuc: "A broken-down ship can't follow the steering rules; red lights warn everyone that she can't move for them.",
+  ramlights: "A ship doing restricted work can't stop to dodge you; the signal tells you she'll stay put.",
+  dredge: "A dredge's pipes or anchors block one side; the colors show which side is safe to pass.",
+  mine: "Mine-clearing can set off explosions; the 1000 m distance keeps other vessels safe.",
+  flagA: "Divers in the water can be hit by propellers; the flag warns boats to keep clear and go slow.",
+  pilot: "Pilot boats move around ships to board and leave; the signal tells others why she's acting strangely.",
+  anchorlights: "An anchored ship sits still in places others travel; lights show she's there and how long she is.",
+  balls: "Simple black shapes are easy to see at a distance by day, and the number tells the story.",
+  aground: "A grounded ship marks shallow water; the extra red lights warn others not to follow her in.",
+  small7: "A tiny boat anchored well out of the way poses little danger, so it's spared the extra gear.",
+  specialanchor: "Special anchorage areas are set aside for small boats, so traffic already knows to expect them.",
+  extralights: "Extra lights are fine as long as they don't confuse anyone; the official lights must stay clear.",
+  pipeline: "A floating pipeline is a barrier; the lights mark the one safe gap to pass through.",
+  blasts: "Different blast lengths keep maneuvering signals and fog signals from being confused.",
+  equipment: "Bigger ships need louder, more varied sound gear to be heard over longer distances.",
+  maneuverintl: "A quick blast tells the other vessel what you're doing right now, so there are no surprises.",
+  inlandsignals: "On crowded rivers, agreeing on the passing side before you move prevents last-second confusion.",
+  radio: "A clear radio agreement does the same job as whistles, and is often clearer.",
+  dock: "A ship backing out of a berth can't see well; the blast warns traffic she's coming out.",
+  danger: "When you're not sure what the other ship is doing, five blasts get attention fast and force a rethink.",
+  channelovertake: "In a narrow channel the ship ahead may need to move over, so the overtaker must ask and wait for a yes.",
+  bend: "Around a blind bend you can't see oncoming traffic; a long blast announces you before you meet.",
+  lightsignals: "Light flashes back up whistle signals in noise or wind, when sound may not carry.",
+  fogpower: "In fog, sound replaces sight; the signal tells others what kind of vessel is near and if she's moving.",
+  fogspecial: "One shared signal tells others: 'I can't maneuver normally, keep clear.'",
+  fogtowed: "Sounding right after the tug tells others the tow is attached and stretches behind her.",
+  foganchor: "Bells mean 'not moving'; a gong at the other end shows a long ship is lying across your path.",
+  anchorwarn: "An anchored ship can't get out of the way, so she may add a warning when someone gets close.",
+  fogintervals: "Stationary vessels sound more often so others can pinpoint their location.",
+  pilotfog: "Pilot boats move around a lot; the extra signal tells others what she is so her movements make sense.",
+  fogsmall: "Small boats can't carry big bells or whistles, but still need to be heard.",
+  attention: "Getting attention is fine, but signals that look official could cause a dangerous mix-up.",
+  distress: "Distress signals must be impossible to mistake, so help comes fast to anyone in trouble.",
+  annex2: "Trawlers working close together need to warn each other what their nets are doing to avoid tangles.",
+};
 </script>
 <script>
 // Lights & Shapes game: learn which lights and day shapes belong to which vessel, then play quick rounds.
@@ -4247,6 +4347,39 @@ window.MNEMONIC_GROUPS = [
   const shuffle = (a) => { a = a.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
   const pick = (a) => a[Math.floor(Math.random() * a.length)];
 
+  // ---------- Mnemonics (shared with the quizzes, from data/mnemonics.js) ----------
+  // Which device goes with each vessel: night lights, day shapes, and (where different) the view from astern.
+  const VESSEL_MN = {
+    "power-small": { night: "powerlights" }, "power-large": { night: "powerlights" }, "power-tiny": { night: "sizes" },
+    hovercraft: { night: "hover" }, sail: { night: "sailbasic" }, "sail-rg": { night: "sailrg" },
+    motorsail: { night: "motorsail", day: "motorsail" },
+    "tow-short": { night: "towcount", astern: "towstern" }, "tow-long": { night: "towcount", astern: "towstern", day: "towcount" },
+    "push-intl": { night: "push" }, "push-inland": { night: "push" }, towed: { night: "towed", day: "towcount" },
+    "barge-pushed": { night: "specialflash" },
+    trawl: { night: "trawl", day: "hourglass" }, fish: { night: "trawl", day: "hourglass" }, "fish-stopped": { night: "fishway", day: "hourglass" },
+    "nuc-way": { night: "nuc", day: "balls" }, "nuc-stopped": { night: "nuc", day: "balls" },
+    "ram-way": { night: "ramlights", day: "ramlights" }, "ram-anchor": { night: "ramlights", day: "ramlights" },
+    dredge: { night: "dredge", day: "dredge" }, diving: { night: "ramlights", day: "flagA" }, mine: { night: "mine", day: "mine" },
+    cbd: { night: "cbd", day: "cbd" }, pilot: { night: "pilot" }, "pilot-anchor": { night: "pilot" },
+    "anchor-small": { night: "anchorlights", day: "balls" }, "anchor-large": { night: "anchorlights", day: "balls" },
+    aground: { night: "aground", day: "balls" },
+  };
+  const SHAPE_MN = { ball: "balls", diamond: "towcount", hourglass: "hourglass", coneUp: "gear", coneDown: "motorsail", cylinder: "cbd", flagA: "flagA" };
+  function mnemonic(key) {
+    const m = key && (window.MNEMONICS || {})[key];
+    return m ? `<div class="mnemonic"><span class="label">Mnemonic · ${esc(m[0])}</span>
+      <p class="device">${esc(m[1])}</p><p class="meaning">${esc(m[2])}</p></div>` : "";
+  }
+  function vesselKey(v, view) {
+    const m = VESSEL_MN[v.id] || {};
+    return view === "day" ? (m.day || m.night) : view === "astern" ? (m.astern || m.night) : m.night;
+  }
+  function vesselMnemonic(v, view) { return mnemonic(vesselKey(v, view)); }
+  function vesselWhy(v, view, tag = "p") {
+    const why = (window.MNEMONIC_WHY || {})[vesselKey(v, view)];
+    return why ? `<${tag} class="why"><span class="label">Why this rule exists</span> ${esc(why)}</${tag}>` : "";
+  }
+
   function dotRow(rows) {
     return `<ul class="light-list">${rows.map(([c, t]) =>
       `<li>${c ? `<span class="lamp" style="--lamp:${COLOR[c]}"></span>` : `<span class="lamp none"></span>`}<span>${esc(t)}</span></li>`).join("")}</ul>`;
@@ -4274,6 +4407,7 @@ window.MNEMONIC_GROUPS = [
       <section class="card">
         <h2>What each light means</h2>
         ${dotRow(LIGHT_KEY.map(([c, n, t]) => [c, `${n}: ${t}`]))}
+        ${mnemonic("sidelook")}${mnemonic("arcs")}${mnemonic("lightswhen")}
       </section>`;
     root.querySelector("#g-back").addEventListener("click", exit);
     root.querySelector("#g-play").addEventListener("click", startGame);
@@ -4330,6 +4464,8 @@ window.MNEMONIC_GROUPS = [
         <div class="scene-wrap">${picture(v, view, { aria: `${v.name}, ${VIEWS[view].toLowerCase()}` })}</div>
         ${dotRow(meanings(v, view))}
         <p class="trick"><span class="label">Remember</span> ${esc(v.say)}</p>
+        ${vesselWhy(v, view)}
+        ${vesselMnemonic(v, view)}
         <p class="hint">${esc(v.about)}</p>
         <div class="nav">
           <button class="btn" id="g-prev">← ${esc(prev.name)}</button>
@@ -4379,6 +4515,7 @@ window.MNEMONIC_GROUPS = [
               <strong>${esc(name)}</strong>
               <span>${esc(means)}</span>
               <span class="trick"><span class="label">Remember</span> ${esc(trick)}</span>
+              ${mnemonic(SHAPE_MN[k]).replace(/<(\/?)(div|p)\b/g, "<$1span")}
             </span>
           </li>`).join("")}</ul>
       </section>
@@ -4476,6 +4613,8 @@ window.MNEMONIC_GROUPS = [
             <span class="flash-name">${esc(v.name)}${v.inland ? ` <span class="tag warn">Inland</span>` : ""}</span>
             ${dotRow(meanings(v, view))}
             <span class="trick"><span class="label">Remember</span> ${esc(v.say)}</span>
+            ${vesselWhy(v, view, "span")}
+            ${vesselMnemonic(v, view).replace(/<(\/?)(div|p)\b/g, "<$1span")}
           </span>` : `<span class="flash-prompt">What is it? Tap to reveal</span>`}
       </button>
       <div class="nav">
@@ -4615,6 +4754,8 @@ window.MNEMONIC_GROUPS = [
         ${ok ? "" : `<p>That was <b>${esc(r.v.name)}</b>.</p>`}
         ${dotRow(meanings(r.v, r.view))}
         <p class="trick"><span class="label">Remember</span> ${esc(r.v.say)}</p>
+        ${vesselWhy(r.v, r.view)}
+        ${vesselMnemonic(r.v, r.view)}
       </div>`;
     }
     root.innerHTML = `
@@ -4868,6 +5009,11 @@ window.MNEMONIC_GROUPS = [
     const m = key && (window.MNEMONICS || {})[key];
     return m ? { key, topic: m[0], device: m[1], meaning: m[2] } : null;
   }
+  function whyLine(q) {
+    const m = mnemonicFor(q);
+    const why = m && (window.MNEMONIC_WHY || {})[m.key];
+    return why ? `<p class="why"><span class="label">Why this rule exists</span> ${esc(why)}</p>` : "";
+  }
   function mnemonicLine(q) {
     const m = mnemonicFor(q);
     if (!m) return "";
@@ -4908,6 +5054,7 @@ window.MNEMONIC_GROUPS = [
             <summary><span class="trick-title">${esc(M[k][0])}</span>
               <span class="trick-line device">${esc(M[k][1])}</span></summary>
             <p>${esc(M[k][2])}</p>
+            ${(window.MNEMONIC_WHY || {})[k] ? `<p class="why"><span class="label">Why</span> ${esc(window.MNEMONIC_WHY[k])}</p>` : ""}
           </details>`).join("")}</div>
       </section>`).join("");
     const count = Object.keys(M).length;
@@ -5132,6 +5279,7 @@ window.MNEMONIC_GROUPS = [
         ${ok ? "" : `<p>The answer is <b>${LETTERS[q.answer]}</b>: ${esc(q.choices[q.answer])}</p>`}
         ${q.note ? `<p>${esc(q.note)}</p>` : ""}
         ${rememberFor(q) ? `<p class="trick"><span class="label">Remember</span> ${esc(rememberFor(q))}</p>` : ""}
+        ${whyLine(q)}
         ${mnemonicLine(q)}
         <p class="src">${q.fromRules ? "Answer worked out from the Navigation Rules (book key not yet added)." : "Answer from the book's answer key."}${quiz.retried[idx] ? " Retries don't change your score; your first answer counts." : ""}</p>
       </div>`;
@@ -5364,6 +5512,7 @@ window.MNEMONIC_GROUPS = [
         <p class="correct">Correct: ${LETTERS[r.q.answer]}. ${esc(r.q.choices[r.q.answer])}</p>
         ${r.q.note ? `<p class="src">${esc(r.q.note)}</p>` : ""}
         ${rememberFor(r.q) ? `<p class="trick"><span class="label">Remember</span> ${esc(rememberFor(r.q))}</p>` : ""}
+        ${whyLine(r.q)}
         ${mnemonicLine(r.q)}
       </div>`).join("");
 
