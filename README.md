@@ -15,7 +15,7 @@ U.S. Maritime Academy "Rules of the Road" practice problems.
 - Each question also shows a **Mnemonic** device for the fact it tests (`data/mnemonics.js`); all of them are on the Memory tricks page.
 - **Memory tricks** lists a short saying for every rule. Tips and tricks live in `data/tips.js`.
 
-## Sections so far (517 questions)
+## Sections so far (519 questions)
 
 | Section | File |
 | --- | --- |
@@ -27,8 +27,8 @@ U.S. Maritime Academy "Rules of the Road" practice problems.
 | Annexes & distress signals, #416–436 | `data/annexes.js` |
 | General Questions, Lights in Diagrams, Sound Signals in Diagrams | `data/diagrams.js` |
 
-All answers come from the book's answer keys. Questions that refer to a book diagram are flagged
-`{diagram: true}` and are off by default in the quiz. Lights & Shapes #276–297 (pages 62–63) are not
+All answers come from the book's answer keys. Questions that refer to a book diagram show a redrawn copy of
+that diagram (`data/diagram-art.js`). Lights & Shapes #276–297 (pages 62–63) are not
 in yet.
 
 ## Lights & Shapes game

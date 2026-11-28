@@ -122,7 +122,7 @@ window.QUESTION_MNEMONIC = {};
     "sound-intl": { 2: "maneuverintl", 5: "maneuverintl", "8-10": "channelovertake", "11-15": "maneuverintl", "16-17": "channelovertake", "18-19": "maneuverintl", 20: "danger", 22: "maneuverintl", "23-25": "lightsignals", "26-28": "fogspecial" },
     "sound-inland": { "29-31": "dock", "32-34": "radio", "35-46": "inlandsignals", "47-49": "danger", "50-54": "inlandsignals", 55: "dock", 56: "lightsignals", 57: "inlandsignals", 58: "radio", 59: "dock", 60: "lightsignals", 61: "inlandsignals", "62-65": "danger", 67: "specialanchor" },
     "annexes": { 416: "annex2", "417-432": "distress", "433-436": "annex2" },
-    "general": { 1: "rule2", "2-3": "extralights", 4: "combined" },
+    "general": { 1: "rule2", "2-3": "extralights", 4: "combined", "5-6": "length" },
     "lights-diagrams": { 1: "push", 2: "pipeline", 3: "overtake", 4: "mine", 5: "overtake", 6: "aground", "7-8": "nuc", 9: "ramlights", 10: "sailrg", 11: "towcount", "12-14": "trawl", 15: "sailbasic", 16: "headon", 17: "pilot", 18: "towstern", 19: "trawl", 20: "towstern", 21: "trawl", 22: "aground", 23: "pilot", 24: "push", 25: "trawl", "26-27": "powerlights", 28: "ramlights", 29: "anchorlights" },
     "sound-diagrams": { 1: "overtake", 2: "danger", "3-4": "inlandsignals", 5: "overtake", "6-7": "inlandsignals", 8: "headon", 9: "maneuverintl", 10: "crossing", 11: "danger", "12-14": "maneuverintl", 15: "fogpower", "16-17": "fogspecial", 18: "fogtowed", 19: "dock", 20: "foganchor", 21: "fogsmall", 22: "pilotfog", 23: "fogpower" },
   };

@@ -2,7 +2,6 @@
 // Transcribed from the U.S. Maritime Academy "Rules of the Road" practice problems.
 // Answers are from the book's answer keys. Any question whose text names a DIAGRAM is
 // flagged as a diagram question automatically (see the loop at the bottom).
-// General Questions #5 and #6 are left out: their choices are only the letters on diagrams 86 and 87.
 
 const DIAGRAM_SECTIONS = [];
 
@@ -24,6 +23,10 @@ DIAGRAM_SECTIONS.push({
       "20-meter vessel engaged in fishing and making way.",
       "25-meter power-driven vessel engaged in trolling.",
       "25-meter pilot vessel."], "A"],
+    [5, "Rule 3", "Which of the following represents the length of a vessel as defined by the Rules? (See diagram 86)", [
+      "A.", "B.", "C.", "D."], "C"],
+    [6, "Rule 3", "Which of the following represents the breadth as defined in the Rules? (See diagram 87)", [
+      "A.", "B.", "C.", "D."], "A"],
   ]
 });
 

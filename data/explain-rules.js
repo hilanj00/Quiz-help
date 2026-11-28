@@ -264,7 +264,7 @@ Object.assign(window.QUESTION_TIPS, {
   "lights-shapes-2-256": "Two cones points together = fishing.",
   "lights-shapes-2-258": "Ball-diamond-ball = RAM, and laying cable is RAM work.",
   "lights-shapes-2-259": "Two balls = not under command.",
-  "lights-shapes-2-260": "Two balls = NUC. Three balls = aground, ball-diamond-ball = RAM.",
+  "lights-shapes-2-260": "The book keys NUC (two balls), but Diagram 18 shows a dredge's full set: two diamonds on the passing side, ball-diamond-ball, and two balls on the blocked side. By Rule 27 that means dredging. Check this one with your instructor.",
   "lights-shapes-2-261": "Red-white-red = RAM, and laying cable is RAM. With masthead and sidelights she's making way.",
   "lights-shapes-2-262": "Red over red = NUC. 'Red over red, the captain is dead.'",
   "lights-shapes-2-263": "A NUC vessel shows red over red with NO masthead light, so head-on you see no white at all. Trawling, RAM and mineclearing all show some white.",
@@ -487,6 +487,8 @@ Object.assign(window.QUESTION_TIPS, {
   "general-1": "Rule 2 special circumstances include more than two vessels meeting, where the normal two-vessel rules don't neatly apply.",
   "general-2": "U.S. submarines on the surface may show an intermittent flashing amber (yellow) beacon.",
   "general-3": "Extra lights are allowed if they can't be mistaken for Rule lights and don't hurt visibility or the lookout.",
+  "general-5": "Length = length OVERALL, the longest line in the diagram (C), from the very front of the bow to the very back of the stern.",
+  "general-6": "Breadth = GREATEST breadth, the widest measurement (A), not the width at either waterline.",
   "general-4": "Combined sidelights: under 20 m only. The 10 m sailboat qualifies.",
   // ---------- Lights in diagrams ----------
   "lights-diagrams-1": "Inland: two stacked masthead lights forward and two yellow towing lights aft = pushing ahead.",

@@ -21,6 +21,7 @@
         num, rule, text, choices,
         answer: LETTERS.indexOf(answer),
         diagram: !!flags.diagram,
+        diagrams: window.BookDiagrams ? window.BookDiagrams.numbersIn(text) : [],
         fromRules: flags.src === "rules",
         note: flags.note || "",
       };
@@ -29,6 +30,13 @@
     }
   }
   const byId = new Map(bank.map((q) => [q.id, q]));
+  // A question can be asked if every diagram it mentions has been drawn.
+  const drawable = (q) => q.diagrams.every((n) => window.BookDiagrams && window.BookDiagrams.has(n));
+  function diagramFigure(q) {
+    if (!q.diagrams.length || !window.BookDiagrams) return "";
+    return `<div class="diagram-row">${q.diagrams.map((n) => `<figure class="diagram">
+      ${window.BookDiagrams.render(n)}<figcaption>Diagram ${n}</figcaption></figure>`).join("")}</div>`;
+  }
 
   // ---------- Saved settings + missed list (this browser only) ----------
   function load() {
@@ -124,7 +132,7 @@
     return a;
   }
   function pool() {
-    return bank.filter((q) => q.section.subject === settings.subject && settings.sections.includes(q.section.id) && (settings.diagrams || !q.diagram));
+    return bank.filter((q) => q.section.subject === settings.subject && settings.sections.includes(q.section.id) && drawable(q));
   }
 
   // ---------- Tips ----------
@@ -259,12 +267,11 @@
         </div>
       </section>` : "";
     const secRows = sections.map((s) => {
-      const n = s.items.filter((q) => settings.diagrams || !q.diagram).length;
-      const hidden = s.items.length - n;
+      const n = s.items.filter(drawable).length;
       return `<label class="check" for="sec-${s.id}">
         <input type="checkbox" id="sec-${s.id}" data-sec="${s.id}" ${settings.sections.includes(s.id) ? "checked" : ""}>
         <span class="name">${esc(s.title)}${historyBadges(s.id)}</span>
-        <span class="count">${n} q${hidden ? ` · +${hidden} diagram` : ""}</span>
+        <span class="count">${n} q</span>
       </label>`;
     }).join("");
 
@@ -334,8 +341,7 @@
         </div>
         <div class="field">
           <label class="toggle" for="opt-shuffle"><input type="checkbox" id="opt-shuffle" ${settings.shuffle ? "checked" : ""}> Shuffle question order</label>
-          ${hasDiagrams ? `<label class="toggle" for="opt-diagrams"><input type="checkbox" id="opt-diagrams" ${settings.diagrams ? "checked" : ""}> Include questions that refer to a book diagram</label>
-          <p class="hint">The diagrams aren't reproduced here, so those questions are off by default.</p>` : ""}
+          ${hasDiagrams ? `<p class="hint">Questions that refer to a book diagram show the diagram with the question.</p>` : ""}
         </div>
         <div class="actions">
           <button class="btn primary" id="start" ${available ? "" : "disabled"}>Start test</button>
@@ -374,8 +380,6 @@
       settings.count = el.dataset.count; persistSettings(); renderSetup();
     }));
     $("#opt-shuffle").addEventListener("change", (e) => { settings.shuffle = e.target.checked; persistSettings(); });
-    const diag = $("#opt-diagrams");
-    if (diag) diag.addEventListener("change", (e) => { settings.diagrams = e.target.checked; persistSettings(); renderSetup(); });
     $("#start").addEventListener("click", () => {
       let list = pool();
       if (settings.shuffle) list = shuffle(list);
@@ -498,9 +502,10 @@
         <div class="tags">
           <span class="tag rule">${esc(q.rule)}</span>
           <span class="tag">${esc(q.section.title)} · #${q.num}</span>
-          ${q.diagram ? `<span class="tag warn">Book diagram not shown</span>` : ""}
+
         </div>
         <p class="question">${esc(q.text)}</p>
+        ${diagramFigure(q)}
         <div class="choices">${choices}</div>
         ${tipPanel}
         ${feedback}
@@ -692,6 +697,7 @@
       <div class="review-item">
         <div class="tags"><span class="tag rule">${esc(r.q.rule)}</span><span class="tag">${esc(r.q.section.title)} · #${r.q.num}</span></div>
         <p>${esc(r.q.text)}</p>
+        ${diagramFigure(r.q)}
         <p class="yours">Your answer: ${r.pick === NOT_SURE ? "Not sure" : r.pick >= 0 ? `${LETTERS[r.pick]}. ${esc(r.q.choices[r.pick])}` : "not answered"}</p>
         <p class="correct">Correct: ${LETTERS[r.q.answer]}. ${esc(r.q.choices[r.q.answer])}</p>
         ${r.q.note ? `<p class="src">${esc(r.q.note)}</p>` : ""}

@@ -1,5 +1,6 @@
 /* Layout: one centered column, like a single card on a chart table. Port red = wrong, starboard green = right. */
 :root {
+  --diagram-bg: #ffffff;
   --bg: #eef2f5;
   --surface: #ffffff;
   --ink: #102a3c;
@@ -29,7 +30,7 @@
     --bg: #0b1721; --surface: #12222f; --ink: #e3edf3; --muted: #93abbb; --line: #24394a;
     --accent: #5ba7da; --accent-ink: #06121b;
     --port: #ef6b62; --port-soft: #3a1c1b; --stbd: #4cc27f; --stbd-soft: #15301f;
-    --amber: #e3a841; --amber-soft: #33270f;
+    --amber: #e3a841; --amber-soft: #33270f; --diagram-bg: #12222f;
     --gold: #f2c94c; --gold-soft: #3a2f0c; --gold-star: #f2b705; --gold-hi: #ffe27a; --gold-ink: #2b1d00; --grey-soft: #1b2d3b;
     color-scheme: dark;
   }
@@ -38,7 +39,7 @@
   --bg: #0b1721; --surface: #12222f; --ink: #e3edf3; --muted: #93abbb; --line: #24394a;
   --accent: #5ba7da; --accent-ink: #06121b;
   --port: #ef6b62; --port-soft: #3a1c1b; --stbd: #4cc27f; --stbd-soft: #15301f;
-  --amber: #e3a841; --amber-soft: #33270f;
+  --amber: #e3a841; --amber-soft: #33270f; --diagram-bg: #12222f;
   --gold: #f2c94c; --gold-soft: #3a2f0c; --gold-star: #f2b705; --gold-hi: #ffe27a; --gold-ink: #2b1d00; --grey-soft: #1b2d3b;
   color-scheme: dark;
 }
@@ -391,6 +392,19 @@ button:focus-visible, input:focus-visible { outline: 3px solid var(--accent); ou
 @media (prefers-reduced-motion: reduce) { .flash-answer { animation: none; } }
 .game-card .feedback .light-list { margin: 4px 0; }
 @media (max-width: 480px) { .game-promo-pic { flex-basis: 100%; } }
+
+/* Book diagrams */
+.diagram-row { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
+.diagram {
+  margin: 0; padding: 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--diagram-bg);
+  display: flex; flex-direction: column; align-items: center; gap: 6px; flex: 0 1 340px; min-width: 0;
+}
+.diagram figcaption { font: 600 0.72rem var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.book-diagram { display: block; width: 100%; height: auto; max-height: 240px; color: var(--ink); }
+.book-diagram.lights-panel { max-width: 150px; }
+.book-diagram .dg-label { font: 700 15px var(--font-display); fill: currentColor; }
+.book-diagram .dg-label.small { font: 600 10px var(--font-mono); }
+.review-item .diagram { flex-basis: 240px; }
 
 /* Tips */
 .tip-btn { border-color: var(--amber); color: var(--amber); }
