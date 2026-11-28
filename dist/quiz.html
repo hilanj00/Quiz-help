@@ -5624,6 +5624,8 @@ window.MNEMONIC_WHY = {
     const pick = picks[idx];
     const done = practice && checked[idx];
     const answeredCount = picks.filter((p) => p >= 0).length;
+    // Practice: returnTo is set by "Try again" so you can jump back to where you were.
+    const returning = practice && quiz.returnTo != null && quiz.returnTo !== idx;
     const revisiting = practice && idx < quiz.furthest;
 
     const choices = q.choices.map((c, i) => {
@@ -5673,7 +5675,7 @@ window.MNEMONIC_WHY = {
     const last = idx === list.length - 1;
     let nextLabel, nextDisabled;
     if (practice) {
-      nextLabel = done ? (revisiting ? `Back to question ${quiz.furthest + 1}` : last ? "See results" : "Next question") : "Check answer";
+      nextLabel = done ? (returning ? `Back to question ${quiz.returnTo + 1}` : last ? "See results" : "Next question") : "Check answer";
       nextDisabled = pick < 0;
     } else {
       nextLabel = last ? "Finish test" : "Next question";
@@ -5684,7 +5686,7 @@ window.MNEMONIC_WHY = {
     const main = `
       <div class="progress">
         <div class="progress-row">
-          <span class="label">Question ${idx + 1} of ${list.length}${revisiting ? " · trying again" : ""}</span>
+          <span class="label">Question ${idx + 1} of ${list.length}${practice && quiz.retried[idx] && !done ? " · trying again" : revisiting ? " · reviewing" : ""}</span>
           <span class="label">${practice ? "Practice" : `${answeredCount} answered`}</span>
         </div>
         <div class="bar"><div style="width:${(reached / list.length) * 100}%"></div></div>
@@ -5702,14 +5704,14 @@ window.MNEMONIC_WHY = {
         ${feedback}
         <div class="nav">
           <div class="actions">
-            ${!practice && idx > 0 ? `<button class="btn" id="prev">Back</button>` : ""}
-            ${revisiting && !done ? `<button class="btn" id="resume">Skip, back to question ${quiz.furthest + 1}</button>` : ""}
+            ${idx > 0 ? `<button class="btn" id="prev" aria-label="Previous question">← Back</button>` : ""}
+            ${returning && !done ? `<button class="btn" id="resume">Skip, back to question ${quiz.returnTo + 1}</button>` : ""}
             ${done ? "" : `<button class="btn tip-btn" id="tip" aria-expanded="${tips[idx]}">${tips[idx] ? "Hide tip" : "Tip"}</button>`}
             <button class="btn ghost" id="quit">End test</button>
           </div>
           <button class="btn primary" id="next" ${nextDisabled ? "disabled" : ""}>${nextLabel}</button>
         </div>
-        <p class="kbd-hint">Keyboard: press A–D or 1–4 to choose, N if not sure, T for a tip, Enter to continue.</p>
+        <p class="kbd-hint">Keyboard: press A–D or 1–4 to choose, N if not sure, T for a tip, Enter to continue, ← to go back.</p>
       </section>`;
 
     setWide(practice);
@@ -5726,9 +5728,9 @@ window.MNEMONIC_WHY = {
     const strikeBtn = $("#strike");
     if (strikeBtn) strikeBtn.addEventListener("click", strikeOne);
     const prev = $("#prev");
-    if (prev) prev.addEventListener("click", () => { quiz.idx--; renderQuestion(); });
+    if (prev) prev.addEventListener("click", goBack);
     const resume = $("#resume");
-    if (resume) resume.addEventListener("click", () => { quiz.idx = quiz.furthest; renderQuestion(); });
+    if (resume) resume.addEventListener("click", () => { quiz.idx = quiz.returnTo; quiz.returnTo = null; renderQuestion(); });
     app.querySelectorAll("[data-retry]").forEach((el) =>
       el.addEventListener("click", () => tryAgain(Number(el.dataset.retry))));
   }
@@ -5761,8 +5763,16 @@ window.MNEMONIC_WHY = {
     </aside>`;
   }
 
+  function goBack() {
+    if (!quiz || quiz.idx === 0) return;
+    quiz.idx--;
+    renderQuestion();
+    window.scrollTo(0, 0);
+  }
+
   function tryAgain(i) {
     if (!quiz) return;
+    if (quiz.returnTo == null) quiz.returnTo = quiz.idx;
     quiz.idx = i;
     quiz.picks[i] = -1;
     quiz.checked[i] = false;
@@ -5823,8 +5833,15 @@ window.MNEMONIC_WHY = {
       renderQuestion();
       return;
     }
+    if (settings.mode === "practice" && quiz.returnTo != null && quiz.returnTo !== idx) {
+      quiz.idx = quiz.returnTo;
+      quiz.returnTo = null;
+      renderQuestion();
+      window.scrollTo(0, 0);
+      return;
+    }
     if (settings.mode === "practice" && idx < quiz.furthest) {
-      quiz.idx = quiz.furthest;
+      quiz.idx = idx + 1;
       renderQuestion();
       window.scrollTo(0, 0);
       return;
@@ -5934,6 +5951,12 @@ window.MNEMONIC_WHY = {
     if (k === "N" || k === "5") { choose(NOT_SURE); e.preventDefault(); return; }
     if (/^[1-4]$/.test(k)) { choose(Number(k) - 1); e.preventDefault(); return; }
     if (k === "T") { toggleTip(); e.preventDefault(); return; }
+    if (e.key === "ArrowLeft") { goBack(); e.preventDefault(); return; }
+    if (e.key === "ArrowRight") {
+      const next = $("#next");
+      if (next && !next.disabled && (settings.mode === "exam" || quiz.checked[quiz.idx])) { advance(); e.preventDefault(); }
+      return;
+    }
     if (e.key === "Enter") {
       const next = $("#next");
       if (next && !next.disabled) { advance(); e.preventDefault(); }
